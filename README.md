@@ -52,7 +52,7 @@ podman run -d \
 ```bash
 npm start
 ```
-## The server will start at http://localhost:3000.
+The server will start at http://localhost:3000.
 
 ### API Endpoints
 Method	Endpoint	Description

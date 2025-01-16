@@ -18,19 +18,6 @@ mongoose.connect(mongoURI, {
 // Module imports
 const User = require('./models/User');
 
-// create a user
-const testUser = new User({
-  name: 'testUser',
-  username: 'testUser01',
-  role: 'tester',
-  creationDate: new Date(),
-  activated: true
-});
-
-testUser.save();
-// print log
-console.log(testUser);
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const app = express();
@@ -65,9 +52,6 @@ app.get('/status', (req, res) => {
 
 });
 
-app.get('/api/data', (req, res) => {
-    res.json({ message: 'Hello from Express server!' });
-});
 ////////////////////////////////
 ////////  CRUD  ////////////////
 

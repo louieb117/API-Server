@@ -5,12 +5,10 @@ FROM node:18
 WORKDIR ./
 
 # Copy package.json and package-lock.json
-COPY package*.json ./
+COPY ../source/package*.json ./
 
 # Install dependencies
-RUN npm install express --save
-RUN npm install body-parser --save
-RUN npm install cors --save
+RUN npm install
 
 # Copy the rest of the application code
 COPY . .
