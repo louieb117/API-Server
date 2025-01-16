@@ -9,8 +9,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - .backend:/app
-      - /app/node_modules
+      - ../source/:/app
     command: ["npm", "start"]
     depends_on:
       - mongodb # Ensure MongoDB starts before Express
