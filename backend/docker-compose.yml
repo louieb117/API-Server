@@ -15,6 +15,7 @@ services:
       - mongodb # Ensure MongoDB starts before Express
     environment:
       MONGO_URI: mongodb://root:{26)nY2kH<Yv`lmB`A"M@mongodb:27017/
+      PORT: 3000
 # DB server
   mongodb:
     image: docker.io/library/mongo:latest
