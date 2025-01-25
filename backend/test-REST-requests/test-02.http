@@ -1,11 +1,4 @@
-#GET https://google.com
-
 GET http://localhost:3000/api
-
-###
-
-GET http://localhost:3000/api/data
-
 
 ###
 Get http://localhost:3000/status
@@ -30,10 +23,10 @@ content-type: application/json
 GET http://localhost:3000/api/request/users
 
 ### 
-GET http://localhost:3000/request/users/6785a7d997c34bd5f5f1109d
+GET http://localhost:3000/api/request/users/6785a7d997c34bd5f5f1109d
 
 ###
-PUT http://localhost:3000/request/users/6785a7d997c34bd5f5f1109d
+PUT http://localhost:3000/api/request/users/6785a7d997c34bd5f5f1109d
 content-type: application/json
 
 {
@@ -43,4 +36,4 @@ content-type: application/json
 }
 
 ### 
-DELETE http://localhost:3000/request/users/6785a7d997c34bd5f5f1109d
+DELETE http://localhost:3000/api/request/users/6785a7d997c34bd5f5f1109d

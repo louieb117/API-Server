@@ -2,20 +2,17 @@
 services:
 # API server
   express-api:
-    image: docker.io/library/node:latest
-    build:
-      #context: .
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    volumes:
-      - ../source/:/app
-    command: ["npm", "start"]
-    depends_on:
-      - mongodb # Ensure MongoDB starts before Express
+    build: .
+    depends_on: mongodb # Ensure MongoDB starts before Express
     environment:
       MONGO_URI: mongodb://root:{26)nY2kH<Yv`lmB`A"M@mongodb:27017/
       PORT: 3000
+    ports:
+      - "3000:3000"
+    volumes:
+      # - ./source:/app # !!! This caused me a permission error !!!
+      - /app/node_modules
+    
 # DB server
   mongodb:
     image: docker.io/library/mongo:latest
@@ -27,8 +24,10 @@ services:
           MONGO_INITDB_ROOT_USERNAME: root
           MONGO_INITDB_ROOT_PASSWORD: '{26)nY2kH<Yv`lmB`A"M'
           MONGO_INITDB_DATABASE: appdatabase
+          
 # DB management server
   mongo-express:
+    depends_on: mongodb # Ensure MongoDB starts before Express  
     image: docker.io/library/mongo-express:latest
     restart: always
     ports:

@@ -30,7 +30,10 @@ const createUser = async (req, res) => {
       // print log
       console.log(testUser);
   
-      res.status(201).json(newUser);
+      res.status(201).json({
+        message: "New User Created!",
+        data: newUser
+      });
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
@@ -39,8 +42,7 @@ const createUser = async (req, res) => {
 const updateUser = async (req, res) => {
     try{
       const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-        // Return the updated document
+        new: true, // Return the updated document
         runValidators: true, // Ensure validation rules are applied
       });
       if (!user) return res.status(404).json({ message: 'User not found' });
@@ -60,7 +62,7 @@ const deleteUser = async (req, res) => {
     }
 };
 
-module.export = {
+module.exports = {
     getAllUsers,
     getUser,
     createUser,
