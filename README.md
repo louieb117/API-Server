@@ -15,6 +15,7 @@ Make sure you have the following installed:
 
 - [Node.js](https://nodejs.org/) (version 14 or higher)
 - [Podman](https://podman.io/)
+- [Podman-compose]()
 - [MongoDB](https://www.mongodb.com/)
 
 ## Getting Started
