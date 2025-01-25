@@ -26,11 +26,6 @@ git clone https://github.com/your-username/your-repo-name.git
 cd your-repo-name
 ```
 
-### Install Dependencies
-```bash
-npm install
-```
-
 ### Configure Environment Variables
 Create a .env file in the root of the project and add the following:
 
@@ -40,23 +35,16 @@ PORT=3000
 ```
 ### Start MongoDB with Podman
 ```bash
-podman run -d \
-  --name mongodb \
-  -p 27017:27017 \
-  -e MONGO_INITDB_ROOT_USERNAME=admin \
-  -e MONGO_INITDB_ROOT_PASSWORD=adminpassword \
-  mongo
+podman-compose build --no-cahce
+podman-compose up
+podman-compose down
 ```
 
-### Run the Server
-```bash
-npm start
-```
 The server will start at http://localhost:3000.
 
 ### API Endpoints
 Method	Endpoint	Description
 ```http
-GET	http://localhost:27017/api/items	#Get all items
-POST	http://localhost:27017/api/items	#Add a new item
+GET	  http://localhost:27017/api/request/users	#Get all items
+POST	http://localhost:27017/api/request/users	#Add a new item
 ```
