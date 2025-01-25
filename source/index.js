@@ -1,8 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const os = require('os');
-const mongoose = require('mongoose');
 
 const connectDB = require('./config/mongodb.js');
 const dotenv = require('dotenv');
