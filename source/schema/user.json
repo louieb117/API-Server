@@ -1,7 +1,11 @@
 {
-    "name": "string",
+    "fullName": "string",
     "username": "string",
+    "password": "string",
     "role": "string",
     "creationDate": "date",
-    "activated": "boolean"
+    "activated": "boolean",
+    "currentLocation": "string",
+    "phoneNumber": "string",
+    "email": "string"
 }

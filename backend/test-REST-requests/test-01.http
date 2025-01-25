@@ -15,11 +15,15 @@ POST http://localhost:3000/request/users
 content-type: application/json
 
 {
-  "name": "luis-test01",
-  "username": "luis_tester_01",
+  "fullName": "testie",
+  "username": "testietee",
+  "password": "peepee",
   "role": "tester",
   "creationDate": "Mon, 13 Jan 2025 23:55:17 GMT",
-  "activated": true
+  "activated": true,
+  "currentLocation": "US",
+  "phoneNumber": "(619)666-6666",
+  "email": "testie@gmail.com"
 }
 
 ###

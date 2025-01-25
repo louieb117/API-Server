@@ -1,11 +1,14 @@
 # Use the Node.js official image
 FROM node:18
 
+#USER node
+RUN mkdir /usr/local/app
 # Set the working directory inside the container
-WORKDIR ./
+WORKDIR /usr/local/app
 
 # Copy package.json and package-lock.json
 COPY ../source/package*.json ./
+COPY ../source/ ./
 
 # Install dependencies
 RUN npm install
