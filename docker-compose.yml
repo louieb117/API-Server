@@ -3,6 +3,7 @@ services:
 # API server
   express-api:
     build: .
+    container_name: express-api
     depends_on: mongodb # Ensure MongoDB starts before Express
     environment:
       MONGO_URI: mongodb://root:{26)nY2kH<Yv`lmB`A"M@mongodb:27017/
@@ -15,18 +16,21 @@ services:
     
 # DB server
   mongodb:
+    container_name: mongodb
     image: docker.io/library/mongo:latest
     ports:
       - "27017:27017"
     volumes:
       - mongodb_data:/data/db
+      - ./backend/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     environment:
           MONGO_INITDB_ROOT_USERNAME: root
           MONGO_INITDB_ROOT_PASSWORD: '{26)nY2kH<Yv`lmB`A"M'
-          MONGO_INITDB_DATABASE: appdatabase
-          
+          MONGO_INITDB_DATABASE: appdb
+      
 # DB management server
   mongo-express:
+    container_name: mongo-express
     depends_on: mongodb # Ensure MongoDB starts before Express  
     image: docker.io/library/mongo-express:latest
     restart: always

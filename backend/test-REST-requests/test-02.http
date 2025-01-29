@@ -8,7 +8,7 @@ POST http://localhost:3000/api/request/users
 content-type: application/json
 
 {
-  "fullName": "testie",
+  "fullName": "weebee",
   "username": "testietee",
   "password": "peepee",
   "role": "tester",
