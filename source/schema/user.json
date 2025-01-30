@@ -1,11 +1,18 @@
 {
     "fullName": "string",
-    "username": "string",
+    "phoneNumber": "string",
+    "email": "string",
     "password": "string",
     "role": "string",
     "creationDate": "date",
     "activated": "boolean",
     "currentLocation": "string",
-    "phoneNumber": "string",
-    "email": "string"
+    "scorcecard": {
+        "totalPoints": "number",
+        "totalOrders": "number",
+        "totalDeliveredOrders": "number"
+    },
+    "picture": "string",
+    "friends": [],
+    "Bio": "string"
 }

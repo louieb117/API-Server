@@ -4,26 +4,45 @@ GET http://localhost:3000/api
 Get http://localhost:3000/status
 
 ###
+POST http://localhost:3000/login/679b0811a48fe5e65be6f656
+Content-Type: application/json
+
+{
+    "password": "admin"
+}
+
+###
+GET http://localhost:3000/api/auth/profile/679b0811a48fe5e65be6f656
+
+###
+POST http://localhost:3000/auth/profile/679b0811a48fe5e65be6f656
+Content-Type: application/json
+
+{
+    "bio": "Im the best admin"
+}
+
+###
 POST http://localhost:3000/api/request/users
 content-type: application/json
 
 {
-  "fullName": "testie",
-  "username": "testietee",
-  "password": "peepee",
-  "role": "tester",
-  "creationDate": "Mon, 13 Jan 2025 23:55:17 GMT",
+  "fullName": "Luis Admin",
+  "username": "lbello.admin",
+  "password": "admin",
+  "role": "admin",
+  "creationDate": "",
   "activated": true,
   "currentLocation": "US",
   "phoneNumber": "(619)666-6666",
-  "email": "testie@gmail.com"
+  "email": "admin@potentiamaxima.com"
 }
 
 ###
 GET http://localhost:3000/api/request/users
 
 ### 
-GET http://localhost:3000/api/request/users/6785a7d997c34bd5f5f1109d
+GET http://localhost:3000/api/request/users/679b0811a48fe5e65be6f656
 
 ###
 PUT http://localhost:3000/api/request/users/6785a7d997c34bd5f5f1109d
