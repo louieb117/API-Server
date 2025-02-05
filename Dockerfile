@@ -11,10 +11,17 @@ COPY ./source /app
 RUN groupadd -r nodegroup && useradd -r -g nodegroup nodeuser
 
 # Set premissions for user and group
-RUN chown -R nodeuser:nodegroup /app
+#RUN chown -R nodeuser:nodegroup /app
 
 # Install dependencies
-RUN npm install && npm install express --save && npm install cors --save && npm install dotenv --save
+RUN npm install && npm install express --save \
+    && npm install jsonwebtoken --save\     
+    && npm install cors --save && npm install dotenv --save \
+    && npm install mongoose --save  \
+    && npm rebuild
+    # && npm list --depth=0 && ls -la
+# Set premissions for user and group
+RUN chown -R nodeuser:nodegroup /app
 
 # Set user to run service
 USER nodeuser

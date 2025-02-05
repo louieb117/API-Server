@@ -11,8 +11,9 @@ services:
       - "3000:3000"
     volumes:
       # - ./source:/app # !!! This caused me a permission error !!!
-      - /app/node_modules
-    
+      # - ./node_modules:/app/node_modules
+        - /app/node_modules
+
 # DB server
   mongodb:
     image: docker.io/library/mongo:latest

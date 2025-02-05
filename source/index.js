@@ -1,11 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-
 const connectDB = require('./config/mongodb.js');
 const dotenv = require('dotenv');
-const routes = require('./routes'); 
-
+const routes = require('./routes');
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

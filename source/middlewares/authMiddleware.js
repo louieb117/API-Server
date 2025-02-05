@@ -9,7 +9,7 @@ const authenticate = (req, res, next) => {
     try {
         // Example verification logic (e.g., using JWT)
         const decoded = jwt.verify(token, process.env.MY_JWT_SECRET);
-        req.user = decoded;
+        req.password = decoded;
         next();
     } catch (err) {
         res.clearCookie('token');
@@ -17,4 +17,4 @@ const authenticate = (req, res, next) => {
     }
 };
 
-module.exports = authenticate;
+module.exports = {authenticate};

@@ -4,7 +4,7 @@ GET http://localhost:3000/api
 Get http://localhost:3000/status
 
 ###
-POST http://localhost:3000/login/679b0811a48fe5e65be6f656
+POST http://localhost:3000/api/login/67a2f66da4a135c87d1d926a
 Content-Type: application/json
 
 {
@@ -42,16 +42,22 @@ content-type: application/json
 GET http://localhost:3000/api/request/users
 
 ### 
-GET http://localhost:3000/api/request/users/679b0811a48fe5e65be6f656
+GET http://localhost:3000/api/request/users/67a01e422043089f3458bba6
 
 ###
-PUT http://localhost:3000/api/request/users/6785a7d997c34bd5f5f1109d
+PUT http://localhost:3000/api/request/users/67a01e422043089f3458bba6
 content-type: application/json
 
 {
-  "name": "luis-admin",
-  "username": "luis_admin_01",
-  "role": "admin"
+  "fullName": "Mr Robo Admin",
+  "username": "robo_01.admin",
+  "password": "admin",
+  "role": "robo admin",
+  "creationDate": "",
+  "activated": true,
+  "currentLocation": "US",
+  "phoneNumber": "(619)666-6666",
+  "email": "robo_01admin@potentiamaxima.com"
 }
 
 ### 
