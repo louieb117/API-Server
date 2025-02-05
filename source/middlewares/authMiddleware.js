@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken');
+
 const authenticate = (req, res, next) => {
     const token = req.header('Authorization');
     if (!token) {
@@ -6,12 +8,13 @@ const authenticate = (req, res, next) => {
 
     try {
         // Example verification logic (e.g., using JWT)
-        // const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        // req.user = decoded;
+        const decoded = jwt.verify(token, process.env.MY_JWT_SECRET);
+        req.password = decoded;
         next();
     } catch (err) {
+        res.clearCookie('token');
         res.status(400).json({ message: 'Invalid token.' });
     }
 };
 
-module.exports = authenticate;
+module.exports = {authenticate};
