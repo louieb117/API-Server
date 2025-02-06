@@ -39,7 +39,7 @@ const createUser = async (req, res) => {
       // save user
       newUser.save();
       // print log
-      console.log(testUser);
+      console.log(newUser);
   
       res.status(201).json({
         message: "New User Created!",

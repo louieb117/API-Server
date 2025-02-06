@@ -9,6 +9,6 @@ router.get('/:id', userController.getUser); // GET /api/users/:id
 router.post('/', userController.createUser); // POST /api/users/:id
 router.put('/:id', userController.updateUser); // PUT /api/users/:id
 router.delete('/:id', userController.deleteUser); // DELETE /api/users/:id
-router.get('/username/:username', userController.getUserByUsername);
+router.get('/:username', userController.getUserByUsername);
 
 module.exports = router;

@@ -5,6 +5,9 @@ const loginRoutes = require('./login');
 const profileRoutes = require('./profile');
 
 // Routes 
+router.get('/', (req, res) => {
+    res.json({ message: 'Welcome to the API Server' });
+});
 
 router.use('/login', loginRoutes);
 
