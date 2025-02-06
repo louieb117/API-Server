@@ -5,12 +5,27 @@ const User = require('../models/user.js');
 
 const login = async (req, res) => {
     try { 
-        const {password} = req.body;
-        const user = await User.findById(req.params.id);
+        const {username, password} = req.body;
+        const {id} = req.params;
+        // Check if username and password are provided
+        if ((!username && !id) || !password) {
+            return res.status(400).json({
+                error: "Username and password are required",
+            });
+        }
 
-        if (user.password !== password) {
+        let user;
+        if (id) {
+            user = await User.findById(id);
+        } else {
+            user = await User.findOne({ username });
+        }
+
+        if (!user || user.password !== password) {
             return res.status(403).json({
                 error: "invalid login",
+                user: user,
+
             });
         }
 
