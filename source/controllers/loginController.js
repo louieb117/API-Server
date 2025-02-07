@@ -7,7 +7,8 @@ const login = async (req, res) => {
     try { 
         const {username, password} = req.body;
         const {id} = req.params;
-        // Check if username and password are provided
+        
+        // Input Validation: Check if username and password are provided
         if ((!username && !id) || !password) {
             return res.status(400).json({
                 error: "Username and password are required",
