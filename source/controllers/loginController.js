@@ -1,4 +1,4 @@
-// require('dotenv').config(); // Load environment variables;
+const {MY_JWT_SECRET} = require('../configs/config.js');// Load environment variables;
 
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.js');
@@ -35,7 +35,7 @@ const login = async (req, res) => {
         delete userObject.password
 
         // Generate a JWT token with a 1-hour expiration
-        const token = jwt.sign(userObject, process.env.MY_JWT_SECRET, { expiresIn: "1h"});
+        const token = jwt.sign(userObject, MY_JWT_SECRET, { expiresIn: "1h"});
 
         // Set the JWT token as a cookie in the response
         res.cookie("token", token);

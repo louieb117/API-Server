@@ -24,7 +24,7 @@ POST http://localhost:3000/api/login/
 Content-Type: application/json
 
 {
-    "username": "lbello.admin",
+    "username": "test.admin",
     "password": "admin"
 }
 
@@ -56,13 +56,13 @@ POST http://localhost:3000/api/request/users
 content-type: application/json
 
 {
-  "fullName": "Luis Admin",
+  "fullName": "test Admin",
   "phoneNumber": "(619)666-6666",
-  "email": "lbello.admin@potentiamaxima.com",
-  "username": "lbello.admin",
+  "email": "test.admin@potentiamaxima.com",
+  "username": "test.admin",
   "password": "admin",
   "role": "admin",
-  "creationDate": "",
+  "creationDate": "{{$timestamp}}",
   "activated": true,
   "currentLocation": "US",
   "bio": "Im the best admin"

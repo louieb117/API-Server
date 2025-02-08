@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // parse Schema json
-const raw_01 = require('../schema/user.json');
+const raw_01 = require('../schemas/user.json');
 
 // create a schema
 const userSchema = mongoose.Schema(raw_01);
