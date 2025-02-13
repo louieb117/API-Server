@@ -1,35 +1,34 @@
 const {MY_JWT_SECRET} = require('../configs/config.js');// Load environment variables;
 
 const jwt = require('jsonwebtoken');
-const User = require('../models/user.js');
+const { validateLoginInput, validateUserInDatabase, validatePassword } = require('../middlewares/validators.js');
+
 
 const login = async (req, res) => {
     try { 
         const {username, password} = req.body;
         const {id} = req.params;
         
-        // Input Validation: Check if username and password are provided
-        if ((!username && !id) || !password) {
-            return res.status(400).json({
-                error: "Username and password are required",
-            });
+        // Input Validation
+        const inputValidation = validateLoginInput(username, password, id);
+        if (!inputValidation.isValid) {
+            return res.status(400).json({ error: inputValidation.message });
         }
 
-        let user;
-        if (id) {
-            user = await User.findById(id);
-        } else {
-            user = await User.findOne({ username });
+        // Database Validation: Check if user exists
+        const userValidation = await validateUserInDatabase(username, id);
+        if (!userValidation.isValid) {
+            return res.status(404).json({ error: userValidation.message });
         }
 
-        if (!user || user.password !== password) {
-            return res.status(403).json({
-                error: "invalid login",
-                user: user,
+        const user = userValidation.user;
 
-            });
+        // Password Validation
+        const passwordValidation = validatePassword(user, password);
+        if (!passwordValidation.isValid) {
+            return res.status(403).json({ error: passwordValidation.message });
         }
-
+        
         // Remove the password from the user object before generating the JWT token
         const userObject = user.toObject();
         delete userObject.password

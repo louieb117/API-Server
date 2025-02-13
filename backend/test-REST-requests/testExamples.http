@@ -35,7 +35,7 @@ Content-Type: application/json
 ######################################################################
 
 ################# Get user profile ################################
-GET http://localhost:3000/api/auth/profile/679b0811a48fe5e65be6f656
+GET http://localhost:3000/api/auth/profile/67a4408429308fd2840d377e
 
 ################# Update user profile ################################
 POST http://localhost:3000/auth/profile/679b0811a48fe5e65be6f656
@@ -72,11 +72,12 @@ content-type: application/json
 GET http://localhost:3000/api/request/users
 
 ################# Read a user by id ###################################
-GET http://localhost:3000/api/request/users/67a01e422043089f3458bba6
+GET http://localhost:3000/api/request/users/67a441bb04e739b09a7a54cf
 
 ################# Update user data ###################################
-PUT http://localhost:3000/api/request/users/67a01e422043089f3458bba6
+PUT http://localhost:3000/api/request/users/67a4408429308fd2840d377e
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2E2OGIzOGVjNjhlM2NkMjQ2MjQwOTAiLCJmdWxsTmFtZSI6InRlc3QgQWRtaW4iLCJwaG9uZU51bWJlciI6Iig2MTkpNjY2LTY2NjYiLCJlbWFpbCI6InRlc3QuYWRtaW5AcG90ZW50aWFtYXhpbWEuY29tIiwidXNlcm5hbWUiOiJ0ZXN0LmFkbWluIiwicm9sZSI6ImFkbWluIiwiY3JlYXRpb25EYXRlIjoiMTk3MC0wMS0yMVQwMzowMjo0Ny44NjRaIiwiYWN0aXZhdGVkIjp0cnVlLCJjdXJyZW50TG9jYXRpb24iOiJVUyIsImZyaWVuZHMiOltdLCJfX3YiOjAsImlhdCI6MTczOTQyNzYzMCwiZXhwIjoxNzM5NDMxMjMwfQ.S-n9PQUpADkJTaCJ4CRq9WCdjy195-paQ1Mahu9rQBo
 
 {
   "fullName": "Mr Robo Admin",
@@ -91,4 +92,5 @@ content-type: application/json
 }
 
 ################# Delete user ######################################
-DELETE http://localhost:3000/api/request/users/6785a7d997c34bd5f5f1109d
+DELETE http://localhost:3000/api/request/users/67a4408429308fd2840d377e
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2E2OGIzOGVjNjhlM2NkMjQ2MjQwOTAiLCJmdWxsTmFtZSI6InRlc3QgQWRtaW4iLCJwaG9uZU51bWJlciI6Iig2MTkpNjY2LTY2NjYiLCJlbWFpbCI6InRlc3QuYWRtaW5AcG90ZW50aWFtYXhpbWEuY29tIiwidXNlcm5hbWUiOiJ0ZXN0LmFkbWluIiwicm9sZSI6ImFkbWluIiwiY3JlYXRpb25EYXRlIjoiMTk3MC0wMS0yMVQwMzowMjo0Ny44NjRaIiwiYWN0aXZhdGVkIjp0cnVlLCJjdXJyZW50TG9jYXRpb24iOiJVUyIsImZyaWVuZHMiOltdLCJfX3YiOjAsImlhdCI6MTczOTQyNzYzMCwiZXhwIjoxNzM5NDMxMjMwfQ.S-n9PQUpADkJTaCJ4CRq9WCdjy195-paQ1Mahu9rQBo

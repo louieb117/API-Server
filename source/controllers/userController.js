@@ -1,10 +1,10 @@
 const User = require('../models/user.js')
+const { validateUserCreationInput, validateUserInDatabase } = require('../middlewares/validators.js');
 
 const getAllUsers = async (req, res) => {
     try{
       const allUsers = await User.find();
-      console.log(allUsers); // Log the result
-      res.json(allUsers);
+      res.status(200).json(allUsers);
     } catch (error) {
       console.error('Error fetching users:', error); // Log the error
       res.status(500).json({ message: error.message });
@@ -13,28 +13,24 @@ const getAllUsers = async (req, res) => {
 
 const getUser = async (req, res) => {
     try{
-      const user = await User.findById(req.params.id);
-      if (!user) return res.status(404).json({ message: 'User not found'});
-      res.json(user);
+      // Database Validation: Check if user exists
+      const userValidation = await validateUserInDatabase(req.body.username, req.params.id);
+      if (!userValidation.isValid) {
+        return res.status(404).json({ error: userValidation.message });
+      }
+      res.status(200).json(userValidation.user);
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      res.status(404).json({ message: error.message });
     }
-};
-
-// New function to search for a user by username
-const getUserByUsername = async (req, res) => {
-  try {
-      const user = await User.findOne({ username: req.params.username });
-      if (!user) return res.status(404).json({ message: 'User not found' });
-      res.json(user);
-  } catch (error) {
-      res.status(500).json({ message: error.message });
-  }
 };
 
 const createUser = async (req, res) => {
     try { 
-      // create a user
+      // validate input
+      const userCreationValidation = validateUserCreationInput(req.body);
+      if (!userCreationValidation.isValid) {
+        return res.status(400).json({ error: userCreationValidation.message });
+      }
       const newUser = new User(req.body);
       // save user
       newUser.save();
@@ -52,12 +48,9 @@ const createUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
     try{
-      const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-        new: true, // Return the updated document
-        runValidators: true, // Ensure validation rules are applied
-      });
+      const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true }); // Return the updated document
       if (!user) return res.status(404).json({ message: 'User not found' });
-      res.json(user);
+      res.status(200).json(user);
     } catch (error) {
       res.status(400).json({ message: error.message });
     }
@@ -76,7 +69,6 @@ const deleteUser = async (req, res) => {
 module.exports = {
     getAllUsers,
     getUser,
-    getUserByUsername,
     createUser,
     updateUser,
     deleteUser
