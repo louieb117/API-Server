@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { authenticate } = require('../middlewares/authMiddleware');
+// const { authenticate } = require('../middlewares/authMiddleware');
 const userController = require('../controllers/userController');
 
 // Define user-related routes
@@ -11,10 +11,10 @@ router.get('/:username', userController.getUser); // GET /api/users/:username
 
 router.post('/', userController.createUser); // POST /api/users/
 
-router.put('/:id', authenticate, userController.updateUser); // PUT /api/users/:id
-router.put('/:username', authenticate, userController.updateUser); // PUT /api/users/:username
+router.put('/:id', userController.updateUser); // PUT /api/users/:id
+router.put('/:username', userController.updateUser); // PUT /api/users/:username
 
-router.delete('/:id', authenticate, userController.deleteUser); // DELETE /api/users/:id
-router.delete('/:username', authenticate, userController.deleteUser); // DELETE /api/users/:username
+router.delete('/:id', userController.deleteUser); // DELETE /api/users/:id
+router.delete('/:username', userController.deleteUser); // DELETE /api/users/:username
 
 module.exports = router;

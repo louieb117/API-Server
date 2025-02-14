@@ -1,0 +1,92 @@
+{
+    "creator" : {
+        "type" : "string",
+        "required" : true
+    },
+    "holeSelection" : {
+        "type" : "number",
+        "required" : true
+    },
+    "course" : {
+        "type" : "string",
+        "required" : true
+    },
+    "date" : {
+        "type" : "date",
+        "required" : true
+    },
+    "players" : {
+        "type" : "array",
+        "required" : true,
+        "items" : {
+            "type" : "string"
+        }
+    },
+    "scores" : {
+        "type" : "array",
+        "required" : true,
+        "items" : {
+            "type" : "object",
+            "properties" : {
+                "player" : {
+                    "type" : "string",
+                    "required" : true
+                },
+                "hole1" : {
+                    "type" : "number"
+                },
+                "hole2" : {
+                    "type" : "number"
+                },
+                "hole3" : {
+                    "type" : "number"
+                },
+                "hole4" : {
+                    "type" : "number"
+                },
+                "hole5" : {
+                    "type" : "number"
+                },
+                "hole6" : {
+                    "type" : "number"
+                },
+                "hole7" : {
+                    "type" : "number"
+                },
+                "hole8" : {
+                    "type" : "number"
+                },
+                "hole9" : {
+                    "type" : "number"
+                },
+                "hole10" : {
+                    "type" : "number"
+                },
+                "hole11" : {
+                    "type" : "number"
+                },
+                "hole12" : {
+                    "type" : "number"
+                },
+                "hole13" : {
+                    "type" : "number"
+                },
+                "hole14" : {
+                    "type" : "number"
+                },
+                "hole15" : {
+                    "type" : "number"
+                },
+                "hole16" : {
+                    "type" : "number"
+                },
+                "hole17" : {
+                    "type" : "number"
+                },
+                "hole18" : {
+                    "type" : "number"
+                }
+            }
+        }
+    }
+}

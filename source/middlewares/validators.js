@@ -74,8 +74,8 @@ const validateUserCreationInput = (body) => {
             throw new Error("Invalid role");
         } else if (body.status && !['active', 'inactive'].includes(body.status)) {
             throw new Error("Invalid status");
-        } else if (body.password && body.password !== body.confirmPassword) {
-            throw new Error("Passwords do not match");
+        // } else if (body.password && body.password !== body.confirmPassword) {
+        //     throw new Error("Passwords do not match");
         } else if (body.password.length > 20) {
             throw new Error("Password must be less than 20 characters long");
         } else if (body.password && body.password.length < 8) {
@@ -88,14 +88,9 @@ const validateUserCreationInput = (body) => {
             throw new Error("Password must contain a lowercase letter");
         } else if (body.password && !/[!@#$%^&*]/.test(body.password)) {
             throw new Error("Password must contain a special character");
+        } else {
+            return { isValid: true };
         }
-
-        const userValidation = validateUserNOTInDatabase(body.username);
-        if (!userValidation.isValid) {
-            return { isValid: false, message: userValidation.message };
-        }
-        return { isValid: true };
-
     } catch (error) {
         return { isValid: false, message: error.message };
     }
@@ -129,9 +124,39 @@ const validatePassword = (user, password) => {
     }
 };
 
+const validateScorecardCreationInput = (body) => {
+    try{
+        if (!body.creator || !body.holeSelection || !body.course || !body.date || !body.players ||!body.scores) {
+            throw new Error("Creator, holeSelection, course, date, and scores are required");
+        }
+        return { isValid: true };
+    }   catch (error) {
+        return { isValid: false, message: error.message };
+    }
+};
+
+const validateScorecardInDatabase = async (id) => {
+    try{
+        const scorecard = await Scorecard.findById(id);
+        if (!scorecard) {
+            return {
+                isValid: false,
+                message: "Scorecard not found",
+            };        
+        }
+        return { isValid: true, scorecard };
+    } catch (error) {
+        return { isValid: false, message: error.message };
+    }
+};
+
+
 module.exports = {
     validateLoginInput,
     validateUserInDatabase,
+    validateUserNOTInDatabase,
     validateUserCreationInput,
-    validatePassword
+    validatePassword,
+    validateScorecardCreationInput,
+    validateScorecardInDatabase
 };

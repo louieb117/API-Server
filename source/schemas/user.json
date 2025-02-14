@@ -1,9 +1,24 @@
 {
-    "fullName": "string",
-    "phoneNumber": "string",
-    "email": "string",
-    "username": "string",
-    "password": "string",
+    "fullName": {
+        "type" : "string",
+        "required" : true
+    },
+    "phoneNumber": {
+        "type" : "string",
+        "required" : true
+    },
+    "email": {
+        "type" : "string",
+        "required" : true
+    },
+    "username": {
+        "type" : "string",
+        "required" : true
+    },
+    "password": {
+        "type" : "string",
+        "required" : true
+    },
     "role": "string",
     "creationDate": "date",
     "activated": "boolean",
