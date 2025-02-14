@@ -1,17 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const connectDB = require('./config/mongodb.js');
-const dotenv = require('dotenv');
+const connectDB = require('./configs/mongodb.js');
+const {PORT} = require('./configs/config.js');
 const routes = require('./routes');
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-dotenv.config(); // Load environment variables
 connectDB(); // Connect to mongodb
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 ////////  Middleware ////////////////
 app.use(cors()); // Enable cross-origin requests
@@ -19,7 +17,6 @@ app.use(bodyParser.json()); // Enables json parsing
 
 ////////  Centralized routing ////////////////
 app.use('/api', routes);
-
 
 ////////  Begin listening  ////////////////
 app.listen(PORT, () => {
