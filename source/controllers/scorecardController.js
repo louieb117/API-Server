@@ -28,7 +28,7 @@ const getAllScorecards = async (req, res) => {
 const getUsersScorecards = async (req, res) => {
     try{
       // Database Validation: Check if user exists
-      const userValidation = await validateUserInDatabase(req.params.id);
+      const userValidation = await validateUserInDatabase(null,req.params.id);
         if (!userValidation.isValid) {
             return res.status(404).json({ error: userValidation.message });
             }
