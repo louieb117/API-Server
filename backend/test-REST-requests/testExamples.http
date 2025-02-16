@@ -24,8 +24,8 @@ POST http://localhost:3000/api/login/
 Content-Type: application/json
 
 {
-    "username": "test.admin",
-    "password": "admin"
+    "username": "test.usere.peter",
+    "password": "Peter123!"
 }
 
 ######################################################################
@@ -56,6 +56,7 @@ POST http://localhost:3000/api/request/users
 content-type: application/json
 
 {
+
   "fullName": "Peter Parker",
   "phoneNumber": "(619)969-6666",
   "email": "test.user.peter@potentiamaxima.com",
@@ -75,7 +76,8 @@ GET http://localhost:3000/api/request/users
 GET http://localhost:3000/api/request/users/67a441bb04e739b09a7a54cf
 
 ################# Update user data ###################################
-PUT http://localhost:3000/api/request/users/67aee4337a44f78d85aa8ed7
+PUT http://localhost:3000/api/request/users/67aee3321f2035e014397ba1
+
 content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2E2OGIzOGVjNjhlM2NkMjQ2MjQwOTAiLCJmdWxsTmFtZSI6InRlc3QgQWRtaW4iLCJwaG9uZU51bWJlciI6Iig2MTkpNjY2LTY2NjYiLCJlbWFpbCI6InRlc3QuYWRtaW5AcG90ZW50aWFtYXhpbWEuY29tIiwidXNlcm5hbWUiOiJ0ZXN0LmFkbWluIiwicm9sZSI6ImFkbWluIiwiY3JlYXRpb25EYXRlIjoiMTk3MC0wMS0yMVQwMzowMjo0Ny44NjRaIiwiYWN0aXZhdGVkIjp0cnVlLCJjdXJyZW50TG9jYXRpb24iOiJVUyIsImZyaWVuZHMiOltdLCJfX3YiOjAsImlhdCI6MTczOTQyNzYzMCwiZXhwIjoxNzM5NDMxMjMwfQ.S-n9PQUpADkJTaCJ4CRq9WCdjy195-paQ1Mahu9rQBo
 
@@ -92,7 +94,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2E2OGIzO
 }
 
 ################# Delete user ######################################
-DELETE http://localhost:3000/api/request/users/67a4408429308fd2840d377e
+DELETE http://localhost:3000/api/request/users/67aee3321f2035e014397ba1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2E2OGIzOGVjNjhlM2NkMjQ2MjQwOTAiLCJmdWxsTmFtZSI6InRlc3QgQWRtaW4iLCJwaG9uZU51bWJlciI6Iig2MTkpNjY2LTY2NjYiLCJlbWFpbCI6InRlc3QuYWRtaW5AcG90ZW50aWFtYXhpbWEuY29tIiwidXNlcm5hbWUiOiJ0ZXN0LmFkbWluIiwicm9sZSI6ImFkbWluIiwiY3JlYXRpb25EYXRlIjoiMTk3MC0wMS0yMVQwMzowMjo0Ny44NjRaIiwiYWN0aXZhdGVkIjp0cnVlLCJjdXJyZW50TG9jYXRpb24iOiJVUyIsImZyaWVuZHMiOltdLCJfX3YiOjAsImlhdCI6MTczOTQyNzYzMCwiZXhwIjoxNzM5NDMxMjMwfQ.S-n9PQUpADkJTaCJ4CRq9WCdjy195-paQ1Mahu9rQBo
 
 ######################################################################
@@ -102,12 +104,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2E2OGIzO
 ######################################################################
 
 ################# Create scorecard ###################################
+
 POST http://localhost:3000/api/request/scorecards/user/create/67aee4337a44f78d85aa8ed7
 content-type: application/json
 
 {
   "holeSelection": 9,
-  "course": "Test Course",
+  "course": "Test Course01",
   "date": "{{$timestamp}}",
   "players": ["player1", "player2", "player3", "player4"],
   "scores": {
@@ -162,26 +165,65 @@ content-type: application/json
 GET http://localhost:3000/api/request/scorecards
 
 ################# Read a scorecard by id ##############################
-GET http://localhost:3000/api/request/scorecards/user/67a441bb04e739b09a7a54cf
+GET http://localhost:3000/api/request/scorecards/user/67b179ca36ec3735643b8691
 
 ################# Update scorecard data ##############################
-PUT http://localhost:3000/api/request/scorecards/user/update/67a441bb04e739b09a7a54cf
+PUT http://localhost:3000/api/request/scorecards/user/update/67aee3321f2035e014397ba1
+
 content-type: application/json
 Authorization
 
 {
-  "title": "Test Scorecard",
-  "description": "This is a test scorecard",
-  "creationDate": "{{$timestamp}}",
-  "lastUpdate": "{{$timestamp}}",
-  "status": "active",
-  "owner": "67a4408429308fd2840d377e",
-  "scorecardType": "test",
-  "scorecardCategory": "test",
-  "scorecardSubCategory": "test",
-  "scorecardTags": ["test", "test", "test"],
-  "scorecardData": {
-    "test": "test"
+  "holeSelection": 9,
+  "course": "Test Course01",
+  "date": "{{$timestamp}}",
+  "players": ["player1", "player2", "player3", "player4"],
+  "scores": {
+    "player1": {
+      "hole1": 4,
+      "hole2": 4,
+      "hole3": 4,
+      "hole4": 4,
+      "hole5": 4,
+      "hole6": 4,
+      "hole7": 4,
+      "hole8": 4,
+      "hole9": 4
+    },
+    "player2": {
+      "hole1": 4,
+      "hole2": 4,
+      "hole3": 4,
+      "hole4": 4,
+      "hole5": 4,
+      "hole6": 4,
+      "hole7": 4,
+      "hole8": 4,
+      "hole9": 4
+    },
+    "player3": {
+      "hole1": 4,
+      "hole2": 4,
+      "hole3": 4,
+      "hole4": 4,
+      "hole5": 4,
+      "hole6": 4,
+      "hole7": 4,
+      "hole8": 4,
+      "hole9": 4
+    },
+    "player4": {
+      "hole1": 4,
+      "hole2": 4,
+      "hole3": 4,
+      "hole4": 4,
+      "hole5": 4,
+      "hole6": 4,
+      "hole7": 4,
+      "hole8": 4,
+      "hole9": 4
+    }
+
   }
 }
 
