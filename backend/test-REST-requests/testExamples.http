@@ -56,7 +56,8 @@ POST http://localhost:3000/api/request/users
 content-type: application/json
 
 {
-  "fullName": "Ben",
+
+  "fullName": "Peter Parker",
   "phoneNumber": "(619)969-6666",
   "email": "test.user.peter@potentiamaxima.com",
   "username": "test.usere.peter",
@@ -76,6 +77,7 @@ GET http://localhost:3000/api/request/users/67a441bb04e739b09a7a54cf
 
 ################# Update user data ###################################
 PUT http://localhost:3000/api/request/users/67aee3321f2035e014397ba1
+
 content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2E2OGIzOGVjNjhlM2NkMjQ2MjQwOTAiLCJmdWxsTmFtZSI6InRlc3QgQWRtaW4iLCJwaG9uZU51bWJlciI6Iig2MTkpNjY2LTY2NjYiLCJlbWFpbCI6InRlc3QuYWRtaW5AcG90ZW50aWFtYXhpbWEuY29tIiwidXNlcm5hbWUiOiJ0ZXN0LmFkbWluIiwicm9sZSI6ImFkbWluIiwiY3JlYXRpb25EYXRlIjoiMTk3MC0wMS0yMVQwMzowMjo0Ny44NjRaIiwiYWN0aXZhdGVkIjp0cnVlLCJjdXJyZW50TG9jYXRpb24iOiJVUyIsImZyaWVuZHMiOltdLCJfX3YiOjAsImlhdCI6MTczOTQyNzYzMCwiZXhwIjoxNzM5NDMxMjMwfQ.S-n9PQUpADkJTaCJ4CRq9WCdjy195-paQ1Mahu9rQBo
 
@@ -102,7 +104,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2E2OGIzO
 ######################################################################
 
 ################# Create scorecard ###################################
-POST http://localhost:3000/api/request/scorecards/user/create/67b179ca36ec3735643b8691
+
+POST http://localhost:3000/api/request/scorecards/user/create/67aee4337a44f78d85aa8ed7
 content-type: application/json
 
 {
@@ -166,6 +169,7 @@ GET http://localhost:3000/api/request/scorecards/user/67b179ca36ec3735643b8691
 
 ################# Update scorecard data ##############################
 PUT http://localhost:3000/api/request/scorecards/user/update/67aee3321f2035e014397ba1
+
 content-type: application/json
 Authorization
 
@@ -219,6 +223,7 @@ Authorization
       "hole8": 4,
       "hole9": 4
     }
+
   }
 }
 
