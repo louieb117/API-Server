@@ -20,7 +20,11 @@ const validateUserInDatabase = async (username, id) => {
     try{
         let user;
         if (id) {
-            user = await User.findById(id);
+            if (id.length > 20 ) {
+                user = await User.findById(id);
+            } else {
+                user = await User.findOne({ username: id });
+            }
         } else {
             user = await User.findOne({ username });
         }
@@ -47,13 +51,13 @@ const validateUserNOTInDatabase = async (username, id) => {
             user = await User.findOne({ username });
         }
 
-        if (user) {
+        if (!(user === null)) {
             return {
                 isValid: false,
                 message: "User already exists",
             };        
         }
-        return { isValid: true };
+        return { isValid: true, message: "User does not exist" };
 
     } catch (error) {
         return { isValid: false, message: error.message };
@@ -95,6 +99,7 @@ const validateUserCreationInput = (body) => {
         return { isValid: false, message: error.message };
     }
 };
+
 
 // const validateUserUpdateInput = (body) => {
 //     try{
