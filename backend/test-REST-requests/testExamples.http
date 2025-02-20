@@ -73,18 +73,19 @@ content-type: application/json
 GET http://localhost:3000/api/request/users
 
 ################# Read a user by id ###################################
-GET http://localhost:3000/api/request/users/67b5608af15327022d98eda3
+GET http://localhost:3000/api/request/users/67b6a435640b19626b400694
 
 
 ################# Read a user by username #############################
 GET http://localhost:3000/api/request/users/peter.tester
 
 ################# Update user data ###################################
-PUT http://localhost:3000/api/request/users/67b5608af15327022d98eda3
+PUT http://localhost:3000/api/request/users/67b6a435640b19626b400694
 content-type: application/json
 
 {
   "fullName": "Mr Roboto Admin",
+  "username": "jesus",
   "password": "Admin01@01",
   "role": "admin",
   "creationDate": "",

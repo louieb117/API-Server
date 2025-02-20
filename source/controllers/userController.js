@@ -57,10 +57,10 @@ const updateUser = async (req, res) => {
       if (!userValidation.isValid) {
         return res.status(404).json({ error: userValidation.message });
       }
-      const usernameValidation = await validateUserNOTInDatabase(req.body.username, null);
-      if (!usernameValidation.isValid) {
-        return res.status(400).json({ error: usernameValidation.message });
-      }
+      // const usernameValidation = await validateUserNOTInDatabase(req.body.username, null);
+      // if (!usernameValidation.isValid) {
+      //   return res.status(400).json({ error: usernameValidation.message });
+      // }
       const userCreationValidation = await validateUserCreationInput(req.body);
       if (!userCreationValidation.isValid) {
         return res.status(400).json({ error: userCreationValidation.message });
