@@ -26,15 +26,15 @@ const getUser = async (req, res) => {
 
 const createUser = async (req, res) => {
     try { 
-      // // validate input
-      // const userValidation = validateUserNOTInDatabase(req.body.username);
-      // if (!userValidation.isValid) {
-      //   return res.status(400).json({ error: userValidation.message });
-      // }
-      // const userCreationValidation = validateUserCreationInput(req.body);
-      // if (!userCreationValidation.isValid) {
-      //   return res.status(400).json({ error: userCreationValidation.message });
-      // }
+      // validate input
+      const userValidation = await validateUserNOTInDatabase(req.body.username, null);
+      if (!userValidation.isValid) {
+        return res.status(400).json({ error: userValidation.message });
+      }
+      const userCreationValidation = await validateUserCreationInput(req.body);
+      if (!userCreationValidation.isValid) {
+        return res.status(400).json({ error: userCreationValidation.message });
+      }
 
       const newUser = new User(req.body);
       // save user
@@ -53,14 +53,18 @@ const createUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
     try{
-      // const userValidation = await validateUserInDatabase(req.body.username, req.params.id);
-      // if (!userValidation.isValid) {
-      //   return res.status(404).json({ error: userValidation.message });
+      const userValidation = await validateUserInDatabase(null, req.params.id);
+      if (!userValidation.isValid) {
+        return res.status(404).json({ error: userValidation.message });
+      }
+      // const usernameValidation = await validateUserNOTInDatabase(req.body.username, null);
+      // if (!usernameValidation.isValid) {
+      //   return res.status(400).json({ error: usernameValidation.message });
       // }
-      // const userCreationValidation = validateUserCreationInput(req.body);
-      // if (!userCreationValidation.isValid) {
-      //   return res.status(400).json({ error: userCreationValidation.message });
-      // }
+      const userCreationValidation = await validateUserCreationInput(req.body);
+      if (!userCreationValidation.isValid) {
+        return res.status(400).json({ error: userCreationValidation.message });
+      }
       const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true }); // Return the updated document
       if (!user) return res.status(404).json({ message: 'User not found' });
       res.status(200).json(user);
@@ -71,10 +75,10 @@ const updateUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
     try {
-      // const userValidation = await validateUserInDatabase(req.body.username, req.params.id);
-      // if (!userValidation.isValid) {
-      //   return res.status(404).json({ error: userValidation.message });
-      // }
+      const userValidation = await validateUserInDatabase(req.body.username, req.params.id);
+      if (!userValidation.isValid) {
+        return res.status(404).json({ error: userValidation.message });
+      }
       const user = await User.findByIdAndDelete(req.params.id);
       if (!user) return res.status(404).json({ message: 'User not found' });
       res.json({ message: 'User deleted successfully' });
