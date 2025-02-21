@@ -1,5 +1,10 @@
 const User = require('../models/user.js')
-const { validateUserCreationInput, validateUserInDatabase, validateUserNOTInDatabase} = require('../middlewares/validators.js');
+const { 
+  validateUserCreationInput,
+  validateUserInDatabase,
+  validateUserNOTInDatabase,
+  validateUserUpdateInput
+} = require('../middlewares/validators.js');
 
 const getAllUsers = async (req, res) => {
     try{
@@ -52,18 +57,14 @@ const createUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-    try{
+    try {
       const userValidation = await validateUserInDatabase(null, req.params.id);
       if (!userValidation.isValid) {
         return res.status(404).json({ error: userValidation.message });
       }
-      // const usernameValidation = await validateUserNOTInDatabase(req.body.username, null);
-      // if (!usernameValidation.isValid) {
-      //   return res.status(400).json({ error: usernameValidation.message });
-      // }
-      const userCreationValidation = await validateUserCreationInput(req.body);
-      if (!userCreationValidation.isValid) {
-        return res.status(400).json({ error: userCreationValidation.message });
+      const userUpdateValidation = await validateUserUpdateInput(req.body);
+      if (!userUpdateValidation.isValid) {
+        return res.status(400).json({ error: userUpdateValidation.message });
       }
       const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true }); // Return the updated document
       if (!user) return res.status(404).json({ message: 'User not found' });
