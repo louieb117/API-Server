@@ -6,6 +6,9 @@ const scorecardController = require('../controllers/scorecardController');
 
 // Define scorecard-related routes
 router.get('/', scorecardController.getAllScorecards); // GET /api/scorecards
+
+router.get('/:id', scorecardController.getScorecard); // GET /api/scorecards/:id
+
 router.get('/user/:id', scorecardController.getUsersScorecards); // GET /api/scorecards/users/:id
 
 router.post('/user/create/:id', scorecardController.createScorecard); // POST /api/scorecards/users/create

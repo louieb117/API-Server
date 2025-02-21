@@ -108,7 +108,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2E2OGIzO
 
 ################# Create scorecard ###################################
 
-POST http://localhost:3000/api/request/scorecards/user/create/67aee4337a44f78d85aa8ed7
+POST http://localhost:3000/api/request/scorecards/user/create/Roboto.tester
 content-type: application/json
 
 {
@@ -168,7 +168,10 @@ content-type: application/json
 GET http://localhost:3000/api/request/scorecards
 
 ################# Read a scorecard by id ##############################
-GET http://localhost:3000/api/request/scorecards/user/67b179ca36ec3735643b8691
+GET http://localhost:3000/api/request/scorecards/67aee3321f2035e014397ba1
+
+################# Read a scorecard by userid/username ################
+GET http://localhost:3000/api/request/scorecards/user/Roboto.tester
 
 ################# Update scorecard data ##############################
 PUT http://localhost:3000/api/request/scorecards/user/update/67aee3321f2035e014397ba1
