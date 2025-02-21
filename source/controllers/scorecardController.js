@@ -12,30 +12,29 @@ const getAllScorecards = async (req, res) => {
     }
 };
 
-// const getScorecard = async (req, res) => {
-//     try{
-//       // Database Validation: Check if scorecard exists
-//       const scorecardValidation = await validateScorecardInDatabase(req.params.id);
-//       if (!scorecardValidation.isValid) {
-//         return res.status(404).json({ error: scorecardValidation.message });
-//       }
-//       res.status(200).json(scorecardValidation.scorecard);
-//     } catch (error) {
-//       res.status(404).json({ message: error.message });
-//     }
-// };
+const getScorecard = async (req, res) => {
+    try{
+      // Database Validation: Check if scorecard exists
+      const scorecardValidation = await validateScorecardInDatabase(req.params.id);
+      if (!scorecardValidation.isValid) {
+        return res.status(404).json({ error: scorecardValidation.message });
+      }
+      res.status(200).json(scorecardValidation.scorecard);
+    } catch (error) {
+      res.status(404).json({ message: error.message });
+    }
+};
 
 const getUsersScorecards = async (req, res) => {
     try{
       // Database Validation: Check if user exists
       const userValidation = await validateUserInDatabase(null,req.params.id);
-
-        if (!userValidation.isValid) {
-            return res.status(404).json({ error: userValidation.message });
-            }
-        const user = userValidation.user;
-        const userScorecards = await Scorecard.find({ creator: user._id });
-        res.status(200).json(userScorecards);
+      if (!userValidation.isValid) {
+        return res.status(404).json({ error: userValidation.message });
+      }
+      const user = userValidation.user;
+      const userScorecards = await Scorecard.find({ creator: user._id });
+      res.status(200).json(userScorecards);
     } catch (error) {
         res.status(404).json({ message: error.message });
         }
@@ -108,6 +107,7 @@ const deleteScorecard = async (req, res) => {
 
 module.exports = {
     getAllScorecards,
+    getScorecard,
     getUsersScorecards,
     createScorecard,
     updateScorecard,
