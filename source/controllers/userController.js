@@ -4,7 +4,7 @@ const {
   validateUserInDatabase,
   validateUserNOTInDatabase,
   validateUserUpdateInput
-} = require('../middlewares/validators.js');
+} = require('../middlewares/validators/userValidators.js');
 
 const getAllUsers = async (req, res) => {
     try{

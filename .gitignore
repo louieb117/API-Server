@@ -1,0 +1,7 @@
+# Ignore MongoDB data directory
+backend/mongodb_data/
+
+source/.env
+source/package-lock.json
+source/package.json
+source/node_modules/
