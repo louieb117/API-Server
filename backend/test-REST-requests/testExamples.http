@@ -3,7 +3,7 @@
 ################# General ############################################
 ######################################################################
 ######################################################################
-GET http://localhost:3000/api
+GET http://192.168.5.34:3000/api
 
 ######################################################################
 ######################################################################
@@ -57,11 +57,11 @@ content-type: application/json
 
 {
 
-  "fullName": "Peter Topper",
+  "fullName": "Fin The Human",
   "phoneNumber": "(619)969-6666",
-  "email": "test.user.peter@potentiamaxima.com",
-  "username": "peter.tester",
-  "password": "Peter123!",
+  "email": "Fin.tester@potentiamaxima.com",
+  "username": "Fin.tester",
+  "password": "Fin3453333!",
   "role": "tester",
   "creationDate": "{{$timestamp}}",
   "activated": true,
@@ -73,14 +73,14 @@ content-type: application/json
 GET http://localhost:3000/api/request/users
 
 ################# Read a user by id ###################################
-GET http://localhost:3000/api/request/users/67a2f66da4a135c87d1d926a
+GET http://localhost:3000/api/request/users/67c92bfe82104d0c94b23a12
 
 
 ################# Read a user by username #############################
 GET http://localhost:3000/api/request/users/peter.tester
 
 ################# Update user data ###################################
-PUT http://localhost:3000/api/request/users/67a4410c04e739b09a7a54ca
+PUT http://localhost:3000/api/request/users/67c92bfe82104d0c94b23a12
 content-type: application/json
 
 {
@@ -93,7 +93,7 @@ content-type: application/json
   "activated": true,
   "currentLocation": "US",
   "bio": "Im the best Roboto test user",
-  "friends": ["67a2f66da4a135c87d1d926a", "67a2f66da4a135c87d1d926a"]
+  "friends": []
 }
 
 ################# Delete user ######################################
@@ -108,16 +108,17 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2E2OGIzO
 
 ################# Create scorecard ###################################
 
-POST http://localhost:3000/api/request/scorecards/user/create/Roboto.tester
+POST http://localhost:3000/api/request/scorecards/user/create/Fin.tester
 content-type: application/json
 
 {
   "holeSelection": 9,
   "course": "Test Course01",
   "date": "{{$timestamp}}",
-  "players": ["player1", "player2", "player3", "player4"],
-  "scores": {
-    "player1": {
+  "players": ["Roboto.tester", "jesus.tester", "peter.tester", "john.tester"],
+  "scores": [
+    {
+      "player": "Roboto.tester",
       "hole1": 4,
       "hole2": 4,
       "hole3": 4,
@@ -128,7 +129,8 @@ content-type: application/json
       "hole8": 4,
       "hole9": 4
     },
-    "player2": {
+    {
+      "player": "jesus.tester",
       "hole1": 4,
       "hole2": 4,
       "hole3": 4,
@@ -139,7 +141,8 @@ content-type: application/json
       "hole8": 4,
       "hole9": 4
     },
-    "player3": {
+    {
+      "player": "peter.tester",
       "hole1": 4,
       "hole2": 4,
       "hole3": 4,
@@ -150,7 +153,8 @@ content-type: application/json
       "hole8": 4,
       "hole9": 4
     },
-    "player4": {
+    {
+      "player": "john.tester",
       "hole1": 4,
       "hole2": 4,
       "hole3": 4,
@@ -161,27 +165,26 @@ content-type: application/json
       "hole8": 4,
       "hole9": 4
     }
-  }
+  ]
 }
 
 ################# Read all scorecards ################################
 GET http://localhost:3000/api/request/scorecards
 
 ################# Read a scorecard by id ##############################
-GET http://localhost:3000/api/request/scorecards/67aee3321f2035e014397ba1
+GET http://localhost:3000/api/request/scorecards/67c93f4e8333cec4179f7909
 
 ################# Read a scorecard by userid/username ################
-GET http://localhost:3000/api/request/scorecards/user/Roboto.tester
+GET http://localhost:3000/api/request/scorecards/user/Fin.tester
 
 ################# Update scorecard data ##############################
-PUT http://localhost:3000/api/request/scorecards/user/update/67aee3321f2035e014397ba1
-
+PUT http://localhost:3000/api/request/scorecards/user/update/67c93f4e8333cec4179f7909
 content-type: application/json
-Authorization
 
 {
-  "holeSelection": 9,
-  "course": "Test Course01",
+  "holeSelection": 12,
+  "creater": "Fin.tester",
+  "course": "Test Course02 - updated",
   "date": "{{$timestamp}}",
   "players": ["player1", "player2", "player3", "player4"],
   "scores": {
@@ -222,7 +225,7 @@ Authorization
       "hole1": 4,
       "hole2": 4,
       "hole3": 4,
-      "hole4": 4,
+      "hole4": 2,
       "hole5": 4,
       "hole6": 4,
       "hole7": 4,
@@ -234,5 +237,5 @@ Authorization
 }
 
 ################# Delete scorecard ###################################
-DELETE http://localhost:3000/api/request/scorecards/user/delete/67aee4337a44f78d85aa8ed7
+DELETE http://localhost:3000/api/request/scorecards/user/delete/67c93f4e8333cec4179f7909
 Authorization

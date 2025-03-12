@@ -1,20 +1,4 @@
-const User = require('../models/user.js');
-
-const validateLoginInput = (username, password, id) => {
-    try{
-        if ((!username && !id) || !password) {
-            return {
-                isValid: false,
-                message: "Username and password or ID and password are required",
-            };        
-        }        
-        return { isValid: true };
-
-    } catch (error) {
-        return { isValid: false, message: error.message };
-
-    }
-};
+const User = require('../../models/user.js');
 
 const validateUserInDatabase = async (username, id) => {
     try{
@@ -322,9 +306,7 @@ const validateUserUpdateInput = async (body) => {
                         }
                         break;
                     default:
-                        // Handle unknown keys if necessary
                         break;
-                        return { isValid: false, message: "Invalid key" , key};
                 }
             }
         }
@@ -341,52 +323,19 @@ const validateUserUpdateInput = async (body) => {
 //     }
 // };
 
-const validatePassword = (user, password) => {
-    try{
-        if (user.password !== password) {
-            throw new Error("Invalid password");
-        }
-        return { isValid: true };
-
-    } catch (error) {
-        return { isValid: false, message: error.message };
-    }
-};
-
-const validateScorecardCreationInput = (body) => {
-    try{
-        if (!body.creator || !body.holeSelection || !body.course || !body.date || !body.players ||!body.scores) {
-            throw new Error("Creator, holeSelection, course, date, and scores are required");
-        }
-        return { isValid: true };
-    }   catch (error) {
-        return { isValid: false, message: error.message };
-    }
-};
-
-const validateScorecardInDatabase = async (id) => {
-    try{
-        const scorecard = await Scorecard.findById(id);
-        if (!scorecard) {
-            return {
-                isValid: false,
-                message: "Scorecard not found",
-            };        
-        }
-        return { isValid: true, scorecard };
-    } catch (error) {
-        return { isValid: false, message: error.message };
-    }
-};
-
-
 module.exports = {
-    validateLoginInput,
     validateUserInDatabase,
     validateUserNOTInDatabase,
     validateUserCreationInput,
+    validateUserFullName,
+    validateUserUsername,
+    validateUserPassword,
+    validateUserRole,
+    validateUserEmail,
+    validateUserPhoneNumber,
+    validateUserBio,
+    validateUserPicture,
+    validateUserFriends,
     validateUserUpdateInput,
-    validatePassword,
-    validateScorecardCreationInput,
-    validateScorecardInDatabase
+    // validateUserDeletionInput
 };

@@ -1,6 +1,10 @@
 const Scorecard = require('../models/scorecard.js');
-const { validateUserInDatabase } = require('../middlewares/validators.js');
-const { validateScorecardCreationInput, validateScorecardInDatabase } = require('../middlewares/validators.js');
+const { validateUserInDatabase } = require('../middlewares/validators/userValidators.js');
+const { 
+  validateScorecardCreationInput, 
+  validateScorecardInDatabase,
+  validateScorecardUpdateInput
+} = require('../middlewares/validators/scorecardValidators.js');
 
 const getAllScorecards = async (req, res) => {
     try{
@@ -33,8 +37,9 @@ const getUsersScorecards = async (req, res) => {
         return res.status(404).json({ error: userValidation.message });
       }
       const user = userValidation.user;
-      const userScorecards = await Scorecard.find({ creator: user._id });
-      res.status(200).json(userScorecards);
+      const userScorecards = await Scorecard.findOne({ creater: user._id });
+      
+      res.status(200).json({Scorecards: userScorecards, User: user._id});
     } catch (error) {
         res.status(404).json({ message: error.message });
         }
@@ -42,45 +47,46 @@ const getUsersScorecards = async (req, res) => {
 
 const createScorecard = async (req, res) => {
     try { 
-        // // validate user
-        // const userValidation = await validateUserInDatabase(req.params.id);
-        // if (!userValidation.isValid) {
-        //   return res.status(404).json({ error: userValidation.message });
-        // }
-        // const user = userValidation.user;
-        // req.body.creator = user._id
+        // validate user
+        const userValidation = await validateUserInDatabase(null,req.params.id);
+        if (!userValidation.isValid) {
+          return res.status(404).json({ error: userValidation.message });
+        }
+        const user = userValidation.user;
+        req.body.creater = user._id.toString();
 
-        // // validate input
-        // const scorecardCreationValidation = validateScorecardCreationInput(req.body);
-        // if (!scorecardCreationValidation.isValid) {
-        //     return res.status(400).json({ error: scorecardCreationValidation.message });
-        // }
-        req.body.creator = req.params.id;
+        // validate input
+        await validateScorecardCreationInput(req.body);
+        const scorecardCreationValidation = await validateScorecardCreationInput(req.body);
+        if (!scorecardCreationValidation.isValid) {
+            return res.status(400).json({ 
+              vstatus: scorecardCreationValidation.isValid,
+              request: req.body,
+              error: scorecardCreationValidation.message
+            });
+        }
         const newScorecard = new Scorecard(req.body);
         // save scorecard
         newScorecard.save();
-        // print log
-        console.log(newScorecard);
+        // // print log
+        // console.log(newScorecard);
     
-        res.status(201).json({
-            message: "New Scorecard Created!",
-            data: newScorecard
-        });
+        res.status(201).json({ message: "New Scorecard Created!", data: newScorecard });
         } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(407).json({ message: error.message });
     }
 };
 
 const updateScorecard = async (req, res) => {
     try{
-    //   const scorecardValidation = await validateScorecardInDatabase(req.params.id);
-    //   if (!scorecardValidation.isValid) {
-    //     return res.status(404).json({ error: scorecardValidation.message });
-    //   }
-    //   const scorecardCreationValidation = validateScorecardCreationInput(req.body);
-    //   if (!scorecardCreationValidation.isValid) {
-    //     return res.status(400).json({ error: scorecardCreationValidation.message });
-    //   }
+      const scorecardValidation = await validateScorecardInDatabase(req.params.id);
+      if (!scorecardValidation.isValid) {
+        return res.status(404).json({ error: scorecardValidation.message });
+      }
+      const scorecardUpdateValidation =  await validateScorecardUpdateInput(req.body);
+      if (!scorecardUpdateValidation.isValid) {
+        return res.status(400).json({ error: scorecardUpdateValidation.message });
+      }
       const scorecard = await Scorecard.findByIdAndUpdate(req.params.id, req.body, { new: true }); // Return the updated document
       if (!scorecard) return res.status(404).json({ message: 'Scorecard not found' });
       res.status(200).json({

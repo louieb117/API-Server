@@ -19,16 +19,44 @@
         "type" : "string",
         "required" : true
     },
-    "role": "string",
-    "creationDate": "date",
-    "activated": "boolean",
-    "currentLocation": "string",
-    "scorcecard": {
-        "totalPoints": "number",
-        "totalOrders": "number",
-        "totalDeliveredOrders": "number"
+    "role": {
+        "type": "string"
     },
-    "picture": "string",
-    "friends": [],
-    "Bio": "string"
+    "creationDate": {
+        "type": "string",
+        "format": "date-time"
+    },
+    "activated": {
+        "type": "boolean"
+    },
+    "currentLocation": {
+        "type": "string"
+    },
+    "scorecard": {
+        "type": "object",
+        "properties": {
+            "totalPoints": {
+                "type": "number"
+            },
+            "totalOrders": {
+                "type": "number"
+            },
+            "totalDeliveredOrders": {
+                "type": "number"
+            }
+        }
+    },
+    "picture":  {
+        "type": "string",
+        "format": "uri"
+    },
+    "friends":  {
+        "type": "array",
+        "items": {
+            "type": "string"
+        }
+    },
+    "Bio": {
+        "type": "string"
+    }
 }

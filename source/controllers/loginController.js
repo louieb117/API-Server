@@ -1,7 +1,10 @@
 const {MY_JWT_SECRET} = require('../configs/config.js');// Load environment variables;
 
 const jwt = require('jsonwebtoken');
-const { validateLoginInput, validateUserInDatabase, validatePassword } = require('../middlewares/validators.js');
+const {validateUserInDatabase} = require('../middlewares/validators/userValidators.js');
+const { 
+    validateLoginInput,
+    validatePassword } = require('../middlewares/validators/loginValidators.js');
 
 
 const login = async (req, res) => {
