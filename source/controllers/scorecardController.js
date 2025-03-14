@@ -37,7 +37,7 @@ const getUsersScorecards = async (req, res) => {
         return res.status(404).json({ error: userValidation.message });
       }
       const user = userValidation.user;
-      const userScorecards = await Scorecard.findOne({ creater: user._id });
+      const userScorecards = await Scorecard.find({ creator: user._id });
       
       res.status(200).json({Scorecards: userScorecards, User: user._id});
     } catch (error) {
@@ -53,7 +53,7 @@ const createScorecard = async (req, res) => {
           return res.status(404).json({ error: userValidation.message });
         }
         const user = userValidation.user;
-        req.body.creater = user._id.toString();
+        req.body.creator = user._id.toString();
 
         // validate input
         await validateScorecardCreationInput(req.body);

@@ -62,6 +62,7 @@ const updateUser = async (req, res) => {
       if (!userValidation.isValid) {
         return res.status(404).json({ error: userValidation.message });
       }
+      
       const userUpdateValidation = await validateUserUpdateInput(req.body);
       if (!userUpdateValidation.isValid) {
         return res.status(400).json({ error: userUpdateValidation.message });
