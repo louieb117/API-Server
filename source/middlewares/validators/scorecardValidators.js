@@ -32,7 +32,7 @@ const validateScorecardNotInDatabase = async (id) => {
     }
 };
 
-const validateScorecardCreater = async (body) => {
+const validateScorecardCreator = async (body) => {
     try{
         const scorecard = await
         Scorecard.findById(body.creator);
@@ -129,10 +129,10 @@ const validateScorecardDataInput = async (body) => {
     for (const key in body) {
         if (body.hasOwnProperty(key)) {
             switch (key) {
-                case "creater":
-                    const createrValidation = await validateScorecardCreater(body);
-                    if (!createrValidation.isValid) {
-                        data.creator = body.creater;
+                case "creator":
+                    const creatorValidation = await validateScorecardCreator(body);
+                    if (!creatorValidation.isValid) {
+                        data.creator = body.creator;
                     }
                     break;
                 case "holeSelection":
@@ -184,8 +184,8 @@ const validateScorecardCreationInput = async (body) => {
         //     return { isValid: false, message: scorecardValidation.message };
         // }
 
-        if (!body.creater || !body.holeSelection || !body.course || !body.date || !body.players ||!body.scores) {
-            throw new Error("creater, holeSelection, course, date, and scores are required");
+        if (!body.creator || !body.holeSelection || !body.course || !body.date || !body.players ||!body.scores) {
+            throw new Error("creator, holeSelection, course, date, and scores are required");
         }
         const v_body = await validateScorecardDataInput(body);
         if (!v_body.isValid) {
@@ -226,5 +226,5 @@ module.exports = {
     validateScorecardDate,
     validateScorecardPlayers,
     validateScorecardScores,
-    validateScorecardCreater
+    validateScorecardCreator
 };

@@ -201,6 +201,22 @@ const validateUserPicture = (body) => {
     }
 };
 
+const validateUniqueFriends = async (user, friends, newFriend) => {
+    try {
+        if ( user.id === newFriend ) {
+            return { isValid: false, message: "User cannot be friends with themselves" };
+        }
+        for (const friend of friends ) {
+            if ( friend === newFriend ) {
+                return { isValid: false, message: "User cannot be friends with the same person twice" };
+            }
+        }
+        return { isValid: true };
+    } catch (error) {
+        return { isValid: false, message: error.message };
+    }
+};
+
 const validateUserFriends = async (body) => {
     try {
         if (!Array.isArray(body.friends)) {
@@ -212,7 +228,11 @@ const validateUserFriends = async (body) => {
         for (const friendId of body.friends) {
             const userValidation = await validateUserInDatabase(null, friendId);
             if (!userValidation.isValid) {
-                throw new Error(`Invalid friend ID: ${friendId}`);
+                throw new Error(`Invalid friend ID: ${friendId}, ${userValidation.message}`);
+            }
+            const uniqueFriendsValidation = await validateUniqueFriends(userValidation.user, body.friends, friendId);
+            if (!uniqueFriendsValidation.isValid) {
+                throw new Error(`Invalid friend ID: ${friendId}, ${uniqueFriendsValidation.message}`);
             }
         }
         return { isValid: true };
