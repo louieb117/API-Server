@@ -4,13 +4,10 @@
     "description": "RestAPI",
     "main": "index.js",
     "scripts": {
-      "start": "node index.js"
+      "start": "node index.js",
+      "test": "jest"
     },
-    "keywords": [
-      "api",
-      "restful",
-      "json"
-    ],
+    "keywords": [],
     "author": "lbello",
     "license": "ISC",
     "dependencies": {
@@ -20,6 +17,10 @@
       "mongoose": "^8.9.4",
       "dotenv": "^16.4.7",
       "jsonwebtoken": "^9.0.2"
+    },
+    "devDependencies": {
+      "jest": "^27.4.7",
+      "supertest": "^6.1.6"
     }
   }
   
