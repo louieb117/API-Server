@@ -14,10 +14,18 @@ RUN groupadd -r nodegroup && useradd -r -g nodegroup nodeuser
 #RUN chown -R nodeuser:nodegroup /app
 
 # Install dependencies
-RUN npm install && npm install express --save \
+RUN npm install --include=dev && npm install express --save \
     && npm install jsonwebtoken --save\     
     && npm install cors --save && npm install dotenv --save \
     && npm install mongoose --save  \
+    && npm install @babel/plugin-transform-modules-commonjs \
+    && npm install eslint-plugin-jest \
+    && npm install ts-node \
+    && npm install http \
+    && npm install nodemon \
+    && npm install jest  \
+    && npm install supertest  \
+    && npm install cross-env  \
     && npm rebuild
     # && npm list --depth=0 && ls -la
 # Set premissions for user and group
@@ -34,6 +42,9 @@ EXPOSE 3000
 
 # Start the application
 CMD ["node", "index.js"]
+# CMD ["npm", "test"]
+# CMD ["npm", "run", "test:watch"]
+# CMD ["npm", "run", "test:debug"]
 
 # Debug Tests
 # CMD ["sleep", "Infinity"]

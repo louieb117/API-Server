@@ -38,7 +38,11 @@ PORT=3000
 ```bash
 podman-compose build --no-cahce
 podman-compose up
-podman-compose down
+podman-compose down -t 0
+
+podman-compose down -t 0 && podman-compose build --no-cache && podman run --rm -it localhost/api-server_backend:latest bash -c "npm test" 
+
+podman run --rm -it localhost/api-server_backend:latest bash -c "npm test" 
 ```
 
 The server will start at http://localhost:3000.

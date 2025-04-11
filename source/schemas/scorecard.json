@@ -25,7 +25,7 @@
     "scores" : {
         "type" : "array",
         "required" : true,
-        "items" : {
+        "players" : {
             "type" : "object",
             "properties" : {
                 "player" : {
