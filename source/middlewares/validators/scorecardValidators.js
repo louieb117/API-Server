@@ -97,33 +97,62 @@ const validateScorecardPlayers = async (body) => {
     }
 };
 
-const validateScorecardScores = async (body) => {
+const validateScorecardScores = async (body, id) => {
+    console.log('flag 0  - req.body.scores', body.scores);
     try{
         if (body.scores.length < 1 || body.scores.length > 4) {
             throw new Error("There must be between 1 and 4 scores");
         }
-        if (body.scores.length !== body.players.length) {
-            throw new Error("There must be a score for each player");
+        const scorecard = await Scorecard.findById(id);
+        if (!scorecard) {
+            throw new Error("Scorecard not found");
         }
-        for (let i = 0; i < body.scores.length; i++) {
-            // I think this should be body.holeSelection - 1
-            if (body.scores[i].length !== body.holeSelection) {
-                throw new Error("There must be a score for each hole");
+
+        // Ensure each player has scores matching the hole selection
+        for (const player in body.scores) {
+            if (!(body.holeSelection) && body.scores[player].length !== scorecard.holeSelection) {
+                throw new Error(`Player ${player} must have scores for ${scorecard.holeSelection} holes`);
             }
-            for (let j = 0; j < body.scores[i].length; j++) {
-                if (body.scores[i][j] < 1 || body.scores[i][j] > 36) {
-                    throw new Error("Scores must be between 1 and 36");
+            if (body.holeSelection && body.scores[player].length !== body.holeSelection) {
+                throw new Error(`Player ${player} must have scores for ${body.holeSelection} holes`);
+            }
+        }
+
+        if (id) {
+            console.log(`flag 1 - Existing Scorecard`, scorecard.scores);
+        
+            // Merge existing scores with the new scores
+            const updatedScores = { ...scorecard.scores }; // Start with existing scores
+        
+            for (const player in body.scores) {
+                if (updatedScores[player]) {
+                    // Update the player's scores
+                    updatedScores[player] = [...body.scores[player]];
+                } else {
+                    // Add new player scores if the player doesn't exist
+                    updatedScores[player] = [...body.scores[player]];
                 }
             }
+        
+            console.log(`flag 2 - Updated Scores`, updatedScores);
+        
+            // Assign the updated scores back to the body
+            body.scores = updatedScores;
         }
-        return { isValid: true };
+        console.log(`flag 3 - Final Body Scores`, body.scores);
+
+        // throw new Error(`flag 6 - stop`);
+
+        // return { isValid: false, message: error.message};
+        return { isValid: false , scores: body.scores };
+
     }
     catch (error) {
         return { isValid: false, message: error.message};
     }
 };
 
-const validateScorecardDataInput = async (body) => {
+const validateScorecardDataInput = async (body, id) => {
     // try {
     const data = {};
     for (const key in body) {
@@ -160,9 +189,9 @@ const validateScorecardDataInput = async (body) => {
                     }
                     break;
                 case "scores":
-                    const scoresValidation = validateScorecardScores(body);
+                    const scoresValidation = validateScorecardScores(body, id);
                     if (!scoresValidation.isValid) {
-                        data.scores = body.scores;
+                        data.scores = scoresValidation.scores;
                     }
                     break;
                 default:
@@ -170,9 +199,9 @@ const validateScorecardDataInput = async (body) => {
             }
         }
     }
-    return { isValid: true, data };
+    return { isValid: true, scorecard: data };
 //     } catch (error) {
-//         return { isValid: false, message: error.message };
+//         return { isValid: false, message: error.message, scorecard: data  };
 //     }
 };
 
@@ -192,25 +221,25 @@ const validateScorecardCreationInput = async (body) => {
             return { isValid: false, message: v_body.message };
         }
 
-        return { isValid: true };
+        return { isValid: true , scorecard: v_body.scorecard };
     }   catch (error) {
-        return { isValid: false, message: error.message };
+        return { isValid: false, message: error.message, scorecard: body };
     }
 };
 
-const validateScorecardUpdateInput = async (body) => {
+const validateScorecardUpdateInput = async (body, id) => {
     try {
         if (!body.holeSelection && !body.course && !body.date && !body.players && !body.scores) {
             throw new Error(`At least one field must be updated. Provided body: ${JSON.stringify(body)}`);
         }
-        const v_body = await validateScorecardDataInput(body);
+        const v_body = await validateScorecardDataInput(body,id);
         if (!v_body.isValid) {
-            return { isValid: false, message: v_body.message };
+            return { isValid: false, scorecard: id, scorecard: v_body.scorecard, message: v_body.message };
         }
 
-        return { isValid: true };
+        return { isValid: true, scorecard: v_body.scorecard  };
     }   catch (error) {
-        return { isValid: false, message: error.message };
+        return { isValid: false, message: error.message, scorecard: body };
     }
 }
 

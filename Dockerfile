@@ -14,18 +14,20 @@ RUN groupadd -r nodegroup && useradd -r -g nodegroup nodeuser
 #RUN chown -R nodeuser:nodegroup /app
 
 # Install dependencies
-RUN npm install --include=dev && npm install express --save \
-    && npm install jsonwebtoken --save\     
-    && npm install cors --save && npm install dotenv --save \
-    && npm install mongoose --save  \
-    && npm install @babel/plugin-transform-modules-commonjs \
-    && npm install eslint-plugin-jest \
-    && npm install ts-node \
-    && npm install http \
-    && npm install nodemon \
-    && npm install jest  \
-    && npm install supertest  \
-    && npm install cross-env  \
+RUN npm install --include=dev \
+    && npm install -g express --save \
+    && npm install -g jsonwebtoken --save \     
+    && npm install -g cors --save \ 
+    && npm install -g dotenv --save \
+    && npm install -g mongoose --save  \
+    && npm install -g @babel/plugin-transform-modules-commonjs --save \
+    && npm install -g eslint-plugin-jest --save \
+    && npm install -g ts-node --save \
+    && npm install -g http --save \
+    && npm install -g nodemon --save \
+    && npm install -g jest  --save \
+    && npm install -g supertest  --save \
+    && npm install -g cross-env  --save \
     && npm rebuild
     # && npm list --depth=0 && ls -la
 # Set premissions for user and group
@@ -41,7 +43,9 @@ EXPOSE 3000
 # RUN pwd && ls -la 
 
 # Start the application
-CMD ["node", "index.js"]
+# CMD ["node", "index.js"]
+# CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]
 # CMD ["npm", "test"]
 # CMD ["npm", "run", "test:watch"]
 # CMD ["npm", "run", "test:debug"]

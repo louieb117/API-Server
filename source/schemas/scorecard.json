@@ -1,4 +1,8 @@
 {
+    "active" : {
+        "type" : "boolean",
+        "required" : true
+    },
     "creator" : {
         "type" : "string",
         "required" : true
@@ -12,7 +16,7 @@
         "required" : true
     },
     "date" : {
-        "type" : "date",
+        "type" : "string",
         "required" : true
     },
     "players" : {
@@ -22,124 +26,13 @@
             "type" : "string"
         }
     },
-    "scores" : {
-        "type" : "array",
-        "required" : true,
-        "players" : {
-            "type" : "object",
-            "properties" : {
-                "player" : {
-                    "type" : "string",
-                    "required" : true
-                },
-                "hole1" : {
-                    "type" : "number"
-                },
-                "hole2" : {
-                    "type" : "number"
-                },
-                "hole3" : {
-                    "type" : "number"
-                },
-                "hole4" : {
-                    "type" : "number"
-                },
-                "hole5" : {
-                    "type" : "number"
-                },
-                "hole6" : {
-                    "type" : "number"
-                },
-                "hole7" : {
-                    "type" : "number"
-                },
-                "hole8" : {
-                    "type" : "number"
-                },
-                "hole9" : {
-                    "type" : "number"
-                },
-                "hole10" : {
-                    "type" : "number"
-                },
-                "hole11" : {
-                    "type" : "number"
-                },
-                "hole12" : {
-                    "type" : "number"
-                },
-                "hole13" : {
-                    "type" : "number"
-                },
-                "hole14" : {
-                    "type" : "number"
-                },
-                "hole15" : {
-                    "type" : "number"
-                },
-                "hole16" : {
-                    "type" : "number"
-                },
-                "hole17" : {
-                    "type" : "number"
-                },
-                "hole18" : {
-                    "type" : "number"
-                },
-                "hole19" : {
-                    "type" : "number"
-                },
-                "hole20" : {
-                    "type" : "number"
-                },
-                "hole21" : {
-                    "type" : "number"
-                },
-                "hole22" : {
-                    "type" : "number"
-                },
-                "hole23" : {
-                    "type" : "number"
-                },
-                "hole24" : {
-                    "type" : "number"
-                },
-                "hole25" : {
-                    "type" : "number"
-                },
-                "hole26" : {
-                    "type" : "number"
-                },
-                "hole27" : {
-                    "type" : "number"
-                },
-                "hole28" : {
-                    "type" : "number"
-                },
-                "hole29" : {
-                    "type" : "number"
-                },
-                "hole30" : {
-                    "type" : "number"
-                },
-                "hole31" : {
-                    "type" : "number"
-                },
-                "hole32" : {
-                    "type" : "number"
-                },
-                "hole33" : {
-                    "type" : "number"
-                },
-                "hole34" : {
-                    "type" : "number"
-                },
-                "hole35" : {
-                    "type" : "number"
-                },
-                "hole36" : {
-                    "type" : "number"
-                }
+    "scores": {
+        "type": "object",
+        "required": true,
+        "additionalProperties": {
+            "type": "array",
+            "items": {
+                "type": "number"
             }
         }
     }
