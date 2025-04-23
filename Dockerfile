@@ -45,7 +45,7 @@ EXPOSE 3000
 # Start the application
 # CMD ["node", "index.js"]
 # CMD ["npm", "start"]
-CMD ["npm", "run", "dev"]
+# CMD ["npm", "run", "dev"]
 # CMD ["npm", "test"]
 # CMD ["npm", "run", "test:watch"]
 # CMD ["npm", "run", "test:debug"]
