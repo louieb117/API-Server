@@ -9,7 +9,7 @@ const validateScorecardInDatabase = async (id) => {
                 message: "Scorecard not found",
             };        
         }
-        return { isValid: true, scorecard };
+        return { isValid: true, scorecard: scorecard };
     } catch (error) {
         return { isValid: false, message: error.message };
     }
@@ -98,111 +98,88 @@ const validateScorecardPlayers = async (body) => {
 };
 
 const validateScorecardScores = async (body, id) => {
-    console.log('flag 0  - req.body.scores', body.scores);
+    const refScorecard = await Scorecard.findById(id);
+    if (!refScorecard) {
+        throw new Error("Scorecard not found");
+    }
+    // console.log('flag 0  - req.body.scores', body.scores);
     try{
         if (body.scores.length < 1 || body.scores.length > 4) {
             throw new Error("There must be between 1 and 4 scores");
         }
-        const scorecard = await Scorecard.findById(id);
-        if (!scorecard) {
-            throw new Error("Scorecard not found");
-        }
 
         // Ensure each player has scores matching the hole selection
-        for (const player in body.scores) {
-            if (!(body.holeSelection) && body.scores[player].length !== scorecard.holeSelection) {
-                throw new Error(`Player ${player} must have scores for ${scorecard.holeSelection} holes`);
+        for (const [playerIndex, playerScores] of Object.entries(body.scores)) {
+            console.log('score counts', playerIndex, playerScores.length, refScorecard.holeSelection);
+            if (!(body.holeSelection) && playerScores.length !== refScorecard.holeSelection) {
+                console.log(`Player ${playerIndex} must have scores for ${refScorecard.holeSelection} holes`);
+                throw new Error(`Player ${playerIndex} must have scores for ${refScorecard.holeSelection} holes`);
             }
-            if (body.holeSelection && body.scores[player].length !== body.holeSelection) {
-                throw new Error(`Player ${player} must have scores for ${body.holeSelection} holes`);
+            if (body.holeSelection && playerScores.length !== body.holeSelection) {
+                throw new Error(`Player ${playerIndex} must have scores for ${body.holeSelection} holes`);
             }
         }
 
-        if (id) {
-            console.log(`flag 1 - Existing Scorecard`, scorecard.scores);
-        
-            // Merge existing scores with the new scores
-            const updatedScores = { ...scorecard.scores }; // Start with existing scores
-        
-            for (const player in body.scores) {
-                if (updatedScores[player]) {
-                    // Update the player's scores
-                    updatedScores[player] = [...body.scores[player]];
-                } else {
-                    // Add new player scores if the player doesn't exist
-                    updatedScores[player] = [...body.scores[player]];
-                }
-            }
-        
-            console.log(`flag 2 - Updated Scores`, updatedScores);
-        
-            // Assign the updated scores back to the body
-            body.scores = updatedScores;
-        }
-        console.log(`flag 3 - Final Body Scores`, body.scores);
-
-        // throw new Error(`flag 6 - stop`);
-
-        // return { isValid: false, message: error.message};
-        return { isValid: false , scores: body.scores };
+        return { isValid: true};
 
     }
     catch (error) {
+        console.log('error', error.message);
         return { isValid: false, message: error.message};
     }
 };
 
 const validateScorecardDataInput = async (body, id) => {
-    // try {
-    const data = {};
-    for (const key in body) {
-        if (body.hasOwnProperty(key)) {
-            switch (key) {
-                case "creator":
-                    const creatorValidation = await validateScorecardCreator(body);
-                    if (!creatorValidation.isValid) {
-                        data.creator = body.creator;
-                    }
-                    break;
-                case "holeSelection":
-                    const holeSelectionValidation = validateScorecardHoleSelection(body);
-                    if (!holeSelectionValidation.isValid) {
-                        data.holeSelection = body.holeSelection;
-                    }
-                    break;
-                case "course":
-                    const courseValidation = validateScorecardCourse(body);
-                    if (!courseValidation.isValid) {
-                        data.course = body.course;
-                    }
-                    break;
-                case "date":
-                    const dateValidation = validateScorecardDate(body);
-                    if (!dateValidation.isValid) {
-                        data.date = body.date;
-                    }
-                    break;
-                case "players":
-                    const playersValidation = await validateScorecardPlayers(body);
-                    if (!playersValidation.isValid) {
-                        data.players = body.players;
-                    }
-                    break;
-                case "scores":
-                    const scoresValidation = validateScorecardScores(body, id);
-                    if (!scoresValidation.isValid) {
-                        data.scores = scoresValidation.scores;
-                    }
-                    break;
-                default:
-                    break;
+    try {
+        const data = {};
+        for (const key in body) {
+            if (body.hasOwnProperty(key)) {
+                switch (key) {
+                    case "creator":
+                        const creatorValidation = await validateScorecardCreator(body);
+                        if (!creatorValidation.isValid) {
+                            data.creator = body.creator;
+                        }
+                        break;
+                    case "holeSelection":
+                        const holeSelectionValidation = validateScorecardHoleSelection(body);
+                        if (!holeSelectionValidation.isValid) {
+                            data.holeSelection = body.holeSelection;
+                        }
+                        break;
+                    case "course":
+                        const courseValidation = validateScorecardCourse(body);
+                        if (!courseValidation.isValid) {
+                            data.course = body.course;
+                        }
+                        break;
+                    case "date":
+                        const dateValidation = validateScorecardDate(body);
+                        if (!dateValidation.isValid) {
+                            data.date = body.date;
+                        }
+                        break;
+                    case "players":
+                        const playersValidation = await validateScorecardPlayers(body);
+                        if (!playersValidation.isValid) {
+                            data.players = body.players;
+                        }
+                        break;
+                    case "scores":
+                        const scoresValidation = validateScorecardScores(body, id);
+                        if (!scoresValidation.isValid) {
+                            data.scores = body.scores;
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
         }
+        return { isValid: true};
+    } catch (error) {
+        return { isValid: false, message: error.message};
     }
-    return { isValid: true, scorecard: data };
-//     } catch (error) {
-//         return { isValid: false, message: error.message, scorecard: data  };
-//     }
 };
 
 
@@ -232,12 +209,13 @@ const validateScorecardUpdateInput = async (body, id) => {
         if (!body.holeSelection && !body.course && !body.date && !body.players && !body.scores) {
             throw new Error(`At least one field must be updated. Provided body: ${JSON.stringify(body)}`);
         }
+
         const v_body = await validateScorecardDataInput(body,id);
         if (!v_body.isValid) {
             return { isValid: false, scorecard: id, scorecard: v_body.scorecard, message: v_body.message };
         }
 
-        return { isValid: true, scorecard: v_body.scorecard  };
+        return { isValid: true };
     }   catch (error) {
         return { isValid: false, message: error.message, scorecard: body };
     }

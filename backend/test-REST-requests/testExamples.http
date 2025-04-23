@@ -141,10 +141,7 @@ content-type: application/json
 {
   "scores": 
   {
-    "Roboto.tester": [4, 4, 4, 4, 4, 4, 4, 4, 4],
-    "jesus.tester": [4, 4, 4, 4, 4, 4, 4, 4, 4],
-    "peter.tester": [4, 4, 4, 4, 4, 4, 4, 4, 4],
-    "john.tester": [4, 4, 4, 4, 4, 4, 4, 4, 4]
+    "peter.tester": [4, 2, 2, 5, 2, 8, 6, 4]
   }
 }
 
