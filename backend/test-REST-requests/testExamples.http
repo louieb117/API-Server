@@ -108,134 +108,40 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2E2OGIzO
 
 ################# Create scorecard ###################################
 
-POST http://localhost:3000/api/request/scorecards/user/create/67c93f408333cec4179f7904
+POST http://localhost:3000/api/request/scorecards/user/create/67c92bfe82104d0c94b23a12
 content-type: application/json
 
 {
   "holeSelection": 9,
-  "course": "Test Course01",
-  "date": "{{$timestamp}}",
-  "players": ["Roboto.tester", "jesus.tester", "peter.tester", "john.tester"],
-  "scores": {
-    {
-      "player": "Roboto.tester",
-      "hole1": 4,
-      "hole2": 4,
-      "hole3": 4,
-      "hole4": 4,
-      "hole5": 4,
-      "hole6": 4,
-      "hole7": 4,
-      "hole8": 4,
-      "hole9": 4
-    },
-    {
-      "player": "jesus.tester",
-      "hole1": 4,
-      "hole2": 4,
-      "hole3": 4,
-      "hole4": 4,
-      "hole5": 4,
-      "hole6": 4,
-      "hole7": 4,
-      "hole8": 4,
-      "hole9": 4
-    },
-    {
-      "player": "peter.tester",
-      "hole1": 4,
-      "hole2": 4,
-      "hole3": 4,
-      "hole4": 4,
-      "hole5": 4,
-      "hole6": 4,
-      "hole7": 4,
-      "hole8": 4,
-      "hole9": 4
-    },
-    {
-      "player": "john.tester",
-      "hole1": 4,
-      "hole2": 4,
-      "hole3": 4,
-      "hole4": 4,
-      "hole5": 4,
-      "hole6": 4,
-      "hole7": 4,
-      "hole8": 4,
-      "hole9": 4
-    }
+  "course": "Test Course 009",
+  "date": "{{$Timestamp}}",
+  "players": ["Fin.tester", "jesus.tester", "Roboto.tester", "john.tester"],
+  "scores": 
+  {
+    "Roboto.tester": [4, 4, 4, 4, 4, 4, 4, 4, 4],
+    "jesus.tester": [4, 4, 4, 4, 4, 4, 4, 4, 4],
+    "peter.tester": [4, 4, 4, 4, 4, 4, 4, 4, 4],
+    "john.tester": [4, 4, 4, 4, 4, 4, 4, 4, 4]
   }
 }
 
 ################# Read all scorecards ################################
-GET http://192.168.5.34:3000/api/request/scorecards
+GET http://localhost:3000/api/request/scorecards
 
 ################# Read a scorecard by id ##############################
-GET http://localhost:3000/api/request/scorecards/67c93f4e8333cec4179f7909
+GET http://localhost:3000/api/request/scorecards/67f8943ed64a99c0f4abb9ca
 
 ################# Read a scorecard by userid/username ################
-GET http://localhost:3000/api/request/scorecards/user/67c93f408333cec4179f7904
+GET http://localhost:3000/api/request/scorecards/user/67c92bfe82104d0c94b23a12
 
 ################# Update scorecard data ##############################
-PUT http://192.168.5.34:3000/api/request/scorecards/user/update/67d39d81275de53579b7046b
+PUT http://localhost:3000/api/request/scorecards/user/update/67f8943ed64a99c0f4abb9ca
 content-type: application/json
 
 {
-  "holeSelection": 12,
-  "creator": "Fin.tester",
-  "course": "Test Course02 - updated",
-  "date": "{{$timestamp}}",
-  "players": ["Roboto.tester", "jesus.tester", "peter.tester", "john.tester"],
-  "scores": {
-    {
-      "player": "Roboto.tester",
-      "hole1": 4,
-      "hole2": 4,
-      "hole3": 4,
-      "hole4": 4,
-      "hole5": 4,
-      "hole6": 4,
-      "hole7": 4,
-      "hole8": 4,
-      "hole9": 4
-    },
-    {
-      "player": "jesus.tester",
-      "hole1": 4,
-      "hole2": 4,
-      "hole3": 4,
-      "hole4": 4,
-      "hole5": 4,
-      "hole6": 4,
-      "hole7": 4,
-      "hole8": 4,
-      "hole9": 4
-    },
-    {
-      "player": "peter.tester",
-      "hole1": 4,
-      "hole2": 4,
-      "hole3": 4,
-      "hole4": 4,
-      "hole5": 4,
-      "hole6": 4,
-      "hole7": 4,
-      "hole8": 4,
-      "hole9": 4
-    },
-    {
-      "player": "john.tester",
-      "hole1": 4,
-      "hole2": 4,
-      "hole3": 4,
-      "hole4": 4,
-      "hole5": 4,
-      "hole6": 4,
-      "hole7": 4,
-      "hole8": 4,
-      "hole9": 4
-    }
+  "scores": 
+  {
+    "peter.tester": [4, 2, 2, 5, 2, 8, 6, 4]
   }
 }
 
