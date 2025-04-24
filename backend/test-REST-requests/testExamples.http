@@ -108,7 +108,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2N2E2OGIzO
 
 ################# Create scorecard ###################################
 
-POST http://localhost:3000/api/request/scorecards/user/create/67c92bfe82104d0c94b23a12
+POST http://localhost:3000/api/request/scorecards/user/create/Fin.tester
 content-type: application/json
 
 {

@@ -13,8 +13,8 @@ services:
       - ./source:/app:z # !!! This caused me a permission error !!!
       # - ./node_modules:/app/node_modules
       - /app/node_modules
-    # command: /bin/bash -c "npm run dev" # Development Mode
-    command: /bin/bash -c "npm run start" # Production Mode
+    command: /bin/bash -c "npm run dev" # Development Mode
+    # command: /bin/bash -c "npm run start" # Production Mode
 
 # DB server
   mongodb:

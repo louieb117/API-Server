@@ -56,7 +56,6 @@ const createScorecard = async (req, res) => {
         req.body.creator = user._id.toString();
 
         // validate input
-        await validateScorecardCreationInput(req.body);
         const scorecardCreationValidation = await validateScorecardCreationInput(req.body);
         if (!scorecardCreationValidation.isValid) {
             return res.status(400).json({ 
