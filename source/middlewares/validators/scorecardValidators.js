@@ -98,8 +98,9 @@ const validateScorecardPlayers = async (body) => {
 };
 
 const validateScorecardScores = async (body, id) => {
-    const refScorecard = await Scorecard.findById(id);
-    if (!refScorecard) {
+
+    const refScorecard = id ? await Scorecard.findById(id) : null;
+    if (id && !refScorecard) {
         throw new Error("Scorecard not found");
     }
     // console.log('flag 0  - req.body.scores', body.scores);
@@ -166,7 +167,10 @@ const validateScorecardDataInput = async (body, id) => {
                         }
                         break;
                     case "scores":
-                        const scoresValidation = validateScorecardScores(body, id);
+                        const scoresValidation = id 
+                            ? await validateScorecardScores(body, id) 
+                            : await validateScorecardScores(body);
+                        
                         if (!scoresValidation.isValid) {
                             data.scores = body.scores;
                         }
@@ -193,7 +197,7 @@ const validateScorecardCreationInput = async (body) => {
         if (!body.creator || !body.holeSelection || !body.course || !body.date || !body.players ||!body.scores) {
             throw new Error("creator, holeSelection, course, date, and scores are required");
         }
-        const v_body = await  (body);
+        const v_body = await validateScorecardDataInput(body);
         if (!v_body.isValid) {
             return { isValid: false, message: v_body.message };
         }

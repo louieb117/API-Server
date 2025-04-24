@@ -132,16 +132,16 @@ GET http://localhost:3000/api/request/scorecards
 GET http://localhost:3000/api/request/scorecards/67f8943ed64a99c0f4abb9ca
 
 ################# Read a scorecard by userid/username ################
-GET http://localhost:3000/api/request/scorecards/user/67c92bfe82104d0c94b23a12
+GET http://localhost:3000/api/request/scorecards/user/Fin.tester
 
 ################# Update scorecard data ##############################
-PUT http://localhost:3000/api/request/scorecards/user/update/67f8943ed64a99c0f4abb9ca
+PUT http://localhost:3000/api/request/scorecards/user/update/67f8965ad64a99c0f4abb9d4
 content-type: application/json
 
 {
   "scores": 
   {
-    "peter.tester": [4, 2, 2, 5, 2, 8, 6, 4]
+    "peter.tester": [0, 0, 0, 0, 0, 0, 0, 0, 0]
   }
 }
 
