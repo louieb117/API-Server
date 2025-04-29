@@ -1,10 +1,11 @@
 {
     "active" : {
         "type" : "boolean",
-        "required" : true
+        "required" : true,
+        "default" : true
     },
     "creator" : {
-        "type" : "string",
+        "type" : "Object",
         "required" : true
     },
     "holeSelection" : {

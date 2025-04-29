@@ -97,7 +97,30 @@ const validateScorecardPlayers = async (body) => {
     }
 };
 
-const validateScorecardScores = async (body, id) => {
+const validateScorecardScoresCreate = async (body) => {
+    try{
+        if (body.scores.length < 1 || body.scores.length > 4) {
+            throw new Error("There must be between 1 and 4 scores");
+        }
+
+        // Ensure each player has scores matching the hole selection
+        for (const [playerIndex, playerScores] of Object.entries(body.scores)) {
+            console.log('score counts', playerIndex, playerScores.length, body.holeSelection);
+            if (body.holeSelection && playerScores.length !== body.holeSelection) {
+                throw new Error(`Player ${playerIndex} must have scores for ${body.holeSelection} holes`);
+            }
+        }
+
+        return { isValid: true};
+
+    }
+    catch (error) {
+        console.log('error', error.message);
+        return { isValid: false, message: error.message};
+    }
+};
+
+const validateScorecardScoresUpdate = async (body, id) => {
 
     const refScorecard = id ? await Scorecard.findById(id) : null;
     if (id && !refScorecard) {
@@ -115,9 +138,6 @@ const validateScorecardScores = async (body, id) => {
             if (!(body.holeSelection) && playerScores.length !== refScorecard.holeSelection) {
                 console.log(`Player ${playerIndex} must have scores for ${refScorecard.holeSelection} holes`);
                 throw new Error(`Player ${playerIndex} must have scores for ${refScorecard.holeSelection} holes`);
-            }
-            if (body.holeSelection && playerScores.length !== body.holeSelection) {
-                throw new Error(`Player ${playerIndex} must have scores for ${body.holeSelection} holes`);
             }
         }
 
@@ -168,8 +188,8 @@ const validateScorecardDataInput = async (body, id) => {
                         break;
                     case "scores":
                         const scoresValidation = id 
-                            ? await validateScorecardScores(body, id) 
-                            : await validateScorecardScores(body);
+                            ? await validateScorecardScoresUpdate(body, id) 
+                            : await validateScorecardScoresCreate(body);
                         
                         if (!scoresValidation.isValid) {
                             data.scores = body.scores;
@@ -236,6 +256,7 @@ module.exports = {
     validateScorecardCourse,
     validateScorecardDate,
     validateScorecardPlayers,
-    validateScorecardScores,
+    validateScorecardScoresCreate,
+    validateScorecardScoresUpdate,
     validateScorecardCreator
 };

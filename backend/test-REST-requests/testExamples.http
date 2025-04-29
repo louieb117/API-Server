@@ -3,7 +3,7 @@
 ################# General ############################################
 ######################################################################
 ######################################################################
-GET http://192.168.5.34:3000/api
+GET http://localhost:3000/api
 
 ######################################################################
 ######################################################################
@@ -52,7 +52,7 @@ Content-Type: application/json
 ######################################################################
 
 ################# Create user ########################################
-POST http://192.168.5.34:3000/api/request/users
+POST http://localhost:3000/api/request/users
 content-type: application/json
 
 {
@@ -129,7 +129,7 @@ content-type: application/json
 GET http://localhost:3000/api/request/scorecards
 
 ################# Read a scorecard by id ##############################
-GET http://localhost:3000/api/request/scorecards/67f8943ed64a99c0f4abb9ca
+GET http://localhost:3000/api/request/scorecards/68101f14af912a4fc8d69fe6
 
 ################# Read a scorecard by userid/username ################
 GET http://localhost:3000/api/request/scorecards/user/Fin.tester
