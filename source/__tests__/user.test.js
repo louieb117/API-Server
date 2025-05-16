@@ -1,8 +1,8 @@
-const request = require('supertest');
+// const request = require('supertest');
 const http = require('http');
 const app = require('../index'); // Adjust the path as necessary
 const server = http.createServer(app); // Create an HTTP server
-const { mongoose } = require('../configs/mongodb'); // Import the mongoose instance
+const { mongoose } = require('../configs/mongodb.js'); // Import the mongoose instance
 
 require('dotenv').config();
 const { reqCreateUser, reqUpdateUser } = require('../utils/data/user.test.data.js');

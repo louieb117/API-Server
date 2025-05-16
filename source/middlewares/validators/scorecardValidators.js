@@ -2,7 +2,9 @@ const Scorecard = require("../../models/scorecard");
 
 const validateScorecardInDatabase = async (id) => {
     try{
+        console.log('validateScorecardInDatabase id', id);
         const scorecard = await Scorecard.findById(id);
+        console.log('validateScorecardInDatabase scorecard', scorecard);
         if (!scorecard) {
             return {
                 isValid: false,
@@ -17,8 +19,9 @@ const validateScorecardInDatabase = async (id) => {
 
 const validateScorecardNotInDatabase = async (id) => {
     try{
-        const scorecard = await
-        Scorecard.findById(id);
+        console.log('validateScorecardNotInDatabase id', id);
+        const scorecard = await Scorecard.findById(id);
+        console.log('validateScorecardNotInDatabase scorecard', scorecard);
         if (scorecard) {
             return {
                 isValid: false,
