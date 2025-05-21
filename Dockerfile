@@ -32,7 +32,7 @@ RUN npm install --include=dev \
     && npm install supertest --save \
     && npm install cross-env --save \
     && npm rebuild  \
-    && npm list --depth=0 && ls -la
+    && npm list --depth=0
     
 USER root
 # Set premissions for user and group
@@ -45,7 +45,7 @@ USER nodeuser
 EXPOSE 3000
 
 # RUN ls -la
-RUN pwd && ls -la
+# RUN pwd && ls -la
 #RUN ls -la /app
 # Debug Tests
 # RUN pwd && ls -la 

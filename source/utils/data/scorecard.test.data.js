@@ -15,6 +15,7 @@ const reqUserName3 = 'Jake Doe';
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 const reqCreateScorecardBody = {
+    "creator": "67c92bfe82104d0c94b23a12",
     "holeSelection": 9,
     "course": "Test Course 009",
     "date": "{{$Timestamp}}",

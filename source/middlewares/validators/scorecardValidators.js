@@ -13,15 +13,16 @@ const validateScorecardInDatabase = async (id) => {
         }
         return { isValid: true, scorecard: scorecard };
     } catch (error) {
+        console.log('validateScorecardInDatabase error:', error.message);
         return { isValid: false, message: error.message };
     }
 };
 
 const validateScorecardNotInDatabase = async (id) => {
     try{
-        console.log('validateScorecardNotInDatabase id', id);
+        console.log('validateScorecardNotInDatabase > Input id', id);
         const scorecard = await Scorecard.findById(id);
-        console.log('validateScorecardNotInDatabase scorecard', scorecard);
+        console.log('validateScorecardNotInDatabase > scorecard found: ', scorecard);
         if (scorecard) {
             return {
                 isValid: false,
@@ -31,14 +32,15 @@ const validateScorecardNotInDatabase = async (id) => {
         return { isValid: true };
     }
     catch (error) {
+        console.log('validateScorecardNotInDatabase error:', error.message);
         return { isValid: false, message: error.message };
     }
 };
 
 const validateScorecardCreator = async (body) => {
     try{
-        const scorecard = await
-        Scorecard.findById(body.creator);
+        const scorecard = await Scorecard.findById(body.creator);
+        console.log('validateScorecardCreator scorecard', scorecard);
         if (!scorecard) {
             return {
                 isValid: false,
@@ -48,6 +50,7 @@ const validateScorecardCreator = async (body) => {
         return { isValid: true };
     }
     catch (error) {
+        console.log('validateScorecardCreator error:', error.message);
         return { isValid: false, message: error.message };
     }
 };
@@ -60,6 +63,7 @@ const validateScorecardHoleSelection = async (body) => {
         return { isValid: true };
     }
     catch (error) {
+        console.log('validateScorecardHoleSelection error:', error.message);
         return { isValid: false, message: error.message };
     }
 };
@@ -72,6 +76,7 @@ const validateScorecardCourse = async (body) => {
         return { isValid: true };
     }
     catch (error) {
+        console.log('validateScorecardCourse error:', error.message);
         return { isValid: false, message: error.message };
     }
 };
@@ -84,6 +89,7 @@ const validateScorecardDate = async (body) => {
         return { isValid: true };
     }
     catch (error) {
+        console.log('validateScorecardDate error:', error.message);
         return { isValid: false, message: error.message };
     }
 };
@@ -96,6 +102,7 @@ const validateScorecardPlayers = async (body) => {
         return { isValid: true };
     }
     catch (error) {
+        console.log('validateScorecardPlayers error:', error.message);
         return { isValid: false, message: error.message };
     }
 };
@@ -118,18 +125,17 @@ const validateScorecardScoresCreate = async (body) => {
 
     }
     catch (error) {
-        console.log('error', error.message);
+        console.log('validateScorecardScoresCreate error:', error.message);
         return { isValid: false, message: error.message};
     }
 };
 
 const validateScorecardScoresUpdate = async (body, id) => {
-
     const refScorecard = id ? await Scorecard.findById(id) : null;
     if (id && !refScorecard) {
+        console.log('validateScorecardScoresUpdate error: Scorecard not found');
         throw new Error("Scorecard not found");
     }
-    // console.log('flag 0  - req.body.scores', body.scores);
     try{
         if (body.scores.length < 1 || body.scores.length > 4) {
             throw new Error("There must be between 1 and 4 scores");
@@ -148,7 +154,7 @@ const validateScorecardScoresUpdate = async (body, id) => {
 
     }
     catch (error) {
-        console.log('error', error.message);
+        console.log('validateScorecardScoresUpdate error:', error.message);
         return { isValid: false, message: error.message};
     }
 };
@@ -205,6 +211,7 @@ const validateScorecardDataInput = async (body, id) => {
         }
         return { isValid: true};
     } catch (error) {
+        console.log('validateScorecardDataInput error:', error.message);
         return { isValid: false, message: error.message};
     }
 };
@@ -212,11 +219,6 @@ const validateScorecardDataInput = async (body, id) => {
 
 const validateScorecardCreationInput = async (body) => {
     try {
-        // const scorecardValidation = await validateScorecardNotInDatabase(body);
-        // if (!scorecardValidation.isValid) {
-        //     return { isValid: false, message: scorecardValidation.message };
-        // }
-
         if (!body.creator || !body.holeSelection || !body.course || !body.date || !body.players ||!body.scores) {
             throw new Error("creator, holeSelection, course, date, and scores are required");
         }
@@ -227,6 +229,7 @@ const validateScorecardCreationInput = async (body) => {
 
         return { isValid: true , scorecard: v_body.scorecard };
     }   catch (error) {
+        console.log('validateScorecardCreationInput error:', error.message);
         return { isValid: false, message: error.message, scorecard: body };
     }
 };
@@ -244,22 +247,23 @@ const validateScorecardUpdateInput = async (body, id) => {
 
         return { isValid: true };
     }   catch (error) {
+        console.log('validateScorecardUpdateInput error:', error.message);
         return { isValid: false, message: error.message, scorecard: body };
     }
 }
 
 
 module.exports = {
-    validateScorecardCreationInput,
     validateScorecardInDatabase,
     validateScorecardNotInDatabase,
-    validateScorecardUpdateInput,
-    validateScorecardDataInput,
+    validateScorecardCreator,
     validateScorecardHoleSelection,
     validateScorecardCourse,
     validateScorecardDate,
     validateScorecardPlayers,
     validateScorecardScoresCreate,
     validateScorecardScoresUpdate,
-    validateScorecardCreator
+    validateScorecardDataInput,
+    validateScorecardCreationInput,
+    validateScorecardUpdateInput
 };

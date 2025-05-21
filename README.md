@@ -43,6 +43,8 @@ podman-compose down -t 0
 podman-compose down -t 0 && podman-compose build --no-cache && podman run --rm -it localhost/api-server_backend:latest bash -c "npm test" 
 
 podman run --rm -it localhost/api-server_backend:latest bash -c "npm test" 
+
+podman run --rm -it localhost/api-server_backend:latest bash -c "npm --trace-warnings test --detectOpenHandles --verbose "    
 ```
 
 The server will start at http://localhost:3000.
