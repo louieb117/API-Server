@@ -8,7 +8,7 @@ const validateScorecardInDatabase = async (id) => {
         if (!scorecard) {
             return {
                 isValid: false,
-                message: "Scorecard not found",
+                message: "Scorecard not found"
             };        
         }
         return { isValid: true, scorecard: scorecard };
@@ -26,7 +26,7 @@ const validateScorecardNotInDatabase = async (id) => {
         if (scorecard) {
             return {
                 isValid: false,
-                message: "Scorecard already exists",
+                message: "Scorecard already exists"
             };        
         }
         return { isValid: true };
@@ -44,7 +44,7 @@ const validateScorecardCreator = async (body) => {
         if (!scorecard) {
             return {
                 isValid: false,
-                message: "Scorecard creator not found",
+                message: "Scorecard creator not found"
             };        
         }
         return { isValid: true };

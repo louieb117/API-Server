@@ -1,6 +1,18 @@
 require('dotenv').config();
 const Scorecard = require("../../../models/scorecard.js");
-const { reqScorecardID,reqCreateScorecardBody } = require('../../../utils/data/scorecard.test.data.js');
+const { 
+    reqScorecardID,
+    reqCreateScorecardBody,
+    reqCreateBody_c_1,
+    reqCreateBody_ic_HS_1,
+    reqCreateBody_ic_HS_2,
+    reqCreateBody_ic_C_1,
+    reqCreateBody_ic_P_1,
+    reqCreateBody_ic_P_2,
+    reqCreateBody_ic_P_3,
+    reqCreateBody_ic_SC_1,
+    reqCreateBody_ic_SC_2
+} = require('../../../utils/data/scorecard.test.data.js');
 const { mockSocrecardResponse01 } = require('../../../utils/data/scorecard.mock.data.js');
 const {
     validateScorecardInDatabase,
@@ -60,50 +72,101 @@ describe('Scorecard Validation Logic', () => {
     // 3. validateScorecardCreator
     describe('validateScorecardCreator', () => {
         // Test: Valid creator
-        test('should return isValid=true for valid creator', () => {
+        test('should return isValid=true for valid creator', async () => {
             Scorecard.findById.mockResolvedValue(mockSocrecardResponse01);
-            const result = validateScorecardCreator(reqCreateScorecardBody);
+            const result = await validateScorecardCreator(reqCreateScorecardBody);
             expect(result.isValid).toBe(true);
         });
         // Test: Invalid creator
-        test('should return isValid=false for invalid creator', () => {
-            const invalidCreator = { creator: '' };
-            const result = validateScorecardCreator(invalidCreator);
+        test('should return isValid=false for invalid creator', async () => {
+            Scorecard.findById.mockResolvedValue(null);
+            const result = await validateScorecardCreator(reqCreateScorecardBody);
             expect(result.isValid).toBe(false);
         });
     });
 
-    // // 4. validateScorecardHoleSelection
-    // describe('validateScorecardHoleSelection', () => {
-    //     // Test: Valid hole selection
-    //     test('should return isValid=true for valid hole selection', () => {
-    //         const validSelection = { /* valid hole selection */ };
-    //         const result = validateScorecardHoleSelection(validSelection);
-    //         expect(result.isValid).toBe(true);
-    //     });
-    //     // Test: Invalid hole selection
-    //     test('should return isValid=false for invalid hole selection', () => {
-    //         const invalidSelection = { /* invalid hole selection */ };
-    //         const result = validateScorecardHoleSelection(invalidSelection);
-    //         expect(result.isValid).toBe(false);
-    //     });
-    // });
+    // 4. validateScorecardHoleSelection
+    describe('validateScorecardHoleSelection', () => {
+        // Test: Valid hole selection
+        test('should return isValid=true for valid hole selection', async () => {
+            const result = await validateScorecardHoleSelection(reqCreateScorecardBody);
+            expect(result.isValid).toBe(true);
+        });
+        // Test: Invalid hole selection / out of range / lower than 9
+        test('should return isValid=false for invalid hole selection that is lower than 9', async () => {
+            const result = await validateScorecardHoleSelection(reqCreateBody_ic_HS_1);
+            expect(result.isValid).toBe(false);
+        });
+        // Test: Invalid hole selection / out of range / higher than 18
+        test('should return isValid=false for invalid hole selection that is higher than 18', async () => {
+            const result = await validateScorecardHoleSelection(reqCreateBody_ic_HS_2);
+            expect(result.isValid).toBe(false);
+        });
+        // Test: Invalid hole selection / out of range / empty
+        test('should return isValid=false for invalid hole selection that is empty', async () => {
+            const result = await validateScorecardHoleSelection({ holeSelection: '' });
+            expect(result.isValid).toBe(false);
+        });
+        // Test: Invalid hole selection / out of range / null
+        test('should return isValid=false for invalid hole selection that is null', async () => {
+            const result = await validateScorecardHoleSelection({ holeSelection: null });
+            expect(result.isValid).toBe(false);
+        });
+        // Test: Invalid hole selection / out of range / undefined
+        test('should return isValid=false for invalid hole selection that is undefined', async () => {
+            const result = await validateScorecardHoleSelection({ holeSelection: undefined });
+            expect(result.isValid).toBe(false);
+        });
+    });
 
-    // // 5. validateScorecardCourse
-    // describe('validateScorecardCourse', () => {
-    //     // Test: Valid course
-    //     test('should return isValid=true for valid course', () => {
-    //         const validCourse = { /* valid course fields */ };
-    //         const result = validateScorecardCourse(validCourse);
-    //         expect(result.isValid).toBe(true);
-    //     });
-    //     // Test: Invalid course
-    //     test('should return isValid=false for invalid course', () => {
-    //         const invalidCourse = { /* invalid course fields */ };
-    //         const result = validateScorecardCourse(invalidCourse);
-    //         expect(result.isValid).toBe(false);
-    //     });
-    // });
+    // 5. validateScorecardCourse
+    describe('validateScorecardCourse', () => {
+        // Test: Valid course
+        test('should return isValid=true for valid course', async () => {
+            const result = await validateScorecardCourse(reqCreateScorecardBody);
+            expect(result.isValid).toBe(true);
+        });
+        // Test: Invalid course / out of range / too short
+        test('should return isValid=false for invalid course that is too short', async () => {
+            const result = await validateScorecardCourse(reqCreateBody_ic_C_1);
+            expect(result.isValid).toBe(false);
+        });
+        // Test: Invalid course / out of range / too long
+        test('should return isValid=false for invalid course that is too long', async () => {
+            const result = await validateScorecardCourse(reqCreateBody_ic_C_1);
+            expect(result.isValid).toBe(false);
+        });
+        // Test: Invalid course / empty
+        test('should return isValid=false for invalid course that is empty', async () => {
+            const result = await validateScorecardCourse({ course: '' });
+            expect(result.isValid).toBe(false);
+        });
+        // Test: Invalid course / null
+        test('should return isValid=false for invalid course that is null', async () => {
+            const result = await validateScorecardCourse({ course: null });
+            expect(result.isValid).toBe(false);
+        });
+        // Test: Invalid course / undefined
+        test('should return isValid=false for invalid course that is undefined', async () => {
+            const result = await validateScorecardCourse({ course: undefined });
+            expect(result.isValid).toBe(false);
+        });
+        // Test: Invalid course / boolean
+        test('should return isValid=false for invalid course that is a boolean', async () => {
+            const result = await validateScorecardCourse({ course: true });
+            expect(result.isValid).toBe(false);
+        });
+        // Test: Invalid course / object
+        test('should return isValid=false for invalid course that is an object', async () => {
+            const result = await validateScorecardCourse({ course: {} });
+            expect(result.isValid).toBe(false);
+        });
+        // Test: Invalid course / array
+        test('should return isValid=false for invalid course that is an array', async () => {
+            const result = await validateScorecardCourse({ course: [] });
+            expect(result.isValid).toBe(false);
+        });
+    });
 
     // // 6. validateScorecardDate
     // describe('validateScorecardDate', () => {
@@ -121,53 +184,134 @@ describe('Scorecard Validation Logic', () => {
     //     });
     // });
 
-    // // 7. validateScorecardPlayers
-    // describe('validateScorecardPlayers', () => {
-    //     // Test: Valid players array
-    //     test('should return isValid=true for valid players', () => {
-    //         const validPlayers = { players: ['player1', 'player2'] };
-    //         const result = validateScorecardPlayers(validPlayers);
-    //         expect(result.isValid).toBe(true);
-    //     });
-    //     // Test: Invalid players array
-    //     test('should return isValid=false for invalid players', () => {
-    //         const invalidPlayers = { players: [] };
-    //         const result = validateScorecardPlayers(invalidPlayers);
-    //         expect(result.isValid).toBe(false);
-    //     });
-    // });
+    // 7. validateScorecardPlayers
+    describe('validateScorecardPlayers', () => {
+        // Test: Valid players array
+        test('should return isValid=true for valid players', async () => {
+            const result = await validateScorecardPlayers(reqCreateScorecardBody);
+            expect(result.isValid).toBe(true);
+        });
+        // Test: Invalid players array / Out of range / too short
+        test('should return isValid=false for not enought players', async () => {
+            const result = await validateScorecardPlayers(reqCreateBody_ic_P_1);
+            expect(result.isValid).toBe(false);
+        });
+        // Test: Invalid players array / Out of range / too long
+        test('should return isValid=false for too many players', async () => {
+            const result = await validateScorecardPlayers(reqCreateBody_ic_P_2);
+            expect(result.isValid).toBe(false);
+        });
+        // Test: Invalid players array / duplicates
+        test('should return isValid=false for duplicates', async () => {
+            const result = await validateScorecardPlayers(reqCreateBody_ic_P_3);
+            expect(result.isValid).toBe(false);
+        });
+        // Test: Invalid players array / empty
+        test('should return isValid=false for empty players array', async () => {
+            const result = await validateScorecardPlayers({ players: [] });
+            expect(result.isValid).toBe(false);
+        });
+        // Test: Invalid players array / null
+        test('should return isValid=false for null players array', async () => {
+            const result = await validateScorecardPlayers({ players: null });
+            expect(result.isValid).toBe(false);
+        });
+        // Test: Invalid players array / undefined
+        test('should return isValid=false for undefined players array', async () => {
+            const result = await validateScorecardPlayers({ players: undefined });
+            expect(result.isValid).toBe(false);
+        });
+    });
 
-    // // 8. validateScorecardScoresCreate
-    // describe('validateScorecardScoresCreate', () => {
-    //     // Test: Valid scores for creation
-    //     test('should return isValid=true for valid scores', () => {
-    //         const validScores = { scores: [3, 4, 5] };
-    //         const result = validateScorecardScoresCreate(validScores);
-    //         expect(result.isValid).toBe(true);
-    //     });
-    //     // Test: Invalid scores for creation
-    //     test('should return isValid=false for invalid scores', () => {
-    //         const invalidScores = { scores: ['a', null] };
-    //         const result = validateScorecardScoresCreate(invalidScores);
-    //         expect(result.isValid).toBe(false);
-    //     });
-    // });
+    // 8. validateScorecardScoresCreate
+    describe('validateScorecardScoresCreate', () => {
+        // Test: Valid scores for creation
+        test('should return isValid=true for valid scores', async () => {
+            const result = await validateScorecardScoresCreate(reqCreateBody_c_1);
+            expect(result.isValid).toBe(true);
+        });
+        // Test: Invalid scores for creation / scores are less than holeSelection
+        test('should return isValid=false for invalid scores that are less than holeSelection', async () => {
+            const result = await validateScorecardScoresCreate(reqCreateBody_ic_SC_1);
+            expect(result.isValid).toBe(false);
+        });
+        // Test: Invalid scores for creation / scores are more than holeSelection
+        test('should return isValid=false for invalid scores that are more than holeSelection', async () => {
+            const result = await validateScorecardScoresCreate(reqCreateBody_ic_SC_2);
+            expect(result.isValid).toBe(false);
+        });
+        // Test: Invalid scores for creation / empty
+        test('should return isValid=false for empty scores', async () => {
+            const result = await validateScorecardScoresCreate({ scores: [] });
+            expect(result.isValid).toBe(false);
+        });
+        // Test: Invalid scores for creation / null
+        test('should return isValid=false for null scores', async () => {
+            const result = await validateScorecardScoresCreate({ scores: null });
+            expect(result.isValid).toBe(false);
+        });
+        // Test: Invalid scores for creation / undefined
+        test('should return isValid=false for undefined scores', async () => {
+            const result = await validateScorecardScoresCreate({ scores: undefined });
+            expect(result.isValid).toBe(false);
+        }); 
 
-    // // 9. validateScorecardScoresUpdate
-    // describe('validateScorecardScoresUpdate', () => {
-    //     // Test: Valid scores for update
-    //     test('should return isValid=true for valid update scores', () => {
-    //         const validUpdateScores = { scores: [4, 5, 6] };
-    //         const result = validateScorecardScoresUpdate(validUpdateScores);
-    //         expect(result.isValid).toBe(true);
-    //     });
-    //     // Test: Invalid scores for update
-    //     test('should return isValid=false for invalid update scores', () => {
-    //         const invalidUpdateScores = { scores: [null, undefined] };
-    //         const result = validateScorecardScoresUpdate(invalidUpdateScores);
-    //         expect(result.isValid).toBe(false);
-    //     });
-    // });
+    });
+
+    // 9. validateScorecardScoresUpdate
+    describe('validateScorecardScoresUpdate', () => {
+        // Test: Valid scores for update
+        test('should return isValid=true for valid update scores', () => {
+            const result = validateScorecardScoresUpdate(reqCreateBody_c_1);
+            expect(result.isValid).toBe(true);
+        });
+        // Test: Invalid scores for update / scores are less than holeSelection
+        test('should return isValid=false for invalid update scores that are less than holeSelection', () => {
+            const result = validateScorecardScoresUpdate(reqCreateBody_ic_SC_1);
+            expect(result.isValid).toBe(false);
+        });
+        // Test: Invalid scores for update / scores are more than holeSelection
+        test('should return isValid=false for invalid update scores that are more than holeSelection', () => {
+            const result = validateScorecardScoresUpdate(reqCreateBody_ic_SC_2);
+            expect(result.isValid).toBe(false);
+        });
+        // Test: Invalid scores for update / holeSelection is not provided
+        test('should return isValid=false for invalid update scores that are not provided', () => {
+            const result = validateScorecardScoresUpdate({ scores: [4, 4, 4] });
+            expect(result.isValid).toBe(false);
+        });
+        // Test: Invalid scores for update / scores is not provided
+        test('should return isValid=false for invalid update scores that are not provided', () => {
+            const result = validateScorecardScoresUpdate({ holeSelection: 9 });
+            expect(result.isValid).toBe(false);
+        });
+        // Test: Invalid scores for update / empty
+        test('should return isValid=false for invalid update scores that are empty', () => {
+            const result = validateScorecardScoresUpdate({ holeSelection: 0, scores: [] });
+            expect(result.isValid).toBe(false);
+        });
+        // Test: Invalid scores for update / null
+        test('should return isValid=false for invalid update scores that are null', () => {
+            const result = validateScorecardScoresUpdate({ holeSelection: null, scores: null });
+            expect(result.isValid).toBe(false);
+        });
+        // Test: Invalid scores for update / undefined
+        test('should return isValid=false for invalid update scores that are undefined', () => {
+            const result = validateScorecardScoresUpdate({ holeSelection: undefined, scores: undefined });
+            expect(result.isValid).toBe(false);
+        });
+        
+
+
+
+
+        // Test: Invalid scores for update
+        test('should return isValid=false for invalid update scores', () => {
+            const invalidUpdateScores = { scores: [null, undefined] };
+            const result = validateScorecardScoresUpdate(invalidUpdateScores);
+            expect(result.isValid).toBe(false);
+        });
+    });
 
     // // 10. validateScorecardDataInput
     // describe('validateScorecardDataInput', () => {
