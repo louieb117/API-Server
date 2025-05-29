@@ -85,6 +85,31 @@ const reqCreateBody_ic_SC_2 = {
         "john.tester": [4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
     }
 };
+
+const reqCreateBody_ic_SU_1 = {
+    "creator": "67c92bfe82104d0c94b23a12",
+    "holeSelection": 9,
+    "players": ["Fin.tester", "jesus.tester", "Roboto.tester", "john.tester"],
+    "scores": 
+    {
+        "Roboto.tester": [4, 4, 4, 4, 4],
+        "jesus.tester": [4, 4, 4, 4, 4],
+        "peter.tester": [4, 4, 4, 4, 4],
+        "john.tester": [4, 4, 4, 4, 4]
+    }
+};
+const reqCreateBody_ic_SU_2 = {
+    "creator": "67c92bfe82104d0c94b23a12",
+    "holeSelection": 9,
+    "players": ["Fin.tester", "jesus.tester", "Roboto.tester", "john.tester"],
+    "scores": 
+    {
+        "Roboto.tester": [4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+        "jesus.tester": [4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+        "peter.tester": [4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+        "john.tester": [4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
+    }
+};
 /////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////// CREATE SCORECARD TEST DATA //////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -184,6 +209,7 @@ module.exports = {
     reqUserName,
     reqUserName2,
     reqUserName3,
+    
     reqCreateBody_c_1,
     reqCreateBody_ic_HS_1,
     reqCreateBody_ic_HS_2,
@@ -193,7 +219,8 @@ module.exports = {
     reqCreateBody_ic_P_3,
     reqCreateBody_ic_SC_1,
     reqCreateBody_ic_SC_2,
-    // reqCreateBody_ic_SC_3,
+    reqCreateBody_ic_SU_1,
+    reqCreateBody_ic_SU_2,
 
     reqCreateScorecardBody,
     reqCreateScorecardBody2,

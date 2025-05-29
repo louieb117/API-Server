@@ -5,8 +5,11 @@ export default {
     coverageProvider: 'v8',
     testEnvironment: 'node',
     testPathIgnorePatterns: [
-        "/__tests__/Middleware_testing/validation_testing/user.test.js",
-        "/__tests__/Middleware_testing/validation_testing/login.test.js",
+        "__tests__/Middleware_testing/validators_testing/scorecard_validator.test.js",
+        "__tests__/Middleware_testing/validators_testing/libraries_testing/scorecard_validator_lib.test.js",
+
+        "/__tests__/Middleware_testing/validators_testing/user.test.js",
+        "/__tests__/Middleware_testing/validators_testing/login.test.js",
         "/__tests__/Middleware_testing/authMiddleware.test.js",
         "/__tests__/Middleware_testing/error.test.js",
         "/__tests__/user.test.js"

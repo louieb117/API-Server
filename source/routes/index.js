@@ -4,7 +4,7 @@ const loginRoutes = require('./login');
 const userRoutes = require('./users');
 const scorecardRoutes = require('./scorecards');
 const { authenticate } = require('../middlewares/authMiddleware');
-const profileRoutes = require('./profile');
+// const profileRoutes = require('./profile');
 
 // Routes 
 router.get('/', (req, res) => {
@@ -17,6 +17,6 @@ router.use('/request/users', userRoutes);
 
 router.use('/request/scorecards', scorecardRoutes);
 
-router.use('/auth/profile', profileRoutes);
+// router.use('/auth/profile', profileRoutes);
 
 module.exports = router;
