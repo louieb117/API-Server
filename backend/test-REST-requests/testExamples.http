@@ -129,13 +129,13 @@ content-type: application/json
 GET http://localhost:3000/api/request/scorecards
 
 ################# Read a scorecard by id ##############################
-GET http://localhost:3000/api/request/scorecards/68101f14af912a4fc8d69fe6
+GET http://localhost:3000/api/request/scorecards/6835506a513308274da6b2d1
 
 ################# Read a scorecard by userid/username ################
-GET http://localhost:3000/api/request/scorecards/user/Fin.tester
+GET http://localhost:3000/api/request/scorecards/user/67c93f408333cec4179f7904
 
 ################# Update scorecard data ##############################
-PUT http://localhost:3000/api/request/scorecards/user/update/67f8965ad64a99c0f4abb9d4
+PUT http://localhost:3000/api/request/scorecards/user/update/6835506a513308274da6b2d1
 content-type: application/json
 
 {
@@ -146,5 +146,5 @@ content-type: application/json
 }
 
 ################# Delete scorecard ###################################
-DELETE http://localhost:3000/api/request/scorecards/user/delete/67c93f4e8333cec4179f7909
+DELETE http://localhost:3000/api/request/scorecards/user/delete/6835506a513308274da6b2d1
 Authorization

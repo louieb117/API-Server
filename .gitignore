@@ -5,3 +5,4 @@ source/.env
 source/package-lock.json
 source/package.json
 source/node_modules/
+source/coverage/
