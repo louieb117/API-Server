@@ -1,27 +1,38 @@
 const User = require('../../models/user.js');
 
-const validateUserInDatabase = async (username, id) => {
+const validateUserInDatabase = async (id) => {
     try{
-        let user;
-        if (id) {
-            if (id.length > 20 ) {
-                user = await User.findById(id);
-            } else {
-                user = await User.findOne({ username: id });
-            }
-        } else {
-            user = await User.findOne({ username });
+        // let user;
+        // if (id) {
+        //     if (id.length > 20 ) {
+        //         user = await User.findById(id);
+        //     } else {
+        //         user = await User.findOne({ username: id });
+        //     }
+        // } else {
+        //     user = await User.findOne({ username });
+        // }
+        console.log('validateUserInDatabase > id:', id);
+        // Validate input
+        if (!id) {
+            throw new Error("id must be provided");
         }
 
-        if (!user) {
-            return {
-                isValid: false,
-                message: "User not found",
-            };        
+        if (id.length < 20 ) {
+            throw new Error("Invalid id format, it should be a valid MongoDB ObjectId");
         }
+
+        const user = id ? await User.findById(id) : null;
+        console.log('validateUserInDatabase user', user);
+
+        if (!user) {
+            throw new Error("User not found");
+        }
+        
         return { isValid: true, user };
 
     } catch (error) {
+        console.log('validateUserInDatabase error:', error.message);
         return { isValid: false, message: error.message };
     }
 };

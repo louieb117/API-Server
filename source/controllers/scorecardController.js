@@ -25,6 +25,7 @@ const getScorecard = async (req, res) => {
       }
       res.status(200).json(scorecardValidation.scorecard);
     } catch (error) {
+      console.error('Error fetching scorecard:', error); // Log the error
       res.status(404).json({ message: error.message });
     }
 };
@@ -32,17 +33,19 @@ const getScorecard = async (req, res) => {
 const getUsersScorecards = async (req, res) => {
     try{
       // Database Validation: Check if user exists
-      const userValidation = await validateUserInDatabase(null,req.params.id);
+      const userValidation = await validateUserInDatabase(req.params.id);
       if (!userValidation.isValid) {
         return res.status(404).json({ error: userValidation.message });
       }
-      const user = userValidation.user;
-      const userScorecards = await Scorecard.find({ creator: user._id });
+
+      console.log('getUsersScorecards info: input for find()', { creator: req.params.id });
+      const userScorecards = await Scorecard.find({ creator: req.params.id });
       
-      res.status(200).json({Scorecards: userScorecards, User: user._id});
+      res.status(200).json({Scorecards: userScorecards, User: req.params.id});
     } catch (error) {
-        res.status(404).json({ message: error.message });
-        }
+      console.error('Error fetching user scorecards:', error); // Log the error
+      res.status(404).json({ message: error.message });
+    }
 };
 
 const createScorecard = async (req, res) => {
