@@ -132,7 +132,7 @@ GET http://localhost:3000/api/request/scorecards
 GET http://localhost:3000/api/request/scorecards/6835506a513308274da6b2d1
 
 ################# Read a scorecard by userid/username ################
-GET http://localhost:3000/api/request/scorecards/user/67c93f408333cec4179f7904
+GET http://localhost:3000/api/request/scorecards/user/67c92bfe82104d0c94b23a12
 
 ################# Update scorecard data ##############################
 PUT http://localhost:3000/api/request/scorecards/user/update/6835506a513308274da6b2d1

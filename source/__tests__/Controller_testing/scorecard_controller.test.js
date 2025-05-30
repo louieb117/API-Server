@@ -55,6 +55,12 @@ jest.mock('../../middlewares/validators/libraries/scorecard.js', () => ({
     validateScorecardScoresUpdate: jest.fn()
 }));
 
+const { validateUserInDatabase } = require('../../middlewares/validators/userValidators.js');
+
+jest.mock('../../middlewares/validators/userValidators.js', () => ({
+    validateUserInDatabase: jest.fn()
+}));
+
 // Test suite for Scorecard Controller
 describe('Scorecard Controller Testing', () => {
     // 1. getAllScorecards
@@ -113,7 +119,7 @@ describe('Scorecard Controller Testing', () => {
             const req = { params: { id: reqUserID } };
             const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
             await getUsersScorecards(req, res);
-            expect(validateUserInDatabase).toHaveBeenCalledWith(null, reqUserID);
+            expect(validateUserInDatabase).toHaveBeenCalledWith(reqUserID);
             expect(Scorecard.find).toHaveBeenCalledWith({ creator: reqUserID });
             expect(res.status).toHaveBeenCalledWith(200);
             expect(res.json).toHaveBeenCalledWith({ Scorecards: [mockSocrecardResponse01], User: reqUserID });

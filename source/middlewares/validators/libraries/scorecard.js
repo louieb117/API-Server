@@ -133,7 +133,6 @@ const validateScorecardScoresCreate = async (body) => {
 const validateScorecardScoresUpdate = async (body, id) => {
     const refScorecard = id ? await Scorecard.findById(id) : null;
     if (id && !refScorecard) {
-        console.log('validateScorecardScoresUpdate error: Scorecard not found');
         throw new Error("Scorecard not found");
     }
     try{
