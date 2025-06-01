@@ -22,6 +22,7 @@ const getScorecard = async (req, res) => {
     const scorecardValidation = await validateScorecardInDatabase(req.params.id);
     if (!scorecardValidation.isValid) {
       return res.status(404).json({ error: scorecardValidation.message });
+
     }
     res.status(200).json(scorecardValidation.scorecard);
   } catch (error) {
@@ -46,6 +47,7 @@ const getUsersScorecards = async (req, res) => {
     console.error('Error fetching user scorecards:', error); // Log the error
     res.status(404).json({ message: error.message });
   }
+
 };
 
 const createScorecard = async (req, res) => {

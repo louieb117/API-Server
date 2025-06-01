@@ -68,6 +68,7 @@ jest.mock('../../middlewares/validators/libraries/scorecard.js', () => ({
 }));
 
 // Mocking user validators
+
 const { validateUserInDatabase } = require('../../middlewares/validators/userValidators.js');
 
 jest.mock('../../middlewares/validators/userValidators.js', () => ({

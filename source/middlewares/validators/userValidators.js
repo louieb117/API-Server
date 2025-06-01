@@ -31,6 +31,7 @@ const validateUserInDatabase = async (id) => {
         
         return { isValid: true, user: user, message: "User exists" };
 
+
     } catch (error) {
         console.log('validateUserInDatabase error:', error.message);
         return { isValid: false, message: error.message };
