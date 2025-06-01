@@ -30,7 +30,19 @@ jest.mock('../../models/scorecard.js', () => ({
     findByIdAndDelete: jest.fn()
 }));
 
-// Mocking the validators
+// Mocking Scorecard validators
+const { 
+    validateScorecardDataInput,
+    validateScorecardCreationInput
+ } = require('../../middlewares/validators/scorecardValidators.js');
+
+jest.mock('../../middlewares/validators/scorecardValidators.js', () => ({
+    validateScorecardDataInput: jest.fn(),
+    validateScorecardCreationInput: jest.fn(),
+    validateScorecardUpdateInput: jest.fn()
+}));
+
+// Mocking the scorecard library validators
 const {
     validateScorecardInDatabase,
     validateScorecardNotInDatabase,
@@ -54,6 +66,8 @@ jest.mock('../../middlewares/validators/libraries/scorecard.js', () => ({
     validateScorecardScoresCreate: jest.fn(),
     validateScorecardScoresUpdate: jest.fn()
 }));
+
+// Mocking user validators
 
 const { validateUserInDatabase } = require('../../middlewares/validators/userValidators.js');
 
@@ -133,6 +147,50 @@ describe('Scorecard Controller Testing', () => {
             expect(res.status).toHaveBeenCalledWith(404);
             expect(res.json).toHaveBeenCalledWith({ error: 'User not found' });
         });
+    });
+
+    // 4. createScorecard
+    describe('createScorecard', () => {
+        test('should create a new scorecard', async () => {
+            validateUserInDatabase.mockResolvedValue({ isValid: true, user: reqUserID });
+            validateScorecardCreationInput.mockResolvedValue({ isValid: true });
+            // validateScorecardDataInput.mockResolvedValue({ isValid: true });
+
+
+            Scorecard.create.mockResolvedValue(mockSocrecardResponse01);
+            const req = { params: { id: reqUserID }, body: reqCreateBody_c_1 };
+            const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+            await createScorecard(req, res);
+
+            
+
+            expect(validateUserInDatabase).toHaveBeenCalledWith(reqUserID);
+            expect(validateScorecardCreationInput).toHaveBeenCalledWith(reqCreateBody_c_1);
+            // expect(validateScorecardDataInput).toHaveBeenCalledWith(reqCreateBody_c_1);
+            
+            expect(res.status).toHaveBeenCalledWith(201);
+            expect(res.json).toHaveBeenCalledWith({
+                message: "New Scorecard Created!",
+                data: mockSocrecardResponse01
+            });
+
+            expect(Scorecard.create).toHaveBeenCalledWith({
+                ...reqCreateBody_c_1,
+                creator: reqUserID
+            });
+
+        });
+
+        test('should return 400 if validation fails', async () => {
+            validateUserInDatabase.mockResolvedValue({ isValid: false, message: 'User not found' });
+            const req = { params: { id: reqUserID }, body: reqCreateBody_c_1 };
+            const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+            await createScorecard(req, res);
+
+            expect(res.status).toHaveBeenCalledWith(404);
+            expect(res.json).toHaveBeenCalledWith({ error: 'User not found' });
+        }
+        );
     }
     );
 

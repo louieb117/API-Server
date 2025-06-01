@@ -29,7 +29,8 @@ const validateUserInDatabase = async (id) => {
             throw new Error("User not found");
         }
         
-        return { isValid: true, user };
+        return { isValid: true, user: user, message: "User exists" };
+
 
     } catch (error) {
         console.log('validateUserInDatabase error:', error.message);
