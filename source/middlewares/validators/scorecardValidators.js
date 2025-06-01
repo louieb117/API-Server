@@ -68,10 +68,12 @@ const validateScorecardDataInput = async (body, id) => {
 
 const validateScorecardCreationInput = async (body) => {
     try {
+        console.log('validateScorecardCreationInput info: body:', body);
         if (!body.creator || !body.holeSelection || !body.course || !body.date || !body.players ||!body.scores) {
             throw new Error("creator, holeSelection, course, date, and scores are required");
         }
         const v_body = await validateScorecardDataInput(body);
+        console.log('validateScorecardCreationInput info: v_body:', v_body);
         if (!v_body.isValid) {
             return { isValid: false, message: v_body.message };
         }

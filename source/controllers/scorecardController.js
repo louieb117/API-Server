@@ -7,76 +7,79 @@ const {
 } = require('../middlewares/validators/scorecardValidators.js');
 
 const getAllScorecards = async (req, res) => {
-    try{
-      const allScorecards = await Scorecard.find();
-      res.status(200).json(allScorecards);
-    } catch (error) {
-      console.error('Error fetching scorecards:', error); // Log the error
-      res.status(500).json({ message: error.message });
-    }
+  try{
+    const allScorecards = await Scorecard.find();
+    res.status(200).json(allScorecards);
+  } catch (error) {
+    console.error('Error fetching scorecards:', error); // Log the error
+    res.status(500).json({ message: error.message });
+  }
 };
 
 const getScorecard = async (req, res) => {
-    try{
-      // Database Validation: Check if scorecard exists
-      const scorecardValidation = await validateScorecardInDatabase(req.params.id);
-      if (!scorecardValidation.isValid) {
-        return res.status(404).json({ error: scorecardValidation.message });
-      }
-      res.status(200).json(scorecardValidation.scorecard);
-    } catch (error) {
-      console.error('Error fetching scorecard:', error); // Log the error
-      res.status(404).json({ message: error.message });
+  try{
+    // Database Validation: Check if scorecard exists
+    const scorecardValidation = await validateScorecardInDatabase(req.params.id);
+    if (!scorecardValidation.isValid) {
+      return res.status(404).json({ error: scorecardValidation.message });
     }
+    res.status(200).json(scorecardValidation.scorecard);
+  } catch (error) {
+    console.error('Error fetching scorecard:', error); // Log the error
+    res.status(404).json({ message: error.message });
+  }
 };
 
 const getUsersScorecards = async (req, res) => {
-    try{
-      // Database Validation: Check if user exists
-      const userValidation = await validateUserInDatabase(req.params.id);
-      if (!userValidation.isValid) {
-        return res.status(404).json({ error: userValidation.message });
-      }
-
-      console.log('getUsersScorecards info: input for find()', { creator: req.params.id });
-      const userScorecards = await Scorecard.find({ creator: req.params.id });
-      
-      res.status(200).json({Scorecards: userScorecards, User: req.params.id});
-    } catch (error) {
-      console.error('Error fetching user scorecards:', error); // Log the error
-      res.status(404).json({ message: error.message });
+  try{
+    // Database Validation: Check if user exists
+    const userValidation = await validateUserInDatabase(req.params.id);
+    if (!userValidation.isValid) {
+      return res.status(404).json({ error: userValidation.message });
     }
+
+    console.log('getUsersScorecards info: input for find()', { creator: req.params.id });
+    const userScorecards = await Scorecard.find({ creator: req.params.id });
+
+    res.status(200).json({Scorecards: userScorecards, User: req.params.id});
+  } catch (error) {
+    console.error('Error fetching user scorecards:', error); // Log the error
+    res.status(404).json({ message: error.message });
+  }
 };
 
 const createScorecard = async (req, res) => {
-    try { 
-        // validate user
-        const userValidation = await validateUserInDatabase(null,req.params.id);
-        if (!userValidation.isValid) {
-          return res.status(404).json({ error: userValidation.message });
-        }
-        const user = userValidation.user;
-        req.body.creator = user._id.toString();
-
-        // validate input
-        const scorecardCreationValidation = await validateScorecardCreationInput(req.body);
-        if (!scorecardCreationValidation.isValid) {
-            return res.status(400).json({ 
-              vstatus: scorecardCreationValidation.isValid,
-              request: req.body,
-              error: scorecardCreationValidation.message
-            });
-        }
-        const newScorecard = new Scorecard(req.body);
-        // save scorecard
-        newScorecard.save();
-        // // print log
-        console.log(newScorecard);
-    
-        res.status(201).json({ message: "New Scorecard Created!", data: newScorecard });
-        } catch (error) {
-        res.status(407).json({ message: error.message });
+  try { 
+    // validate user
+    const userValidation = await validateUserInDatabase(req.params.id);
+    if (!userValidation.isValid) {
+      return res.status(404).json({ error: userValidation.message });
     }
+
+    const user = userValidation.user;
+    console.log('createScorecard info: user', user);
+
+    req.body.creator = user._id.toString();
+    console.log('createScorecard info: request body', req.body);
+    
+    // validate input
+    const scorecardCreationValidation = await validateScorecardCreationInput(req.body);
+    console.log('createScorecard info: scorecardCreationValidation', scorecardCreationValidation);
+    if (!scorecardCreationValidation.isValid) {
+        return res.status(400).json({ 
+          vstatus: scorecardCreationValidation.isValid,
+          request: req.body,
+          error: scorecardCreationValidation.message
+        });
+    }
+    const newScorecard = await Scorecard.create(req.body);
+    console.log('createScorecard info: newScorecard', newScorecard);
+    
+    res.status(201).json({ message: "New Scorecard Created!", data: newScorecard });
+  } catch (error) {
+        console.error('Error creating scorecard:', error); // Log the error
+        res.status(407).json({ message: error.message });
+  }
 };
 
 const updateScorecard = async (req, res) => {
