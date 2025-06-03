@@ -1,8 +1,8 @@
-const reqScorecardID = '67c92bfe82104d0c94b23a12';
+const reqScorecardID = '67f8943ed64a99c0f4abb9ca';
 const reqScorecardID2 = '68101f14af912a4fc8d69fe7';
 const reqScorecardID3 = '68101f14af912a4fc8d69fe8';
 
-const reqUserID = '68101f14af912a4fc8d69fe7';
+const reqUserID = '67c93f408333cec4179f7904';
 const reqUserID2 = '68101f14af912a4fc8d69fe8';
 const reqUserID3 = '68101f14af912a4fc8d69fe9';
 
@@ -27,6 +27,14 @@ const reqCreateBody_c_1 = {
     "john.tester": [4, 4, 4, 4, 4, 4, 4, 4, 4]
     }
 };
+
+const reqUpdateBody_c_1 = {
+  "scores": 
+  {
+    "peter.tester": [0, 0, 0, 0, 0, 0, 0, 0, 0]
+  }
+};
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////  SCORECARD TEST DATA: Incorrect /////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -225,6 +233,8 @@ module.exports = {
     reqCreateScorecardBody,
     reqCreateScorecardBody2,
     reqCreateScorecardBody3,
+
+    reqUpdateBody_c_1,
 
     reqUpdateScorecardBody,
     reqUpdateScorecardBody2,

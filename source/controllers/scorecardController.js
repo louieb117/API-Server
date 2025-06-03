@@ -52,7 +52,7 @@ const getUsersScorecards = async (req, res) => {
 
 const createScorecard = async (req, res) => {
   try { 
-    // validate user
+    // Database Validation: Check if user exists
     const userValidation = await validateUserInDatabase(req.params.id);
     if (!userValidation.isValid) {
       return res.status(404).json({ error: userValidation.message });
@@ -61,10 +61,14 @@ const createScorecard = async (req, res) => {
     const user = userValidation.user;
     console.log('createScorecard info: user', user);
 
-    req.body.creator = user._id.toString();
+    // Create Feature: Assign the request parameter id to the scorecard's creator field
+    // if (!req.body.creator) {
+    //     console.log('createScorecard info: No creator provided, using user._id');
+    // }
+    req.body.creator = user.toString();
     console.log('createScorecard info: request body', req.body);
     
-    // validate input
+    // Request body validation: Check if all required fields are present
     const scorecardCreationValidation = await validateScorecardCreationInput(req.body);
     console.log('createScorecard info: scorecardCreationValidation', scorecardCreationValidation);
     if (!scorecardCreationValidation.isValid) {
@@ -74,9 +78,20 @@ const createScorecard = async (req, res) => {
           error: scorecardCreationValidation.message
         });
     }
+
+    // Create Feature: Create a new scorecard with the validated request body
     const newScorecard = await Scorecard.create(req.body);
     console.log('createScorecard info: newScorecard', newScorecard);
     
+    // // Save the new scorecard to the database
+    // await newScorecard.save();
+    // console.log('createScorecard info: newScorecard saved', newScorecard);
+    // // Log the new scorecard
+    // console.log('createScorecard info: newScorecard created', newScorecard);
+    // // Respond with the created scorecard
+    // console.log('createScorecard info: response', { message: "New Scorecard Created!", data: newScorecard });
+
+    // Response Feature: Return a success message with the created scorecard
     res.status(201).json({ message: "New Scorecard Created!", data: newScorecard });
   } catch (error) {
         console.error('Error creating scorecard:', error); // Log the error
@@ -85,57 +100,58 @@ const createScorecard = async (req, res) => {
 };
 
 const updateScorecard = async (req, res) => {
-    // console.log('Request body', req.body);
-    // console.log('Request id', req.params.id);
     try{
+      // Database Validation: Check if scorecard exists
       const scorecardValidation = await validateScorecardInDatabase(req.params.id);
       if (!scorecardValidation.isValid) {
-        console.log('Scorecard not found', scorecardValidation.message);
         return res.status(404).json({ error: scorecardValidation.message });
       }
 
-      // refine data
-      const refScorecard = await Scorecard.findById(req.params.id);
-      if (req.params.id) {
-          // console.log(`flag 1 - Existing Scorecard`, refScorecard.scores);
-      
-          // Merge existing scores with the new scores
-          const updatedScores = { ...refScorecard.scores }; // Start with existing scores
-      
-          for (const player in req.body.scores) {
-              if (updatedScores[player]) {
-                  // Update the player's scores
-                  updatedScores[player] = [...req.body.scores[player]];
-              } else {
-                  // Add new player scores if the player doesn't exist
-                  updatedScores[player] = [...req.body.scores[player]];
-              }
-          }
-      
-          // console.log(`flag 2 - Updated Scores`, updatedScores);
-      
-          // Assign the updated scores back to the body
-          req.body.scores = updatedScores;
-      }
-      // console.log(`flag 3 - Final Body Scores`, req.body.scores);
+      const refScorecard = scorecardValidation.scorecard;
+      console.log('updateScorecard Info: reference Scorecard', refScorecard);
 
-      // validate input
+      
+      // Update Feature: Merge existing scores with the new scores
+      const updatedScores = { ...refScorecard.scores }; // Start with existing scores
+  
+      for (const player in req.body.scores) {
+          if (updatedScores[player]) {
+              // Update the player's scores
+              updatedScores[player] = [...req.body.scores[player]];
+          } else {
+              // Add new player scores if the player doesn't exist
+              updatedScores[player] = [...req.body.scores[player]];
+          }
+      }
+      console.log('updateScorecard Info: updatedScores', updatedScores);
+      
+      // Assign the updated scores back to the body
+      req.body.scores = updatedScores;
+      console.log('updateScorecard Info: request body after merging scores', req.body);
+      
+      // Request body validation: Check if at least one field is being updated
       const scorecardUpdateValidation =  await validateScorecardUpdateInput(req.body, req.params.id);
       console.log('scorecardUpdateValidation', scorecardUpdateValidation);
       if (!scorecardUpdateValidation.isValid) {
         return res.status(400).json({ error: scorecardUpdateValidation.message });
       }
 
+      // Update Feature: Update the scorecard with the validated request body
+      console.log('updateScorecard Info: updating scorecard with body', req.body);
       const scorecard = await Scorecard.findByIdAndUpdate(req.params.id, req.body, { new: true }); // Return the updated document
       if (!scorecard) {
         console.error('Scorecard not found or update failed');
         return res.status(404).json({ message: 'Scorecard not found' });
       }
+
+      // Response Feature: Return a success message with the updated scorecard
+      console.log('updateScorecard Info: scorecard updated', scorecard);
       res.status(200).json({
         message: "Scorecard updated!",
         data: scorecard
       });
     } catch (error) {
+      console.error('Error updating scorecard:', error); // Log the error
       res.status(400).json({ message: error.message });
     }
 };

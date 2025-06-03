@@ -1,21 +1,72 @@
-const mockSocrecardResponse01 = {
-    _id: '67c92bfe82104d0c94b23a12', // Use a string representation of ObjectId
-    fullName: 'Mr Roboto Admin',
-    phoneNumber: '6199696660',
-    email: 'test.user.Roboto@potentiamaxima.com',
-    username: 'peter.tester',
-    password: 'Roboto123!',
-    role: 'tester',
-    creationDate: '1741237332',
-    activated: true,
-    currentLocation: 'US',
-    friends: [],
-    __v: 0,
+const mockSocrecardGetResponse01 = {
+  active: true,
+  _id: "67f8943ed64a99c0f4abb9ca",
+  creator: "67c93f408333cec4179f7904",
+  holeSelection: 9,
+  course: "Test Course 99",
+  date: "{{new Date().toISOString()}}",
+  players: [
+    "Roboto.tester",
+    "jesus.tester",
+    "peter.tester",
+    "john.tester"
+  ],
+  scores: {
+    "Roboto.tester": [
+      7, 3, 9, 5, 2, 8, 6, 4, 1
+    ],
+    "jesus.tester": [
+      4, 4, 4, 4, 4, 4, 4, 4, 4
+    ],
+    "peter.tester": [
+      4, 2, 2, 5, 2, 8, 6, 4
+    ],
+    "john.tester": [
+      4, 4, 4, 4, 4, 4, 4, 4, 4
+    ]
+  },
+  __v: 0
 };
 
+const mockSocrecardUpdateResponse01 = {
+  message: "Scorecard updated!",
+  data: {
+    active: true,
+    _id: "67f8943ed64a99c0f4abb9ca",
+    creator: "67c93f408333cec4179f7904",
+    holeSelection: 9,
+    course: "Test Course 99",
+    date: "{{new Date().toISOString()}}",
+    players: [
+      "Roboto.tester",
+      "jesus.tester",
+      "peter.tester",
+      "john.tester"
+    ],
+    scores: {
+      "Roboto.tester": [
+        7, 3, 9, 5, 2, 8, 6, 4, 1
+      ],
+      "jesus.tester": [
+        4, 4, 4, 4, 4, 4, 4, 4, 4
+      ],
+      "peter.tester": [
+        0, 0, 0, 0, 0, 0, 0, 0, 0
+      ],
+      "john.tester": [
+        4, 4, 4, 4, 4, 4, 4, 4, 4
+      ]
+    },
+    __v: 0
+  }
+}
 
+const mockScorecardDeleteResponse01 = {
+  message: "Scorecard deleted"
+}
 
 module.exports = {
-    mockSocrecardResponse01
-
+  mockSocrecardGetResponse01,
+  mockSocrecardUpdateResponse01,
+  mockScorecardDeleteResponse01
 };
