@@ -17,10 +17,13 @@ const {
 } = require('../../utils/data/scorecard.test.data.js');
 
 const {
-    mockSocrecardResponse01
+    mockSocrecardGetResponse01,
+    mockSocrecardUpdateResponse01,
+    mockScorecardDeleteResponse01
 } = require('../../utils/data/scorecard.mock.data.js');
 
 // Mocks:
+// Mocking Scorecard model
 const Scorecard = require('../../models/scorecard.js');
 jest.mock('../../models/scorecard.js', () => ({
     find: jest.fn(),
@@ -33,7 +36,8 @@ jest.mock('../../models/scorecard.js', () => ({
 // Mocking Scorecard validators
 const { 
     validateScorecardDataInput,
-    validateScorecardCreationInput
+    validateScorecardCreationInput,
+    validateScorecardUpdateInput
  } = require('../../middlewares/validators/scorecardValidators.js');
 
 jest.mock('../../middlewares/validators/scorecardValidators.js', () => ({
@@ -68,7 +72,6 @@ jest.mock('../../middlewares/validators/libraries/scorecard.js', () => ({
 }));
 
 // Mocking user validators
-
 const { validateUserInDatabase } = require('../../middlewares/validators/userValidators.js');
 
 jest.mock('../../middlewares/validators/userValidators.js', () => ({
@@ -77,103 +80,134 @@ jest.mock('../../middlewares/validators/userValidators.js', () => ({
 
 // Test suite for Scorecard Controller
 describe('Scorecard Controller Testing', () => {
+
     // 1. getAllScorecards
     describe('getAllScorecards', () => {
+
         test('should return all scorecards', async () => {
-            Scorecard.find.mockResolvedValue(mockSocrecardResponse01);
+            // Mockings
+            Scorecard.find.mockResolvedValue(mockSocrecardGetResponse01);
+
+            // Request and Response objects
             const req = {};
             const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
             await getAllScorecards(req, res);
 
+            // Assertions
             expect(Scorecard.find).toHaveBeenCalled();
             expect(res.status).toHaveBeenCalledWith(200);
-            expect(res.json).toHaveBeenCalledWith(mockSocrecardResponse01);
+            expect(res.json).toHaveBeenCalledWith(mockSocrecardGetResponse01);
         });
 
         test('should handle errors', async () => {
+            // Mockings
             const errorMessage = 'Database error';
             Scorecard.find.mockRejectedValue(new Error(errorMessage));
+
+            // Request and Response objects
             const req = {};
             const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
             await getAllScorecards(req, res);
 
+            // Assertions
             expect(res.status).toHaveBeenCalledWith(500);
             expect(res.json).toHaveBeenCalledWith({ message: errorMessage });
-        }
-        );
+        });
+
     });
 
     // 2. getScorecard
     describe('getScorecard', () => {
+
         test('should return a specific scorecard by ID', async () => {
-            validateScorecardInDatabase.mockResolvedValue({ isValid: true, scorecard: mockSocrecardResponse01 });
+            // Mockings
+            validateScorecardInDatabase.mockResolvedValue({ isValid: true, scorecard: mockSocrecardGetResponse01 });
+
+            // Request and Response objects
             const req = { params: { id: reqScorecardID } };
             const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
             await getScorecard(req, res);
+
+            // Assertions
             expect(validateScorecardInDatabase).toHaveBeenCalledWith(reqScorecardID);
             expect(res.status).toHaveBeenCalledWith(200);
-            expect(res.json).toHaveBeenCalledWith(mockSocrecardResponse01);
+            expect(res.json).toHaveBeenCalledWith(mockSocrecardGetResponse01);
         });
 
         test('should return 404 if scorecard not found', async () => {
+            // Mockings
             validateScorecardInDatabase.mockResolvedValue({ isValid: false, message: 'Not found' });
+
+            // Request and Response objects
             const req = { params: { id: reqScorecardID } };
             const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
             await getScorecard(req, res);
+
+            // Assertions
             expect(res.status).toHaveBeenCalledWith(404);
             expect(res.json).toHaveBeenCalledWith({ error: 'Not found' });
         });
+
     });
 
     // 3. getUsersScorecards
     describe('getUsersScorecards', () => {
+
         test('should return all scorecards for a user', async () => {
+            // Mockings
             validateUserInDatabase.mockResolvedValue({ isValid: true, user: reqUserID });
-            Scorecard.find.mockResolvedValue([mockSocrecardResponse01]);
+            Scorecard.find.mockResolvedValue([mockSocrecardGetResponse01]);
+
+            // Request and Response objects
             const req = { params: { id: reqUserID } };
             const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
             await getUsersScorecards(req, res);
+            
+            // Assertions
             expect(validateUserInDatabase).toHaveBeenCalledWith(reqUserID);
             expect(Scorecard.find).toHaveBeenCalledWith({ creator: reqUserID });
             expect(res.status).toHaveBeenCalledWith(200);
-            expect(res.json).toHaveBeenCalledWith({ Scorecards: [mockSocrecardResponse01], User: reqUserID });
-        }
-        );
+            expect(res.json).toHaveBeenCalledWith({ Scorecards: [mockSocrecardGetResponse01], User: reqUserID });
+        });
+
         test('should return 404 if user not found', async () => {
+            // Mockings
             validateUserInDatabase.mockResolvedValue({ isValid: false, message: 'User not found' });
+
+            // Request and Response objects
             const req = { params: { id: reqUserID } };
             const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
             await getUsersScorecards(req, res);
+
+            // Assertions
             expect(res.status).toHaveBeenCalledWith(404);
             expect(res.json).toHaveBeenCalledWith({ error: 'User not found' });
         });
+
     });
 
     // 4. createScorecard
     describe('createScorecard', () => {
+
         test('should create a new scorecard', async () => {
+            // Mockings
             validateUserInDatabase.mockResolvedValue({ isValid: true, user: reqUserID });
             validateScorecardCreationInput.mockResolvedValue({ isValid: true });
-            // validateScorecardDataInput.mockResolvedValue({ isValid: true });
+            Scorecard.create.mockResolvedValue(mockSocrecardGetResponse01);
 
-
-            Scorecard.create.mockResolvedValue(mockSocrecardResponse01);
+            // Request and Response objects
             const req = { params: { id: reqUserID }, body: reqCreateBody_c_1 };
             const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
-            await createScorecard(req, res);
+            await createScorecard(req, res);            
 
-            
-
+            // Assertions
             expect(validateUserInDatabase).toHaveBeenCalledWith(reqUserID);
-            expect(validateScorecardCreationInput).toHaveBeenCalledWith(reqCreateBody_c_1);
-            // expect(validateScorecardDataInput).toHaveBeenCalledWith(reqCreateBody_c_1);
-            
+            expect(validateScorecardCreationInput).toHaveBeenCalledWith(reqCreateBody_c_1);            
             expect(res.status).toHaveBeenCalledWith(201);
             expect(res.json).toHaveBeenCalledWith({
                 message: "New Scorecard Created!",
-                data: mockSocrecardResponse01
+                data: mockSocrecardGetResponse01
             });
-
             expect(Scorecard.create).toHaveBeenCalledWith({
                 ...reqCreateBody_c_1,
                 creator: reqUserID
@@ -182,16 +216,62 @@ describe('Scorecard Controller Testing', () => {
         });
 
         test('should return 400 if validation fails', async () => {
+            // Mockings
             validateUserInDatabase.mockResolvedValue({ isValid: false, message: 'User not found' });
+
+            // Request and Response objects
             const req = { params: { id: reqUserID }, body: reqCreateBody_c_1 };
             const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
             await createScorecard(req, res);
 
+            // Assertions
             expect(res.status).toHaveBeenCalledWith(404);
             expect(res.json).toHaveBeenCalledWith({ error: 'User not found' });
-        }
-        );
-    }
-    );
+        });
+
+    });
+
+    // 5. updateScorecard
+    describe('updateScorecard', () => {
+
+        test('should update an existing scorecard', async () => {
+            // Mockings
+            validateScorecardInDatabase.mockResolvedValue({ isValid: true, scorecard: mockSocrecardGetResponse01 });
+            validateScorecardUpdateInput.mockResolvedValue({ isValid: true });
+            Scorecard.findByIdAndUpdate.mockResolvedValue(mockSocrecardUpdateResponse01);
+
+            // Request and Response objects
+            const req = { params: { id: reqScorecardID }, body: reqUpdateBody_c_1 };
+            const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+            await updateScorecard(req, res);
+
+            // Assertions
+            expect(validateScorecardInDatabase).toHaveBeenCalledWith(reqScorecardID);
+            expect(validateScorecardUpdateInput).toHaveBeenCalledWith(reqUpdateBody_c_1, reqScorecardID);
+            expect(Scorecard.findByIdAndUpdate).toHaveBeenCalledWith(reqScorecardID, reqUpdateBody_c_1, { new: true });
+            expect(res.status).toHaveBeenCalledWith(200);
+            expect(res.json).toHaveBeenCalledWith({
+                message: "Scorecard updated!",
+                data: mockSocrecardUpdateResponse01
+            });
+        });
+
+        test('should return 404 if scorecard not found', async () => {
+            // Mockings
+            validateScorecardInDatabase.mockResolvedValue({ isValid: false, message: 'Not found' });
+
+            // Request and Response objects
+            const req = { params: { id: reqScorecardID }, body: reqUpdateBody_c_1 };
+            const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+            await updateScorecard(req, res);
+
+            // Assertions
+            expect(res.status).toHaveBeenCalledWith(404);
+            expect(res.json).toHaveBeenCalledWith({ error: 'Not found' });
+        });
+
+    });
+
+    // 6. deleteScorecard
 
 });
