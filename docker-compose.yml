@@ -3,7 +3,8 @@ services:
 # API server
   backend:
     build: .
-    depends_on: mongodb # Ensure MongoDB starts before Express
+    depends_on: 
+      - mongodb # Ensure MongoDB starts before Express
     environment:
       MONGO_URI: mongodb://root:{26)nY2kH<Yv`lmB`A"M@mongodb:27017/
       PORT: 3000
@@ -33,7 +34,8 @@ services:
           
 # DB management server
   mongo-express:
-    depends_on: mongodb # Ensure MongoDB starts before Express  
+    depends_on: 
+      - mongodb # Ensure MongoDB starts before Express  
     image: docker.io/library/mongo-express:latest
     restart: always
     ports:
