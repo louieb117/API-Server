@@ -9,6 +9,10 @@ const {
     reqLoginBody_2,
 } = require('../../../utils/data/login.test.data.js');
 
+const {
+    mockLoginResponse01
+} = require('../../../utils/data/login.mock.data.js');
+
 // Mocks:
 // Mocking login validators
 const {
@@ -41,7 +45,7 @@ describe('Login Controller Testing', () => {
         test('should return 200 and a token if login is successful', async () => {
             // Arrange
             const req = {
-                body: { username: 'testUser', password: 'StrongPass1!' },
+                body: reqLoginBody_1,
                 params: {}
             };
             const res = {
@@ -50,6 +54,8 @@ describe('Login Controller Testing', () => {
                 cookie: jest.fn()
             };
             const user = { _id: '12345', username: 'testUser', password: 'StrongPass1!' };
+            
+            // Mockings
             validateLoginInput.mockReturnValue({ isValid: true });
             validateUserInDatabase.mockResolvedValue({ isValid: true, user });
             validatePassword.mockReturnValue({ isValid: true });
