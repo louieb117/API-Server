@@ -15,6 +15,7 @@ const validateLoginInput = (username, password, id) => {
 };
 
 const validatePassword = (user, password) => {
+    console.log("validatePassword info: user.password:", user.password , " Input password", password);
     try{
         if (user.password !== password) {
             throw new Error("Invalid password");

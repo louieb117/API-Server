@@ -79,7 +79,7 @@ const createScorecard = async (req, res) => {
         });
     }
 
-    // Create Feature: Create a new scorecard with the validated request body
+    // Create Function: Create a new scorecard with the validated request body
     const newScorecard = await Scorecard.create(req.body);
     console.log('createScorecard info: newScorecard', newScorecard);
     
@@ -136,7 +136,7 @@ const updateScorecard = async (req, res) => {
         return res.status(400).json({ error: scorecardUpdateValidation.message });
       }
 
-      // Update Feature: Update the scorecard with the validated request body
+      // Update Function: Update the scorecard with the validated request body
       console.log('updateScorecard Info: updating scorecard with body', req.body);
       const scorecard = await Scorecard.findByIdAndUpdate(req.params.id, req.body, { new: true }); // Return the updated document
       if (!scorecard) {

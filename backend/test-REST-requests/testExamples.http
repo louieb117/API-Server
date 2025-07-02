@@ -12,7 +12,7 @@ GET http://localhost:3000/api
 ######################################################################
 
 ################# Login with id ################################
-POST http://localhost:3000/api/login/67c93f408333cec4179f7904
+POST http://localhost:3000/api/login/685e20eeb401f750303a83a1
 Content-Type: application/json
 
 {
@@ -20,12 +20,12 @@ Content-Type: application/json
 }
 
 ################# Login with username ################################
-POST http://localhost:3000/api/login/
+POST http://localhost:3000/api/login/685e20eeb401f750303a83a1
 Content-Type: application/json
 
 {
-    "username": "test.usere.peter",
-    "password": "Peter123!"
+    "username": "Fin.tester",
+    "password": "Fin3453333!"
 }
 
 ######################################################################

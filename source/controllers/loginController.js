@@ -11,15 +11,19 @@ const login = async (req, res) => {
     try { 
         const {username, password} = req.body;
         const {id} = req.params;
+        console.log("Login info: ", {username, password, id});
+        // Login Function: Validate data and authenticate user and generate JWT token
         
-        // Input Validation
+        // Input Validation: check if username and password or ID and password are provided
         const inputValidation = validateLoginInput(username, password, id);
+        console.log("Login info: inputValidation", inputValidation);
         if (!inputValidation.isValid) {
             return res.status(400).json({ error: inputValidation.message });
         }
 
         // Database Validation: Check if user exists
-        const userValidation = await validateUserInDatabase(username, id);
+        const userValidation = await validateUserInDatabase(id);
+        console.log("Login info: userValidation", userValidation);
         if (!userValidation.isValid) {
             return res.status(404).json({ error: userValidation.message });
         }
@@ -28,6 +32,7 @@ const login = async (req, res) => {
 
         // Password Validation
         const passwordValidation = validatePassword(user, password);
+        console.log("Login info: passwordValidation", passwordValidation);
         if (!passwordValidation.isValid) {
             return res.status(403).json({ error: passwordValidation.message });
         }
@@ -36,9 +41,9 @@ const login = async (req, res) => {
         const userObject = user.toObject();
         delete userObject.password
 
-        // Generate a JWT token with a 1-hour expiration
+        // Login Feature: Generate a JWT token with a 1-hour expiration
         const token = jwt.sign(userObject, MY_JWT_SECRET, { expiresIn: "1h"});
-
+        console.log("Login info: token", token);
         // Set the JWT token as a cookie in the response
         res.cookie("token", token);
         
