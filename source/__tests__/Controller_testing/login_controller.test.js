@@ -18,8 +18,8 @@ const {
 const {
     validateLoginInput,
     validatePassword,
-} = require('../../../middlewares/validators/loginValidators.js');
-jest.mock('../../../middlewares/validators/loginValidators.js', () => ({
+} = require('../../middlewares/validators/loginValidators.js');
+jest.mock('../../middlewares/validators/loginValidators.js', () => ({
     validateLoginInput: jest.fn(),
     validatePassword: jest.fn(),
 }));

@@ -41,6 +41,12 @@ const createUser = async (req, res) => {
         return res.status(400).json({ error: userCreationValidation.message });
       }
 
+      // Set the creationDate to now
+      const pacificDate = new Date().toLocaleString("en-US", { 
+      timeZone: "America/Los_Angeles" 
+      });
+      req.body.creationDate = new Date(pacificDate).toISOString();
+
       const newUser = new User(req.body);
       // save user
       newUser.save();
