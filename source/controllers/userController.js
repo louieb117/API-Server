@@ -1,7 +1,7 @@
 const User = require('../models/user.js')
 const { 
   validateUserCreationInput,
-  validateUserInDatabase,
+  validateUsernameInDatabase,
   validateUserNOTInDatabase,
   validateUserUpdateInput
 } = require('../middlewares/validators/userValidators.js');
@@ -19,7 +19,7 @@ const getAllUsers = async (req, res) => {
 const getUser = async (req, res) => {
     try{
       // Database Validation: Check if user exists
-      const userValidation = await validateUserInDatabase(req.body.username, req.params.id);
+      const userValidation = await validateUsernameInDatabase(req.body.username, req.params.id);
       if (!userValidation.isValid) {
         return res.status(404).json({ error: userValidation.message });
       }
@@ -58,7 +58,7 @@ const createUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
     try {
-      const userValidation = await validateUserInDatabase(null, req.params.id);
+      const userValidation = await validateUsernameInDatabase(null, req.params.id);
       if (!userValidation.isValid) {
         return res.status(404).json({ error: userValidation.message });
       }
@@ -77,7 +77,7 @@ const updateUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
     try {
-      const userValidation = await validateUserInDatabase(req.body.username, req.params.id);
+      const userValidation = await validateUsernameInDatabase(req.body.username, req.params.id);
       if (!userValidation.isValid) {
         return res.status(404).json({ error: userValidation.message });
       }

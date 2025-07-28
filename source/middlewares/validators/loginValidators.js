@@ -1,6 +1,6 @@
-const validateLoginInput = (username, password, id) => {
+const validateLoginInput = (username, password) => {
     try{
-        if ((!username && !id) || !password) {
+        if (!username || !password) {
             return {
                 isValid: false,
                 message: "Username and password or ID and password are required",
