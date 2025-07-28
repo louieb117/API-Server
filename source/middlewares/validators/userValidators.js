@@ -1,6 +1,6 @@
 const User = require('../../models/user.js');
 
-const validateUserInDatabase = async (id) => {
+const validateUsernameInDatabase = async (username) => {
     try{
         // let user;
         // if (id) {
@@ -12,18 +12,18 @@ const validateUserInDatabase = async (id) => {
         // } else {
         //     user = await User.findOne({ username });
         // }
-        console.log('validateUserInDatabase > id:', id);
+        console.log('validateUsernameInDatabase > username:', username);
         // Validate input
-        if (!id) {
+        if (!username) {
             throw new Error("id must be provided");
         }
 
-        if (id.length < 20 ) {
+        if (username.length > 20 ) {
             throw new Error("Invalid id format, it should be a valid MongoDB ObjectId");
         }
 
-        const user = id ? await User.findById(id) : null;
-        console.log('validateUserInDatabase user', user);
+        const user = username ? await User.findOne(username) : null;
+        console.log('validateUsernameInDatabase user', user);
 
         if (!user) {
             throw new Error("User not found");
@@ -33,7 +33,7 @@ const validateUserInDatabase = async (id) => {
 
 
     } catch (error) {
-        console.log('validateUserInDatabase error:', error.message);
+        console.log('validateUsernameInDatabase error:', error.message);
         return { isValid: false, message: error.message };
     }
 };
@@ -238,7 +238,7 @@ const validateUserFriends = async (body) => {
             throw new Error("Friends list must be less than 200 characters long");
         }
         for (const friendId of body.friends) {
-            const userValidation = await validateUserInDatabase(null, friendId);
+            const userValidation = await validateUsernameInDatabase(null, friendId);
             if (!userValidation.isValid) {
                 throw new Error(`Invalid friend ID: ${friendId}, ${userValidation.message}`);
             }
@@ -356,7 +356,7 @@ const validateUserUpdateInput = async (body) => {
 // };
 
 module.exports = {
-    validateUserInDatabase,
+    validateUsernameInDatabase,
     validateUserNOTInDatabase,
     validateUserCreationInput,
     validateUserFullName,

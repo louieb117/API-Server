@@ -1,7 +1,7 @@
 const {MY_JWT_SECRET} = require('../configs/config.js');// Load environment variables;
 
 const jwt = require('jsonwebtoken');
-const {validateUserInDatabase} = require('../middlewares/validators/userValidators.js');
+const {validateUsernameInDatabase} = require('../middlewares/validators/userValidators.js');
 const { 
     validateLoginInput,
     validatePassword } = require('../middlewares/validators/loginValidators.js');
@@ -10,19 +10,19 @@ const {
 const login = async (req, res) => {
     try { 
         const {username, password} = req.body;
-        const {id} = req.params;
-        console.log("Login info: ", {username, password, id});
+        // const {id} = req.params;
+        console.log("Login info: ", {username, password});
         // Login Function: Validate data and authenticate user and generate JWT token
         
         // Input Validation: check if username and password or ID and password are provided
-        const inputValidation = validateLoginInput(username, password, id);
+        const inputValidation = validateLoginInput(username, password);
         console.log("Login info: inputValidation", inputValidation);
         if (!inputValidation.isValid) {
             return res.status(400).json({ error: inputValidation.message });
         }
 
         // Database Validation: Check if user exists
-        const userValidation = await validateUserInDatabase(id);
+        const userValidation = await validateUsernameInDatabase(username);
         console.log("Login info: userValidation", userValidation);
         if (!userValidation.isValid) {
             return res.status(404).json({ error: userValidation.message });

@@ -72,10 +72,10 @@ jest.mock('../../middlewares/validators/libraries/scorecard.js', () => ({
 }));
 
 // Mocking user validators
-const { validateUserInDatabase } = require('../../middlewares/validators/userValidators.js');
+const { validateUsernameInDatabase } = require('../../middlewares/validators/userValidators.js');
 
 jest.mock('../../middlewares/validators/userValidators.js', () => ({
-    validateUserInDatabase: jest.fn()
+    validateUsernameInDatabase: jest.fn()
 }));
 
 // Test suite for Scorecard Controller
@@ -155,7 +155,7 @@ describe('Scorecard Controller Testing', () => {
 
         test('should return all scorecards for a user', async () => {
             // Mockings
-            validateUserInDatabase.mockResolvedValue({ isValid: true, user: reqUserID });
+            validateUsernameInDatabase.mockResolvedValue({ isValid: true, user: reqUserID });
             Scorecard.find.mockResolvedValue([mockSocrecardGetResponse01]);
 
             // Request and Response objects
@@ -164,7 +164,7 @@ describe('Scorecard Controller Testing', () => {
             await getUsersScorecards(req, res);
             
             // Assertions
-            expect(validateUserInDatabase).toHaveBeenCalledWith(reqUserID);
+            expect(validateUsernameInDatabase).toHaveBeenCalledWith(reqUserID);
             expect(Scorecard.find).toHaveBeenCalledWith({ creator: reqUserID });
             expect(res.status).toHaveBeenCalledWith(200);
             expect(res.json).toHaveBeenCalledWith({ Scorecards: [mockSocrecardGetResponse01], User: reqUserID });
@@ -172,7 +172,7 @@ describe('Scorecard Controller Testing', () => {
 
         test('should return 404 if user not found', async () => {
             // Mockings
-            validateUserInDatabase.mockResolvedValue({ isValid: false, message: 'User not found' });
+            validateUsernameInDatabase.mockResolvedValue({ isValid: false, message: 'User not found' });
 
             // Request and Response objects
             const req = { params: { id: reqUserID } };
@@ -191,7 +191,7 @@ describe('Scorecard Controller Testing', () => {
 
         test('should create a new scorecard', async () => {
             // Mockings
-            validateUserInDatabase.mockResolvedValue({ isValid: true, user: reqUserID });
+            validateUsernameInDatabase.mockResolvedValue({ isValid: true, user: reqUserID });
             validateScorecardCreationInput.mockResolvedValue({ isValid: true });
             Scorecard.create.mockResolvedValue(mockSocrecardGetResponse01);
 
@@ -201,7 +201,7 @@ describe('Scorecard Controller Testing', () => {
             await createScorecard(req, res);            
 
             // Assertions
-            expect(validateUserInDatabase).toHaveBeenCalledWith(reqUserID);
+            expect(validateUsernameInDatabase).toHaveBeenCalledWith(reqUserID);
             expect(validateScorecardCreationInput).toHaveBeenCalledWith(reqCreateBody_c_1);            
             expect(res.status).toHaveBeenCalledWith(201);
             expect(res.json).toHaveBeenCalledWith({
@@ -217,7 +217,7 @@ describe('Scorecard Controller Testing', () => {
 
         test('should return 400 if validation fails', async () => {
             // Mockings
-            validateUserInDatabase.mockResolvedValue({ isValid: false, message: 'User not found' });
+            validateUsernameInDatabase.mockResolvedValue({ isValid: false, message: 'User not found' });
 
             // Request and Response objects
             const req = { params: { id: reqUserID }, body: reqCreateBody_c_1 };

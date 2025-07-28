@@ -1,8 +1,8 @@
 require('dotenv').config();
 const User = require("../../../models/user.js");
-const { mockUserId, mockUserResponse } = require('../../../utils/data/user.mock.data.js');
+const { mockUsername, mockUserResponse } = require('../../../utils/data/user.mock.data.js');
 const {
-    validateUserInDatabase,
+    validateUsernameInDatabase,
     validateUserNOTInDatabase,
     validateUserCreationInput,
     validateUserFullName,
@@ -25,17 +25,17 @@ jest.mock('../../../models/user', () => ({
 }));
 
 describe('User Validator Logic', () => {
-    // 1. validateUserInDatabase
-    describe('validateUserInDatabase', () => {
+    // 1. validateUsernameInDatabase
+    describe('validateUsernameInDatabase', () => {
         beforeEach(() => jest.clearAllMocks());
         test('should return isValid=true if user exists', async () => {
-            User.findById.mockResolvedValue(mockUserResponse);
-            const result = await validateUserInDatabase(mockUserId);
+            User.findOne.mockResolvedValue(mockUserResponse);
+            const result = await validateUsernameInDatabase(mockUsername);
             expect(result.isValid).toBe(true);
         });
         test('should return isValid=false if user does not exist', async () => {
-            User.findById.mockResolvedValue(null);
-            const result = await validateUserInDatabase(mockUserId);
+            User.findOne.mockResolvedValue(null);
+            const result = await validateUsernameInDatabase(mockUsername);
             expect(result.isValid).toBe(false);
         });
     });
