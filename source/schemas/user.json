@@ -31,21 +31,7 @@
     },
     "currentLocation": {
         "type": "string"
-    },
-    "scorecard": {
-        "type": "object",
-        "properties": {
-            "totalPoints": {
-                "type": "number"
-            },
-            "totalOrders": {
-                "type": "number"
-            },
-            "totalDeliveredOrders": {
-                "type": "number"
-            }
-        }
-    },
+    }, 
     "picture":  {
         "type": "string",
         "format": "uri"
