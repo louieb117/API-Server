@@ -1,5 +1,5 @@
 const Scorecard = require('../models/scorecard.js');
-const { validateUserInDatabase } = require('../middlewares/validators/userValidators.js');
+const { validateUsernameInDatabase } = require('../middlewares/validators/userValidators.js');
 const { validateScorecardInDatabase } = require('../middlewares/validators/libraries/scorecard.js');
 const { 
   validateScorecardCreationInput, 
@@ -34,7 +34,7 @@ const getScorecard = async (req, res) => {
 const getUsersScorecards = async (req, res) => {
   try{
     // Database Validation: Check if user exists
-    const userValidation = await validateUserInDatabase(req.params.id);
+    const userValidation = await validateUsernameInDatabase(req.params.id);
     if (!userValidation.isValid) {
       return res.status(404).json({ error: userValidation.message });
     }
@@ -53,7 +53,7 @@ const getUsersScorecards = async (req, res) => {
 const createScorecard = async (req, res) => {
   try { 
     // Database Validation: Check if user exists
-    const userValidation = await validateUserInDatabase(req.params.id);
+    const userValidation = await validateUsernameInDatabase(req.params.id);
     if (!userValidation.isValid) {
       return res.status(404).json({ error: userValidation.message });
     }
