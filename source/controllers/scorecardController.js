@@ -65,7 +65,7 @@ const createScorecard = async (req, res) => {
     // if (!req.body.creator) {
     //     console.log('createScorecard info: No creator provided, using user._id');
     // }
-    req.body.creator = user.toString();
+    req.body.creator = user._id;
     console.log('createScorecard info: request body', req.body);
     
     // Request body validation: Check if all required fields are present

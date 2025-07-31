@@ -1,10 +1,6 @@
-require('dotenv').config();
-const User = require("../../../models/user.js");
-const { mockUsername, mockUserResponse } = require('../../../utils/data/user.mock.data.js');
+// Validators under test
 const {
-    validateUsernameInDatabase,
-    validateUserNOTInDatabase,
-    validateUserCreationInput,
+    validateUsernameInDatabase, 
     validateUserFullName,
     validateUserUsername,
     validateUserPassword,
@@ -15,219 +11,242 @@ const {
     validateUserPicture,
     validateUserFriends,
     validateUserUpdateInput,
-    // validateUserDeletionInput
 } = require('../../../middlewares/validators/userValidators.js');
 
-// Mock the User model
-jest.mock('../../../models/user', () => ({
+// Test data
+const { mockUsername, mockUserId, mockUserResponse } = require('../../../utils/data/user.mock.data.js');
+
+// Mocks
+const User = require("../../../models/user.js");
+jest.mock('../../../models/user.js', () => ({
     findById: jest.fn(),
     findOne: jest.fn(),
 }));
 
-describe('User Validator Logic', () => {
+// Test suite for User Validators
+describe('User Creation Validators Testing', () => {
+
     // 1. validateUsernameInDatabase
     describe('validateUsernameInDatabase', () => {
         beforeEach(() => jest.clearAllMocks());
-        test('should return isValid=true if user exists', async () => {
+
+        test('should return isValid=true if user does not exist', async () => {
             User.findOne.mockResolvedValue(mockUserResponse);
             const result = await validateUsernameInDatabase(mockUsername);
             expect(result.isValid).toBe(true);
         });
-        test('should return isValid=false if user does not exist', async () => {
+
+        test('should return isValid=false if user already exists', async () => {
             User.findOne.mockResolvedValue(null);
             const result = await validateUsernameInDatabase(mockUsername);
             expect(result.isValid).toBe(false);
         });
+    }); 
+
+    // 2. validateUserUsername
+    describe('validateUserUsername', () => {
+        test('should return isValid=true for valid username', () => {
+            const valid = { username: 'peter.tester' };
+            const result = validateUserUsername(valid);
+            expect(result.isValid).toBe(true);
+        });
+
+        test('should return isValid=false for short username < 3 characters', () => {
+            const invalid = { username: 'a' };
+            const result = validateUserUsername(invalid);
+            expect(result.isValid).toBe(false);
+        });
+
+        test('should return isValid=false for username > 20 characters', () => {
+            const invalid = { username: 'a'.repeat(21) };
+            const result = validateUserUsername(invalid);
+            expect(result.isValid).toBe(false);
+        });
+    }); 
+
+    // 3. validateUserRole
+    describe('validateUserRole', () => {
+        test('should return isValid=true for valid admin role', () => {
+            const valid = { role: 'admin' };
+            const result = validateUserRole(valid);
+            expect(result.isValid).toBe(true);
+        });
+
+        test('should return isValid=true for valid user role', () => {
+            const valid = { role: 'user' };
+            const result = validateUserRole(valid);
+            expect(result.isValid).toBe(true);
+        });
+
+        test('should return isValid=true for valid tester role', () => {
+            const valid = { role: 'tester' };
+            const result = validateUserRole(valid);
+            expect(result.isValid).toBe(true);
+        });
+
+        test('should return isValid=false for invalid role', () => {
+            const invalid = { role: 'invalidRole' };
+            const result = validateUserRole(invalid);
+            expect(result.isValid).toBe(false);
+        });
     });
 
-    // // 2. validateUserNOTInDatabase
-    // describe('validateUserNOTInDatabase', () => {
-    //     beforeEach(() => jest.clearAllMocks());
-    //     test('should return isValid=true if user does not exist', async () => {
-    //         User.findById.mockResolvedValue(null);
-    //         const result = await validateUserNOTInDatabase(null, mockUserId);
-    //         expect(result.isValid).toBe(true);
-    //     });
-    //     test('should return isValid=false if user exists', async () => {
-    //         User.findById.mockResolvedValue(mockUserResponse);
-    //         const result = await validateUserNOTInDatabase(null, mockUserId);
-    //         expect(result.isValid).toBe(false);
-    //     });
-    // });
+    // 4. validateEmail 
+    describe('validateUserEmail', () => {
+        test('should return isValid=true for valid email', () => {
+            const validEmail = { email: 'jesus@email.com' };
+            const result = validateUserEmail(validEmail);
+            expect(result.isValid).toBe(true);
+        });
+        test('should return isValid=false for invalid email', () => {
+            const invalidEmail = { email: 'invalid-email' };
+            const result = validateUserEmail(invalidEmail);
+            expect(result.isValid).toBe(false);
+        });
+    });
+    
+    // 5. validatePhoneNumber
+    describe('validateUserPhoneNumber', () => {
+        test('should return isValid=true for valid phone number', () => {
+            const validPhone = { phoneNumber: '1234567890' };
+            const result = validateUserPhoneNumber(validPhone);
+            expect(result.isValid).toBe(true);
+        });
+        test('should return isValid=false for invalid phone number', () => {
+            const invalidPhone = { phoneNumber: '12345' };
+            const result = validateUserPhoneNumber(invalidPhone);
+            expect(result.isValid).toBe(false);
+        });
+    });
 
-    // // 3. validateUserCreationInput
-    // describe('validateUserCreationInput', () => {
-    //     test('should return isValid=true for valid input', async () => {
-    //         const validInput = { username: 'testuser', password: 'StrongPass1!' };
-    //         const result = await validateUserCreationInput(validInput);
-    //         expect(result.isValid).toBe(true);
-    //     });
-    //     test('should return isValid=false for missing username', async () => {
-    //         const invalidInput = { password: 'StrongPass1!' };
-    //         const result = await validateUserCreationInput(invalidInput);
-    //         expect(result.isValid).toBe(false);
-    //     });
-    // });
+    // 6. validateUserPassword
+    describe('validateUserPassword', () => {
+        test('should return isValid=true for valid password', () => {
+            const validPassword = { password: 'Fin345333!' };
+            const result = validateUserPassword(validPassword);
+            expect(result.isValid).toBe(true);
+        });  
+        test('should return isValid=false for password > 20 characters', () => {
+            const invalidPassword = { password: 'a'.repeat(21) };
+            const result = validateUserPassword(invalidPassword);
+            expect(result.isValid).toBe(false);
+        });
+        test('should return isValid=false for password < 8 characters', () => {
+            const invalidPassword = { password: 'short' };
+            const result = validateUserPassword(invalidPassword);
+            expect(result.isValid).toBe(false);
+        });
+        test('should return isValid=false for password without a number', () => {
+            const invalidPassword = { password: 'NoNumberHere!' };
+            const result = validateUserPassword(invalidPassword);
+            expect(result.isValid).toBe(false);
+        });
+        test('should return isValid=false for password without an uppercase', () => {
+            const invalidPassword = { password: 'nouppercase1!' };
+            const result = validateUserPassword(invalidPassword);
+            expect(result.isValid).toBe(false); 
+        });
+        test('should return isValid=false for password without a lowercase', () => {
+            const invalidPassword = { password: 'NOUPERCASE1!' };
+            const result = validateUserPassword(invalidPassword);
+            expect(result.isValid).toBe(false); 
+        });
+        test('should return isValid=false for password without a special character', () => {
+            const invalidPassword = { password: 'NoSpecialChar1' };
+            const result = validateUserPassword(invalidPassword);
+            expect(result.isValid).toBe(false);
+        });
+    });
 
-    // // 4. validateUserFullName
-    // describe('validateUserFullName', () => {
-    //     test('should return isValid=true for valid fullName', () => {
-    //         const valid = { fullName: 'John Doe' };
-    //         const result = validateUserFullName(valid);
-    //         expect(result.isValid).toBe(true);
-    //     });
-    //     test('should return isValid=false for short fullName', () => {
-    //         const invalid = { fullName: 'JD' };
-    //         const result = validateUserFullName(invalid);
-    //         expect(result.isValid).toBe(false);
-    //     });
-    // });
+    // 7. validateUserFullName
+    describe('validateUserFullName', () => {
+        test('should return isValid=true for valid fullName', () => {
+            const valid = { fullName: 'John Doe' };
+            const result = validateUserFullName(valid);
+            expect(result.isValid).toBe(true);
+        });
 
-    // // 5. validateUserUsername
-    // describe('validateUserUsername', () => {
-    //     test('should return isValid=true for valid username', () => {
-    //         const valid = { username: 'validuser' };
-    //         const result = validateUserUsername(valid);
-    //         expect(result.isValid).toBe(true);
-    //     });
-    //     test('should return isValid=false for short username', () => {
-    //         const invalid = { username: 'ab' };
-    //         const result = validateUserUsername(invalid);
-    //         expect(result.isValid).toBe(false);
-    //     });
-    // });
+        test('should return isValid=false for short fullName < 3 characters', () => {
+            const invalid = { fullName: 'JD' };
+            const result = validateUserFullName(invalid);
+            expect(result.isValid).toBe(false);
+        });
 
-    // // 6. validateUserPassword
-    // describe('validateUserPassword', () => {
-    //     test('should return isValid=true for strong password', () => {
-    //         const valid = { password: 'StrongPass1!' };
-    //         const result = validateUserPassword(valid);
-    //         expect(result.isValid).toBe(true);
-    //     });
-    //     test('should return isValid=false for weak password', () => {
-    //         const invalid = { password: '123' };
-    //         const result = validateUserPassword(invalid);
-    //         expect(result.isValid).toBe(false);
-    //     });
-    // });
+        test('should return isValid=false for fullName > 50 characters', () => {
+            const invalid = { fullName: 'a'.repeat(51) };
+            const result = validateUserFullName(invalid);
+            expect(result.isValid).toBe(false);
+        });
+    }); 
 
-    // // 7. validateUserRole
-    // describe('validateUserRole', () => {
-    //     test('should return isValid=true for valid role', () => {
-    //         const valid = { role: 'admin' };
-    //         const result = validateUserRole(valid);
-    //         expect(result.isValid).toBe(true);
-    //     });
-    //     test('should return isValid=false for invalid role', () => {
-    //         const invalid = { role: 'superuser' };
-    //         const result = validateUserRole(invalid);
-    //         expect(result.isValid).toBe(false);
-    //     });
-    // });
+    // 8. validateUserBio
+    describe('validateUserBio', () => {
+        test('should return isValid=true for valid bio', () => {
+            const valid = { bio: 'This is a valid bio.' };
+            const result = validateUserBio(valid);
+            expect(result.isValid).toBe(true);
+        });
 
-    // // 8. validateUserEmail
-    // describe('validateUserEmail', () => {
-    //     test('should return isValid=true for valid email', () => {
-    //         const valid = { email: 'test@example.com' };
-    //         const result = validateUserEmail(valid);
-    //         expect(result.isValid).toBe(true);
-    //     });
-    //     test('should return isValid=false for invalid email', () => {
-    //         const invalid = { email: 'not-an-email' };
-    //         const result = validateUserEmail(invalid);
-    //         expect(result.isValid).toBe(false);
-    //     });
-    // });
+        test('should return isValid=false for bio > 200 characters', () => {
+            const invalid = { bio: 'a'.repeat(201) };
+            const result = validateUserBio(invalid);
+            expect(result.isValid).toBe(false);
+        });
+    });
 
-    // // 9. validateUserPhoneNumber
-    // describe('validateUserPhoneNumber', () => {
-    //     test('should return isValid=true for valid phone number', () => {
-    //         const valid = { phoneNumber: '1234567890' };
-    //         const result = validateUserPhoneNumber(valid);
-    //         expect(result.isValid).toBe(true);
-    //     });
-    //     test('should return isValid=false for invalid phone number', () => {
-    //         const invalid = { phoneNumber: '123' };
-    //         const result = validateUserPhoneNumber(invalid);
-    //         expect(result.isValid).toBe(false);
-    //     });
-    // });
+    // 9. validateUserPicture
+    describe('validateUserPicture', () => {
+        test('should return isValid=true for valid picture URL', () => {
+            const valid = { picture: 'http://example.com/picture.jpg' };
+            const result = validateUserPicture(valid);
+            expect(result.isValid).toBe(true);
+        });
 
-    // // 10. validateUserBio
-    // describe('validateUserBio', () => {
-    //     test('should return isValid=true for valid bio', () => {
-    //         const valid = { bio: 'This is a short bio.' };
-    //         const result = validateUserBio(valid);
-    //         expect(result.isValid).toBe(true);
-    //     });
-    //     test('should return isValid=false for long bio', () => {
-    //         const invalid = { bio: 'a'.repeat(201) };
-    //         const result = validateUserBio(invalid);
-    //         expect(result.isValid).toBe(false);
-    //     });
-    // });
+        test('should return isValid=false for invalid picture URL > 200 characters', () => {
+            const invalid = { picture: 'a'.repeat(201) };
+            const result = validateUserPicture(invalid);
+            expect(result.isValid).toBe(false);
+        });
+    });
 
-    // // 11. validateUserPicture
-    // describe('validateUserPicture', () => {
-    //     test('should return isValid=true for valid picture url', () => {
-    //         const valid = { picture: 'http://example.com/pic.jpg' };
-    //         const result = validateUserPicture(valid);
-    //         expect(result.isValid).toBe(true);
-    //     });
-    //     test('should return isValid=false for long picture url', () => {
-    //         const invalid = { picture: 'a'.repeat(201) };
-    //         const result = validateUserPicture(invalid);
-    //         expect(result.isValid).toBe(false);
-    //     });
-    // });
+    // 10. validateUserUniqueFriends
+    describe('validateUserUniqueFriends', () => {
+        test('should return isValid=true for unique friends', () => {
+            const valid = { friends: ['user1', 'user2'] };
+            const result = validateUserFriends(valid);
+            expect(result.isValid).toBe(true);
+        });
 
-    // // 12. validateUserFriends
-    // describe('validateUserFriends', () => {
-    //     beforeEach(() => jest.clearAllMocks());
-    //     test('should return isValid=true for valid friends array', async () => {
-    //         // Mock User.findById to always return a user for each friend
-    //         User.findById.mockResolvedValue(mockUserResponse);
-    //         const valid = { friends: [mockUserId] };
-    //         const result = await validateUserFriends(valid);
-    //         expect(result.isValid).toBe(true);
-    //     });
-    //     test('should return isValid=false for non-array friends', async () => {
-    //         const invalid = { friends: 'not-an-array' };
-    //         const result = await validateUserFriends(invalid);
-    //         expect(result.isValid).toBe(false);
-    //     });
-    // });
+        test('should return isValid=false for duplicate friends', () => {
+            const invalid = { friends: ['user1', 'user1'] };
+            const result = validateUserFriends(invalid);
+            expect(result.isValid).toBe(false);
+        }); 
+    });
 
-    // // 13. validateUserUpdateInput
-    // describe('validateUserUpdateInput', () => {
-    //     test('should return isValid=true for valid update', async () => {
-    //         const valid = { fullName: 'John Doe' };
-    //         const result = await validateUserUpdateInput(valid);
-    //         expect(result.isValid).toBe(true);
-    //     });
-    //     test('should return isValid=false for invalid update', async () => {
-    //         const invalid = { fullName: 'JD' };
-    //         const result = await validateUserUpdateInput(invalid);
-    //         expect(result.isValid).toBe(false);
-    //     });
-    // });
-
-    // 14. validateUserDeletionInput (if implemented)
-    // describe('validateUserDeletionInput', () => {
-    //     test('should return isValid=true for valid deletion input', () => {
-    //         // ...
-    //     });
-    //     test('should return isValid=false for invalid deletion input', () => {
-    //         // ...
-    //     });
-    // });
-});
-
-/*
-    --- Template & Test Ideas ---
-    For each function:
-    - Test valid input (should return isValid=true)
-    - Test invalid input (should return isValid=false)
-    - Add more cases as needed: missing fields, wrong types, edge cases, etc.
-    - Use mock data or fixtures for complex objects.
-*/
+    // 11. validateUserFriends
+    describe('validateUserFriends', () => { 
+        test('should return isValid=true for valid friend < 200 characters', () => {
+            const valid = { friends: ['Friend_Test'] };
+            const result = validateUserFriends(valid);
+            expect(result.isValid).toBe(true);
+        });
+        test('should return isValid=false for valid friend > 200 characters', () => {
+            const invalid = { friends: ['a'.repeat(201)] };
+            const result = validateUserFriends(invalid);
+            expect(result.isValid).toBe(false);
+        }); 
+        test('should return isValid=true if friend is in database', async () => {
+            User.findById.mockResolvedValue(mockUserResponse);
+            const valid = { friends: [mockUsername] };
+            const result = await validateUserFriends(valid);
+            expect(result.isValid).toBe(true);
+        });
+        test('should return isValid=false if friend is not in database', async () => {
+            User.findById.mockResolvedValue(null);
+            const invalid = { friends: ['nonExistentUser'] };
+            const result = await validateUserFriends(invalid);
+            expect(result.isValid).toBe(false);
+        });
+    });
+}); 
