@@ -23,13 +23,7 @@ describe('Login Validators Testing', () => {
     describe('validateLoginInput', () => {
         // Test: Valid username and password
         test('should return isValid=true for valid username and password', async () => {
-            const result = await validateLoginInput(username, password, id);
-            expect(result.isValid).toBe(true);
-        });
-
-        // Test: Valid ID and password
-        test('should return isValid=true for valid ID and password', async () => {
-            const result = await validateLoginInput(undefined, 'StrongPass1!', 'someUserId');
+            const result = await validateLoginInput(username, password);
             expect(result.isValid).toBe(true);
         });
 

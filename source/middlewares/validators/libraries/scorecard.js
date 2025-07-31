@@ -5,7 +5,7 @@ const validateScorecardInDatabase = async (id) => {
         console.log('validateScorecardInDatabase id', id);
         const scorecard = await Scorecard.findById(id);
         console.log('validateScorecardInDatabase scorecard', scorecard);
-        if (!scorecard) {
+        if (!scorecard || scorecard === null) {
             return {
                 isValid: false,
                 message: "Scorecard not found"
