@@ -11,6 +11,11 @@ const {
 const validateScorecardDataInput = async (body, id) => {
     try {
         const data = {};
+        if (!body || Object.keys(body).length === 0 ) {
+            return { isValid: false, message: "Input body is required" };
+        }
+
+        console.log('validateScorecardDataInput info: body:', body);
         for (const key in body) {
             if (body.hasOwnProperty(key)) {
                 switch (key) {

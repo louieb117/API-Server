@@ -26,7 +26,7 @@ const {
     reqCreateBody_ic_SU_2
 } = require('../../../../utils/data/scorecard.test.data.js');
 
-const { mockSocrecardResponse01 } = require('../../../../utils/data/scorecard.mock.data.js');
+const { mockSocrecardGetResponse01 } = require('../../../../utils/data/scorecard.mock.data.js');
 
 // Mocks:
 const Scorecard = require("../../../../models/scorecard.js");
@@ -43,7 +43,7 @@ describe('Scorecard Validatiors library Testing', () => {
         beforeEach(() => jest.clearAllMocks());
         // Test: Scorecard exists in DB
         test('should return isValid=true if scorecard exists', async () => {
-            Scorecard.findById.mockResolvedValue(mockSocrecardResponse01);
+            Scorecard.findById.mockResolvedValue(mockSocrecardGetResponse01);
             const result = await validateScorecardInDatabase(reqScorecardID);
             expect(result.isValid).toBe(true);
         });
@@ -66,7 +66,7 @@ describe('Scorecard Validatiors library Testing', () => {
         });
         // Test: Scorecard exists in DB
         test('should return isValid=false if scorecard exists', async () => {
-            Scorecard.findById.mockResolvedValue(mockSocrecardResponse01);
+            Scorecard.findById.mockResolvedValue(mockSocrecardGetResponse01);
             const result = await validateScorecardNotInDatabase(reqScorecardID);
             expect(result.isValid).toBe(false);
         });
@@ -76,7 +76,7 @@ describe('Scorecard Validatiors library Testing', () => {
     describe('validateScorecardCreator', () => {
         // Test: Valid creator
         test('should return isValid=true for valid creator', async () => {
-            Scorecard.findById.mockResolvedValue(mockSocrecardResponse01);
+            Scorecard.findById.mockResolvedValue(mockSocrecardGetResponse01);
             const result = await validateScorecardCreator(reqCreateScorecardBody);
             expect(result.isValid).toBe(true);
         });
@@ -254,49 +254,49 @@ describe('Scorecard Validatiors library Testing', () => {
     describe('validateScorecardScoresUpdate', () => {
         // Test: Valid scores for update
         test('should return isValid=true for valid update scores', async () => {
-            Scorecard.findById.mockResolvedValue(mockSocrecardResponse01);
+            Scorecard.findById.mockResolvedValue(mockSocrecardGetResponse01);
             const result = await validateScorecardScoresUpdate(reqCreateBody_c_1, reqScorecardID);
             expect(result.isValid).toBe(true);
         });
         // Test: Invalid scores for update / scores are less than holeSelection
         // test('should return isValid=false for invalid update scores that are less than holeSelection', async () => {
-        //     Scorecard.findById.mockResolvedValue(mockSocrecardResponse01);
+        //     Scorecard.findById.mockResolvedValue(mockSocrecardGetResponse01);
         //     const result = await validateScorecardScoresUpdate(reqCreateBody_ic_SU_1, reqScorecardID);
         //     expect(result.isValid).toBe(false);
         // });
         // Test: Invalid scores for update / scores are more than holeSelection
         // test('should return isValid=false for invalid update scores that are more than holeSelection', async () => {
-        //     Scorecard.findById.mockResolvedValue(mockSocrecardResponse01);            
+        //     Scorecard.findById.mockResolvedValue(mockSocrecardGetResponse01);            
         //     const result = await validateScorecardScoresUpdate(reqCreateBody_ic_SU_2, reqScorecardID);
         //     expect(result.isValid).toBe(false);
         // });
         // Test: Invalid scores for update / holeSelection is not provided
         // test('should return isValid=false for invalid update scores that are not provided', async () => {
-        //     Scorecard.findById.mockResolvedValue(mockSocrecardResponse01);
+        //     Scorecard.findById.mockResolvedValue(mockSocrecardGetResponse01);
         //     const result = await validateScorecardScoresUpdate({ scores: [4, 4, 4] }, reqScorecardID);
         //     expect(result.isValid).toBe(false);
         // });
         // Test: Invalid scores for update / scores is not provided
         test('should return isValid=false for invalid update scores that are not provided', async () => {
-            Scorecard.findById.mockResolvedValue(mockSocrecardResponse01);
+            Scorecard.findById.mockResolvedValue(mockSocrecardGetResponse01);
             const result = await validateScorecardScoresUpdate({ holeSelection: 9 }, reqScorecardID);
             expect(result.isValid).toBe(false);
         });
         // Test: Invalid scores for update / empty
         // test('should return isValid=false for invalid update scores that are empty', async () => {
-        //     Scorecard.findById.mockResolvedValue(mockSocrecardResponse01);
+        //     Scorecard.findById.mockResolvedValue(mockSocrecardGetResponse01);
         //     const result = await validateScorecardScScorecardoresUpdate({ holeSelection: 0, scores: [] }, reqScorecardID);
         //     expect(result.isValid).toBe(false);
         // });
         // Test: Invalid scores for update / null
         test('should return isValid=false for invalid update scores that are null', async () => {
-            Scorecard.findById.mockResolvedValue(mockSocrecardResponse01);
+            Scorecard.findById.mockResolvedValue(mockSocrecardGetResponse01);
             const result = await validateScorecardScoresUpdate({ holeSelection: null, scores: null }, reqScorecardID);
             expect(result.isValid).toBe(false);
         });
         // Test: Invalid scores for update / undefined
         test('should return isValid=false for invalid update scores that are undefined', async () => {
-            Scorecard.findById.mockResolvedValue(mockSocrecardResponse01);
+            Scorecard.findById.mockResolvedValue(mockSocrecardGetResponse01);
             const result = await validateScorecardScoresUpdate({ holeSelection: undefined, scores: undefined }, reqScorecardID);
             expect(result.isValid).toBe(false);
         });
