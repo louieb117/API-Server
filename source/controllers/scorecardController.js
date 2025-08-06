@@ -53,7 +53,7 @@ const getUsersScorecards = async (req, res) => {
 const createScorecard = async (req, res) => {
   try { 
     // Database Validation: Check if user exists
-    const userValidation = await validateUsernameInDatabase(req.params.id);
+    const userValidation = await validateUsernameInDatabase(req.params.username);
     if (!userValidation.isValid) {
       return res.status(404).json({ error: userValidation.message });
     }
