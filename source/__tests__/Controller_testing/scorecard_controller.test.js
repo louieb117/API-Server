@@ -10,13 +10,15 @@ const {
 
 // Test data:
 const {
-    reqUserID, 
+    reqUserID,
+    reqUserName, 
     reqScorecardID,
     reqCreateBody_c_1,
     reqUpdateBody_c_1
 } = require('../../utils/data/scorecard.test.data.js');
 
 const {
+    mockUser,
     mockSocrecardGetResponse01,
     mockSocrecardUpdateResponse01,
     mockScorecardDeleteResponse01
@@ -191,17 +193,17 @@ describe('Scorecard Controller Testing', () => {
 
         test('should create a new scorecard', async () => {
             // Mockings
-            validateUsernameInDatabase.mockResolvedValue({ isValid: true, user: reqUserID });
+            validateUsernameInDatabase.mockResolvedValue({ isValid: true, user: mockUser });
             validateScorecardCreationInput.mockResolvedValue({ isValid: true });
             Scorecard.create.mockResolvedValue(mockSocrecardGetResponse01);
 
             // Request and Response objects
-            const req = { params: { id: reqUserID }, body: reqCreateBody_c_1 };
+            const req = { params: { username: reqUserName }, body: reqCreateBody_c_1 };
             const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
             await createScorecard(req, res);            
 
             // Assertions
-            expect(validateUsernameInDatabase).toHaveBeenCalledWith(reqUserID);
+            expect(validateUsernameInDatabase).toHaveBeenCalledWith(reqUserName);
             expect(validateScorecardCreationInput).toHaveBeenCalledWith(reqCreateBody_c_1);            
             expect(res.status).toHaveBeenCalledWith(201);
             expect(res.json).toHaveBeenCalledWith({
@@ -210,7 +212,7 @@ describe('Scorecard Controller Testing', () => {
             });
             expect(Scorecard.create).toHaveBeenCalledWith({
                 ...reqCreateBody_c_1,
-                creator: reqUserID
+                creator: mockUser._id
             });
 
         });

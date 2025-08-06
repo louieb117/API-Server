@@ -6,20 +6,21 @@ const reqUserID = '67c93f408333cec4179f7904';
 const reqUserID2 = '68101f14af912a4fc8d69fe8';
 const reqUserID3 = '68101f14af912a4fc8d69fe9';
 
-const reqUserName = 'John Doe';
+const reqUserName = 'Fin.tester';
 const reqUserName2 = 'Jane Doe';
 const reqUserName3 = 'Jake Doe';
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////  SCORECARD TEST DATA: Correct ///////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////
 const reqCreateBody_c_1 = {
-    "creator": "67c92bfe82104d0c94b23a12",
-    "holeSelection": 9,
-    "course": "Test Course 009",
-    "date": "{{$Timestamp}}",
-    "players": ["Fin.tester", "jesus.tester", "Roboto.tester", "john.tester"],
-    "scores": 
+    creator: "67c92bfe82104d0c94b23a12",
+    holeSelection: 9,
+    course: "Test Course 009",
+    date: "{{$Timestamp}}",
+    players: ["Fin.tester", "jesus.tester", "Roboto.tester", "john.tester"],
+    scores: 
     {
     "Roboto.tester": [4, 4, 4, 4, 4, 4, 4, 4, 4],
     "jesus.tester": [4, 4, 4, 4, 4, 4, 4, 4, 4],
