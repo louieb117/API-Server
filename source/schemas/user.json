@@ -1,48 +1,46 @@
 {
-    "fullName": {
-        "type" : "string",
-        "required" : true
-    },
-    "phoneNumber": {
-        "type" : "string",
-        "required" : true
-    },
-    "email": {
-        "type" : "string",
-        "required" : true
-    },
     "username": {
         "type" : "string",
-        "required" : true
+        "required" : true,
+        "description": "The username of the user.",
+        "minLength": 1
     },
     "password": {
         "type" : "string",
-        "required" : true
+        "required" : true,
+        "description": "The password for the user account.",
+        "minLength": 6
     },
-    "role": {
-        "type": "string"
+    "status": {
+      "type": "string",
+      "enum": ["active", "inactive", "locked","banned"],
+      "default": "active",
+      "description": "The current status of the user profile."
     },
-    "creationDate": {
+    "phoneNumber": {
+        "type" : "string",
+        "required" : true,
+        "description": "The phone number of the user."
+    },
+    "email": {
+        "type" : "string",
+        "required" : true,
+        "format": "email",
+        "description": "The email address of the user."
+    },
+    "profile_id": {
         "type": "string",
-        "format": "date-time"
+        "required": true,
+        "description": "The unique identifier for the user's profile."
     },
-    "activated": {
-        "type": "boolean"
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date and time when the profile was created."
     },
-    "currentLocation": {
-        "type": "string"
-    }, 
-    "picture":  {
-        "type": "string",
-        "format": "uri"
-    },
-    "friends":  {
-        "type": "array",
-        "items": {
-            "type": "string"
-        }
-    },
-    "Bio": {
-        "type": "string"
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date and time when the profile was last updated."
     }
 }

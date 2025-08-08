@@ -1,0 +1,118 @@
+{
+    "user_id": {
+      "type": "string",
+      "required": true,
+      "description": "The username of the profile owner.",
+      "minLength": 1
+    },
+
+    "onlineStatus": {
+      "type": "boolean",
+      "default": false,
+      "description": "Indicates whether the user is currently online."
+    },
+    "profilePicture": {
+      "type": "string",
+      "format": "uri",
+      "description": "URL to the user's profile picture."
+    },
+    "bio": {
+      "type": "string",
+      "description": "A short biography of the user.",
+      "maxLength": 500
+    },
+    "location": {
+      "type": "string",
+      "description": "The user's current location.",
+      "maxLength": 100
+    },
+
+    "fullName": {
+      "type": "string",
+      "required": true,
+      "description": "The full name of the user.",
+      "maxLength": 100
+    },
+
+    "myScorecards": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of scorecard ids created by the user."
+    },
+    "otherScorecards": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of scorecard ids associated with the user."
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of group ids the user is a member of."
+    },
+    "friends": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of friends' user ids."
+    },
+    "preferences": {
+      "type": "object",
+      "description": "User preferences for the application.",
+      "properties": {
+        "theme": {
+          "type": "string",
+          "enum": ["light", "dark", "system"],
+          "default": "system",
+          "description": "Preferred theme for the application."
+        },
+        "notifications": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether the user wants to receive notifications."
+        },
+        "language": {
+          "type": "string",
+          "default": "en",
+          "description": "Preferred language for the application.",
+          "maxLength": 5
+        },
+        "privacy": {
+          "type": "object",
+          "description": "Privacy settings for the user.",
+          "properties": {
+            "profileVisibility": {
+              "type": "string",
+              "enum": ["public", "friends", "private"],
+              "default": "public",
+              "description": "Who can see the user's profile."
+            },
+            "dataSharing": {
+              "type": "boolean",
+              "default": true,
+              "description": "Whether the user allows data sharing with third parties."
+            }
+          },
+          "required": ["profileVisibility", "dataSharing"]
+        }
+      },
+      "required": ["theme", "notifications", "language", "privacy"]
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date and time when the profile was created."
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date and time when the profile was last updated."
+    }
+
+}
