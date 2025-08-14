@@ -11,9 +11,15 @@
       "description": "The password for the user account.",
       "minLength": 6
     },
+    "role": {
+      "type": "string",
+      "enum": ["admin", "user", "tester"],
+      "default": "user",
+      "description": "The current role of the user profile."
+    },
     "status": {
       "type": "string",
-      "enum": ["active", "inactive", "locked","banned"],
+      "enum": ["active", "inactive", "locked", "banned"],
       "default": "active",
       "description": "The current status of the user profile."
     },
