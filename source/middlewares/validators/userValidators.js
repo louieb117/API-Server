@@ -1,8 +1,7 @@
 const User = require('../../models/user.js');
 
 const validateUsernameInDatabase = async (username) => {
-    try{ 
-        console.log('validateUsernameInDatabase > username:', username); 
+    try{  
         if (!username) {
             throw new Error("id must be provided");
         }
@@ -51,7 +50,7 @@ const validateUserCreationInput = async (body) => {
             throw new Error("Invalid email address");
         } else if (body.role && !['admin', 'user', 'tester'].includes(body.role)) {
             throw new Error("Invalid role");
-        } else if (body.status && !['active', 'inactive'].includes(body.status)) {
+        } else if (body.status && !['active', 'inactive', 'locked', 'banned'].includes(body.status)) {
             throw new Error("Invalid status");
         } else if (body.password && body.password !== body.confirmPassword) {
             throw new Error("Passwords do not match");
@@ -147,6 +146,17 @@ const validateUserRole = (body) => {
     }
 };
 
+const validateUserStatus = (body) => {
+    try{
+        if (body.status && !['active', 'inactive', 'locked', 'banned'].includes(body.status)) {
+            throw new Error("Invalid status");
+        }
+        return { isValid: true };
+    } catch (error) {
+        return { isValid: false, message: error.message };
+    }
+};
+
 const validateUserEmail = (body) => {
     try{
         if (body.email && !body.email.includes('@')) {
@@ -193,18 +203,15 @@ const validateUserPicture = (body) => {
 
 const validateUniqueFriends = async (user, newFriend) => {
     try {
-        if ( user._id.toString() === newFriend ) {
-            console.log('Failed in new friend is current user');
+        if ( user._id.toString() === newFriend ) { 
             return { isValid: false, message: "User cannot be friends with themselves" };
         }
         const count = user.friends.filter(friend => friend === newFriend).length;
-        if (count > 0) {
-            console.log('Failed in user already friend');
+        if (count > 0) { 
             return { isValid: false, message: "User cannot be friends with the same person twice" };
         }
         const userValidation = await validateUsernameInDatabase(newFriend);
-        if (!userValidation.isValid) {
-            console.log('Failed in friends user validation Friend ID:', newFriend);
+        if (!userValidation.isValid) { 
             return { isValid: false, message: "Not an existing user" };
         }
         return { isValid: true };
@@ -218,15 +225,7 @@ const validateUserUpdateInput = async (body) => {
         const updateData = {};
         for (const key in body) {
             if (body.hasOwnProperty(key)) {
-                switch (key) {
-                    case 'fullName':
-                        const userFullNameValidation = validateUserFullName(body);
-                        if (userFullNameValidation.isValid) {
-                            updateData.fullName = body.fullName;
-                        } else {
-                            return { isValid: false, message: userFullNameValidation.message };
-                        }
-                        break;
+                switch (key) { 
                     case 'username':
                         const userUsernameValidation = validateUserUsername(body);
                         if (userUsernameValidation.isValid) {
@@ -323,6 +322,7 @@ module.exports = {
     validateUserUsername,
     validateUserPassword,
     validateUserRole,
+    validateUserStatus,
     validateUserEmail,
     validateUserPhoneNumber,
     validateUserBio,

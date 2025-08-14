@@ -2,10 +2,12 @@
 const {
     validateUsernameInDatabase,
     validateUserNOTInDatabase, 
+    validateUserCreationInput,
     validateUserFullName,
     validateUserUsername,
     validateUserPassword,
     validateUserRole,
+    validateUserStatus,
     validateUserEmail,
     validateUserPhoneNumber,
     validateUserBio,
@@ -55,7 +57,124 @@ describe('User Creation Validators Testing', () => {
         });
     }); 
 
-    // 2. validateUserUsername
+    // 2. validateUserCreationInput 
+    describe('validateUserCreationInput', () => { 
+        test('should return isValid=false if username is not provided', async () => {
+            const invalid = { password: 'Password123!' };
+            const result = await validateUserCreationInput(invalid);
+            expect(result.message).toBe('Username and password are required');
+            expect(result.isValid).toBe(false);
+        });
+
+        test('should return isValid=false if password is not provided', async () => {
+            const invalid = { username: 'peter.tester' };
+            const result = await validateUserCreationInput(invalid);
+            expect(result.message).toBe('Username and password are required');
+            expect(result.isValid).toBe(false);
+        });
+
+        test('should return isValid=false if username is < 3 characters', async () => {
+            const invalid = { username: 'pt', password: 'Password123!' };
+            const result = await validateUserCreationInput(invalid);
+            expect(result.message).toBe('Username must be at least 3 characters long');
+            expect(result.isValid).toBe(false);
+        });
+
+        test('should return isValid=false if username is > 20 characters', async () => {
+            const invalid = { username: 'a'.repeat(21), password: 'Password123!' };
+            const result = await validateUserCreationInput(invalid);
+            expect(result.message).toBe('Username must be less than 20 characters long');
+            expect(result.isValid).toBe(false);
+        });
+
+        test('should return isValid=false if email address is invalid', async () => {
+            const invalid = { username: 'peter.tester', password: 'Password123!', email: 'invalid-email' };
+            const result = await validateUserCreationInput(invalid);
+            expect(result.message).toBe('Invalid email address');
+            expect(result.isValid).toBe(false);
+        });
+
+        test('should return isValid=false if role is invalid', async () => {
+            const invalid = { username: 'peter.tester', password: 'Password123!', email: 'valid@email.com', 
+                role: 'invalidRole' };
+            const result = await validateUserCreationInput(invalid);
+            expect(result.message).toBe('Invalid role');
+            expect(result.isValid).toBe(false);
+        });
+
+        test('should return isValid=false if status is invalid', async () => {
+            const invalid = { username: 'peter.tester', password: 'Password123!', email: 'valid@email.com', 
+                role: 'user', status: 'invalidStatus' };
+            const result = await validateUserCreationInput(invalid);
+            expect(result.message).toBe('Invalid status');
+            expect(result.isValid).toBe(false);
+        });
+
+        test('should return isValid=false if password does not match confirmPassword', async () => {
+            const invalid = { username: 'peter.tester', password: 'Password123!', email: 'valid@email.com', 
+                role: 'user', status: 'active', confirmPassword: 'DifferentPassword123!' };  
+            const result = await validateUserCreationInput(invalid);
+            expect(result.message).toBe('Passwords do not match');
+            expect(result.isValid).toBe(false);
+        });
+
+        test('should return isValid=false if password is > 20 characters', async () => {
+            const invalid = { username: 'peter.tester', password: 'a'.repeat(21), email: 'valid@email.com', 
+                role: 'user', status: 'active', confirmPassword: 'a'.repeat(21) };  
+            const result = await validateUserCreationInput(invalid);
+            expect(result.message).toBe('Password must be less than 20 characters long');
+            expect(result.isValid).toBe(false);
+        });
+
+        test('should return isValid=false if password is < 8 characters', async () => {
+            const invalid = { username: 'peter.tester', password: 'a', email: 'valid@email.com', 
+                role: 'user', status: 'active', confirmPassword: 'a' };  
+            const result = await validateUserCreationInput(invalid);
+            expect(result.message).toBe('Password must be at least 8 characters long');
+            expect(result.isValid).toBe(false);
+        });
+
+        test('should return isValid=false if password does not contain a number', async () => {
+            const invalid = { username: 'peter.tester', password: 'aaaaaaaaa', email: 'valid@email.com', 
+                role: 'user', status: 'active', confirmPassword: 'aaaaaaaaa' };  
+            const result = await validateUserCreationInput(invalid);
+            expect(result.message).toBe('Password must contain a number');
+            expect(result.isValid).toBe(false);
+        });
+        
+        test('should return isValid=false if password does not contain an uppercase letter', async () => {
+            const invalid = { username: 'peter.tester', password: 'aaaaaaaa1', email: 'valid@email.com', 
+                role: 'user', status: 'active', confirmPassword: 'aaaaaaaa1' };  
+            const result = await validateUserCreationInput(invalid);
+            expect(result.message).toBe('Password must contain an uppercase letter');
+            expect(result.isValid).toBe(false);
+        });
+
+        test('should return isValid=false if password does not contain a lowercase letter', async () => {
+            const invalid = { username: 'peter.tester', password: 'AAAAAAAA1', email: 'valid@email.com', 
+                role: 'user', status: 'active', confirmPassword: 'AAAAAAAA1' };  
+            const result = await validateUserCreationInput(invalid);
+            expect(result.message).toBe('Password must contain a lowercase letter');
+            expect(result.isValid).toBe(false);
+        });
+
+        test('should return isValid=false if password does not contain a special character', async () => {
+            const invalid = { username: 'peter.tester', password: 'AAAAAAAa1', email: 'valid@email.com', 
+                role: 'user', status: 'active', confirmPassword: 'AAAAAAAa1' };  
+            const result = await validateUserCreationInput(invalid);
+            expect(result.message).toBe('Password must contain a special character');
+            expect(result.isValid).toBe(false);
+        });
+
+        test('should return isValid=true for valid user creation input', async () => {
+            const valid = { username: 'peter.tester', password: 'AAAAAAAa1!', email: 'valid@email.com', 
+                role: 'user', status: 'active', confirmPassword: 'AAAAAAAa1!' };  
+            const result = await validateUserCreationInput(valid); 
+            expect(result.isValid).toBe(true);
+        });
+    });
+    
+    // 3. validateUserUsername
     describe('validateUserUsername', () => {
         test('should return isValid=true for valid username', async () => {
             validateUserNOTInDatabase.mockResolvedValue({ isValid: true });
@@ -79,7 +198,7 @@ describe('User Creation Validators Testing', () => {
         });
     }); 
 
-    // 3. validateUserRole
+    // 4. validateUserRole
     describe('validateUserRole', () => {
         test('should return isValid=true for valid admin role', () => {
             const valid = { role: 'admin' };
@@ -106,7 +225,40 @@ describe('User Creation Validators Testing', () => {
         });
     });
 
-    // 4. validateEmail 
+    // 5. validateUserStatus
+    describe('validateUserStatus', () => {
+        test('should return isValid=true for valid active status', () => {
+            const valid = { status: 'active' };
+            const result = validateUserStatus(valid);
+            expect(result.isValid).toBe(true);
+        });
+
+        test('should return isValid=true for valid inactive status', () => {
+            const valid = { status: 'inactive' };
+            const result = validateUserStatus(valid);
+            expect(result.isValid).toBe(true);
+        });
+
+        test('should return isValid=true for valid locked status', () => {
+            const valid = { status: 'locked' };
+            const result = validateUserStatus(valid);
+            expect(result.isValid).toBe(true);
+        });
+
+        test('should return isValid=true for valid banned status', () => {
+            const valid = { status: 'banned' };
+            const result = validateUserStatus(valid);
+            expect(result.isValid).toBe(true);
+        });
+
+        test('should return isValid=false for invalid status', () => {
+            const invalid = { status: 'invalidStatus' };
+            const result = validateUserStatus(invalid);
+            expect(result.isValid).toBe(false);
+        });
+    });
+
+    // 6. validateEmail 
     describe('validateUserEmail', () => {
         test('should return isValid=true for valid email', () => {
             const validEmail = { email: 'jesus@email.com' };
@@ -120,7 +272,7 @@ describe('User Creation Validators Testing', () => {
         });
     });
     
-    // 5. validatePhoneNumber
+    // 7. validatePhoneNumber
     describe('validateUserPhoneNumber', () => {
         test('should return isValid=true for valid phone number', () => {
             const validPhone = { phoneNumber: '1234567890' };
@@ -134,7 +286,7 @@ describe('User Creation Validators Testing', () => {
         });
     });
 
-    // 6. validateUserPassword
+    // 8. validateUserPassword
     describe('validateUserPassword', () => {
         test('should return isValid=true for valid password', () => {
             const validPassword = { password: 'Fin345333!' };
@@ -173,7 +325,7 @@ describe('User Creation Validators Testing', () => {
         });
     });
 
-    // 7. validateUserFullName
+    // 9. validateUserFullName
     describe('validateUserFullName', () => {
         test('should return isValid=true for valid fullName', () => {
             const valid = { fullName: 'John Doe' };
@@ -194,7 +346,7 @@ describe('User Creation Validators Testing', () => {
         });
     }); 
 
-    // 8. validateUserBio
+    // 10. validateUserBio
     describe('validateUserBio', () => {
         test('should return isValid=true for valid bio', () => {
             const valid = { bio: 'This is a valid bio.' };
@@ -209,7 +361,7 @@ describe('User Creation Validators Testing', () => {
         });
     });
 
-    // 9. validateUserPicture
+    // 11. validateUserPicture
     describe('validateUserPicture', () => {
         test('should return isValid=true for valid picture URL', () => {
             const valid = { picture: 'http://example.com/picture.jpg' };
@@ -224,7 +376,7 @@ describe('User Creation Validators Testing', () => {
         });
     }); 
 
-    // 10. validateUniqueFriends
+    // 12. validateUniqueFriends
     describe('validateUniqueFriends', () => { 
         const validators = require('../../../middlewares/validators/userValidators.js');
 
