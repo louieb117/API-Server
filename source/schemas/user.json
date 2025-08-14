@@ -1,15 +1,15 @@
 {
     "username": {
-        "type" : "string",
-        "required" : true,
-        "description": "The username of the user.",
-        "minLength": 1
+      "type" : "string",
+      "required" : true,
+      "description": "The username of the user.",
+      "minLength": 1
     },
     "password": {
-        "type" : "string",
-        "required" : true,
-        "description": "The password for the user account.",
-        "minLength": 6
+      "type" : "string",
+      "required" : true,
+      "description": "The password for the user account.",
+      "minLength": 6
     },
     "status": {
       "type": "string",
@@ -18,20 +18,20 @@
       "description": "The current status of the user profile."
     },
     "phoneNumber": {
-        "type" : "string",
-        "required" : true,
-        "description": "The phone number of the user."
+      "type" : "string",
+      "required" : true,
+      "description": "The phone number of the user."
     },
     "email": {
-        "type" : "string",
-        "required" : true,
-        "format": "email",
-        "description": "The email address of the user."
+      "type" : "string",
+      "required" : true,
+      "format": "email",
+      "description": "The email address of the user."
     },
     "profile_id": {
-        "type": "string",
-        "required": true,
-        "description": "The unique identifier for the user's profile."
+      "type": "string",
+      "required": true,
+      "description": "The unique identifier for the user's profile."
     },
     "createdAt": {
       "type": "string",

@@ -1,6 +1,7 @@
 // Validators under test
 const {
-    validateUsernameInDatabase, 
+    validateUsernameInDatabase,
+    validateUserNOTInDatabase, 
     validateUserFullName,
     validateUserUsername,
     validateUserPassword,
@@ -8,13 +9,12 @@ const {
     validateUserEmail,
     validateUserPhoneNumber,
     validateUserBio,
-    validateUserPicture,
-    validateUserFriends,
-    validateUserUpdateInput,
+    validateUserPicture, 
+    validateUniqueFriends, 
 } = require('../../../middlewares/validators/userValidators.js');
 
 // Test data
-const { mockUsername, mockUserId, mockUserResponse } = require('../../../utils/data/user.mock.data.js');
+const { mockUsername, mockUserId, mockUserResponse, mockUserResponse02 } = require('../../../utils/data/user.mock.data.js');
 
 // Mocks
 const User = require("../../../models/user.js");
@@ -22,6 +22,18 @@ jest.mock('../../../models/user.js', () => ({
     findById: jest.fn(),
     findOne: jest.fn(),
 }));
+
+jest.mock('../../../middlewares/validators/userValidators.js', () => {
+    const original = jest.requireActual('../../../middlewares/validators/userValidators.js');
+    return {
+        ...original,
+        validateUserNOTInDatabase: jest.fn(),    
+    };
+});
+
+afterEach(() => {
+            jest.restoreAllMocks();  
+        });
 
 // Test suite for User Validators
 describe('User Creation Validators Testing', () => {
@@ -45,21 +57,24 @@ describe('User Creation Validators Testing', () => {
 
     // 2. validateUserUsername
     describe('validateUserUsername', () => {
-        test('should return isValid=true for valid username', () => {
+        test('should return isValid=true for valid username', async () => {
+            validateUserNOTInDatabase.mockResolvedValue({ isValid: true });
             const valid = { username: 'peter.tester' };
-            const result = validateUserUsername(valid);
+            const result = await validateUserUsername(valid);
             expect(result.isValid).toBe(true);
         });
 
-        test('should return isValid=false for short username < 3 characters', () => {
+        test('should return isValid=false for short username < 3 characters', async () => {
+            validateUserNOTInDatabase.mockResolvedValue({ isValid: true });
             const invalid = { username: 'a' };
-            const result = validateUserUsername(invalid);
+            const result = await validateUserUsername(invalid);
             expect(result.isValid).toBe(false);
         });
 
-        test('should return isValid=false for username > 20 characters', () => {
+        test('should return isValid=false for username > 20 characters', async () => {
+            validateUserNOTInDatabase.mockResolvedValue({ isValid: true });
             const invalid = { username: 'a'.repeat(21) };
-            const result = validateUserUsername(invalid);
+            const result = await validateUserUsername(invalid);
             expect(result.isValid).toBe(false);
         });
     }); 
@@ -207,46 +222,43 @@ describe('User Creation Validators Testing', () => {
             const result = validateUserPicture(invalid);
             expect(result.isValid).toBe(false);
         });
-    });
+    }); 
 
-    // 10. validateUserUniqueFriends
-    describe('validateUserUniqueFriends', () => {
-        test('should return isValid=true for unique friends', () => {
-            const valid = { friends: ['user1', 'user2'] };
-            const result = validateUserFriends(valid);
-            expect(result.isValid).toBe(true);
+    // 10. validateUniqueFriends
+    describe('validateUniqueFriends', () => { 
+        const validators = require('../../../middlewares/validators/userValidators.js');
+
+        test('should return isValid=false if the new friend is the same as the current user', async () => {
+            User.findOne.mockResolvedValue(mockUserResponse);
+            jest.spyOn(validators, 'validateUsernameInDatabase')
+            .mockResolvedValue({ isValid: true });
+            // Same user ID as the current user
+            const result = await validateUniqueFriends(mockUserResponse, '68101f14af912a4fc8d69fe7');
+            expect(result.isValid).toBe(false); 
         });
 
-        test('should return isValid=false for duplicate friends', () => {
-            const invalid = { friends: ['user1', 'user1'] };
-            const result = validateUserFriends(invalid);
-            expect(result.isValid).toBe(false);
-        }); 
-    });
+        test('should return isValid=false if the new friend is not the same as the current user', async () => {
+            User.findOne.mockResolvedValue(mockUserResponse);
+            jest.spyOn(validators, 'validateUsernameInDatabase')
+            .mockResolvedValue({ isValid: true });
+            const result = await validateUniqueFriends(mockUserResponse, 'Not_the_Same_User');
+            expect(result.isValid).toBe(true); 
+        });
 
-    // 11. validateUserFriends
-    describe('validateUserFriends', () => { 
-        test('should return isValid=true for valid friend < 200 characters', () => {
-            const valid = { friends: ['Friend_Test'] };
-            const result = validateUserFriends(valid);
-            expect(result.isValid).toBe(true);
+        test('should return isValid=false if the new friend already exists in the friends list', async () => {
+            User.findOne.mockResolvedValue(mockUserResponse);
+            jest.spyOn(validators, 'validateUsernameInDatabase')
+            .mockResolvedValue({ isValid: true });
+            // Existing friend in the list
+            const result = await validateUniqueFriends(mockUserResponse, 'friend_test');
+            expect(result.isValid).toBe(false); 
         });
-        test('should return isValid=false for valid friend > 200 characters', () => {
-            const invalid = { friends: ['a'.repeat(201)] };
-            const result = validateUserFriends(invalid);
-            expect(result.isValid).toBe(false);
-        }); 
-        test('should return isValid=true if friend is in database', async () => {
-            User.findById.mockResolvedValue(mockUserResponse);
-            const valid = { friends: [mockUsername] };
-            const result = await validateUserFriends(valid);
-            expect(result.isValid).toBe(true);
-        });
-        test('should return isValid=false if friend is not in database', async () => {
-            User.findById.mockResolvedValue(null);
-            const invalid = { friends: ['nonExistentUser'] };
-            const result = await validateUserFriends(invalid);
-            expect(result.isValid).toBe(false);
+        test('should return isValid=true if the new friend does not already exists in the friends list', async () => {
+            User.findOne.mockResolvedValue(mockUserResponse);
+            jest.spyOn(validators, 'validateUsernameInDatabase')
+            .mockResolvedValue({ isValid: true }); 
+            const result = await validateUniqueFriends(mockUserResponse, 'Not_A_Friend');
+            expect(result.isValid).toBe(true); 
         });
     });
 }); 
