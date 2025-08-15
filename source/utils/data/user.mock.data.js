@@ -9,10 +9,11 @@ const mockUserResponse = {
     username: 'peter.tester',
     password: 'Roboto123!',
     role: 'tester',
+    status: 'active',
     creationDate: '1741237332',
     activated: true,
     currentLocation: 'US',
-    friends: [],
+    friends: ['friend_test'],
     __v: 0,
 };
 

@@ -1,39 +1,19 @@
 const User = require('../../models/user.js');
 
 const validateUsernameInDatabase = async (username) => {
-    try{
-        // let user;
-        // if (id) {
-        //     if (id.length > 20 ) {
-        //         user = await User.findById(id);
-        //     } else {
-        //         user = await User.findOne({ username: id });
-        //     }
-        // } else {
-        //     user = await User.findOne({ username });
-        // }
-        console.log('validateUsernameInDatabase > username:', username);
-        // Validate input
+    try{  
         if (!username) {
             throw new Error("id must be provided");
         }
-
         if (username.length > 20 ) {
             throw new Error("Invalid id format, it should be a valid MongoDB ObjectId");
         }
-
-        const user = username ? await User.findOne(username) : null;
-        console.log('validateUsernameInDatabase user', user);
-
+        const user = username ? await User.findOne(username) : null; 
         if (!user) {
             throw new Error("User not found");
         }
-        
         return { isValid: true, user: user, message: "User exists" };
-
-
-    } catch (error) {
-        console.log('validateUsernameInDatabase error:', error.message);
+    } catch (error) { 
         return { isValid: false, message: error.message };
     }
 };
@@ -46,7 +26,6 @@ const validateUserNOTInDatabase = async (username, id) => {
         } else {
             user = await User.findOne({ username });
         }
-
         if (!(user === null)) {
             return {
                 isValid: false,
@@ -54,7 +33,6 @@ const validateUserNOTInDatabase = async (username, id) => {
             };        
         }
         return { isValid: true, message: "User does not exist" };
-
     } catch (error) {
         return { isValid: false, message: error.message };
     }
@@ -72,10 +50,10 @@ const validateUserCreationInput = async (body) => {
             throw new Error("Invalid email address");
         } else if (body.role && !['admin', 'user', 'tester'].includes(body.role)) {
             throw new Error("Invalid role");
-        } else if (body.status && !['active', 'inactive'].includes(body.status)) {
+        } else if (body.status && !['active', 'inactive', 'locked', 'banned'].includes(body.status)) {
             throw new Error("Invalid status");
-        // } else if (body.password && body.password !== body.confirmPassword) {
-        //     throw new Error("Passwords do not match");
+        } else if (body.password && body.password !== body.confirmPassword) {
+            throw new Error("Passwords do not match");
         } else if (body.password.length > 20) {
             throw new Error("Password must be less than 20 characters long");
         } else if (body.password && body.password.length < 8) {
@@ -108,13 +86,12 @@ const validateUserFullName = (body) => {
             throw new Error("Full name must be less than 50 characters long");
         } 
         return { isValid: true };
-        
     } catch (error) {
         return { isValid: false, message: error.message , body};
     }
 };
 
-const validateUserUsername = (body) => {
+const validateUserUsername = async (body) => {
     try{
         if (body.username.length < 3) {
             throw new Error("Username must be at least 3 characters long");
@@ -122,7 +99,7 @@ const validateUserUsername = (body) => {
         if (body.username.length > 20) {
             throw new Error("Username must be less than 20 characters long");
         }
-        const userValidation = validateUserNOTInDatabase(body.username, null);
+        const userValidation = await validateUserNOTInDatabase(body.username, null);
         if (!userValidation.isValid) {
             throw new Error("Username already exists");
         }
@@ -162,6 +139,17 @@ const validateUserRole = (body) => {
     try{
         if (body.role && !['admin', 'user', 'tester'].includes(body.role)) {
             throw new Error("Invalid role");
+        }
+        return { isValid: true };
+    } catch (error) {
+        return { isValid: false, message: error.message };
+    }
+};
+
+const validateUserStatus = (body) => {
+    try{
+        if (body.status && !['active', 'inactive', 'locked', 'banned'].includes(body.status)) {
+            throw new Error("Invalid status");
         }
         return { isValid: true };
     } catch (error) {
@@ -213,60 +201,31 @@ const validateUserPicture = (body) => {
     }
 };
 
-const validateUniqueFriends = async (user, friends, newFriend) => {
+const validateUniqueFriends = async (user, newFriend) => {
     try {
-        if ( user.id === newFriend ) {
+        if ( user._id.toString() === newFriend ) { 
             return { isValid: false, message: "User cannot be friends with themselves" };
         }
-        for (const friend of friends ) {
-            if ( friend === newFriend ) {
-                return { isValid: false, message: "User cannot be friends with the same person twice" };
-            }
+        const count = user.friends.filter(friend => friend === newFriend).length;
+        if (count > 0) { 
+            return { isValid: false, message: "User cannot be friends with the same person twice" };
+        }
+        const userValidation = await validateUsernameInDatabase(newFriend);
+        if (!userValidation.isValid) { 
+            return { isValid: false, message: "Not an existing user" };
         }
         return { isValid: true };
     } catch (error) {
         return { isValid: false, message: error.message };
     }
-};
-
-const validateUserFriends = async (body) => {
-    try {
-        if (!Array.isArray(body.friends)) {
-            throw new Error("Friends must be an array");
-        }
-        if (body.friends.length > 200) {
-            throw new Error("Friends list must be less than 200 characters long");
-        }
-        for (const friendId of body.friends) {
-            const userValidation = await validateUsernameInDatabase(null, friendId);
-            if (!userValidation.isValid) {
-                throw new Error(`Invalid friend ID: ${friendId}, ${userValidation.message}`);
-            }
-            const uniqueFriendsValidation = await validateUniqueFriends(userValidation.user, body.friends, friendId);
-            if (!uniqueFriendsValidation.isValid) {
-                throw new Error(`Invalid friend ID: ${friendId}, ${uniqueFriendsValidation.message}`);
-            }
-        }
-        return { isValid: true };
-    } catch (error) {
-        return { isValid: false, message: error.message };
-    }
-};
+}; 
 
 const validateUserUpdateInput = async (body) => {
     try {
         const updateData = {};
         for (const key in body) {
             if (body.hasOwnProperty(key)) {
-                switch (key) {
-                    case 'fullName':
-                        const userFullNameValidation = validateUserFullName(body);
-                        if (userFullNameValidation.isValid) {
-                            updateData.fullName = body.fullName;
-                        } else {
-                            return { isValid: false, message: userFullNameValidation.message };
-                        }
-                        break;
+                switch (key) { 
                     case 'username':
                         const userUsernameValidation = validateUserUsername(body);
                         if (userUsernameValidation.isValid) {
@@ -363,11 +322,12 @@ module.exports = {
     validateUserUsername,
     validateUserPassword,
     validateUserRole,
+    validateUserStatus,
     validateUserEmail,
     validateUserPhoneNumber,
     validateUserBio,
     validateUserPicture,
-    validateUserFriends,
+    validateUniqueFriends,
     validateUserUpdateInput,
     // validateUserDeletionInput
 };
