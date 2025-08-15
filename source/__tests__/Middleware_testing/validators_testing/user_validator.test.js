@@ -41,7 +41,7 @@ afterEach(() => {
 describe('User Creation Validators Testing', () => {
 
     // 1. validateUsernameInDatabase
-    describe('validateUsernameInDatabase', () => {
+    describe('1. validateUsernameInDatabase', () => {
         beforeEach(() => jest.clearAllMocks());
 
         test('should return isValid=true if user does not exist', async () => {
@@ -58,7 +58,7 @@ describe('User Creation Validators Testing', () => {
     }); 
 
     // 2. validateUserCreationInput 
-    describe('validateUserCreationInput', () => { 
+    describe('2. validateUserCreationInput', () => { 
         test('should return isValid=false if username is not provided', async () => {
             const invalid = { password: 'Password123!' };
             const result = await validateUserCreationInput(invalid);
@@ -175,7 +175,7 @@ describe('User Creation Validators Testing', () => {
     });
     
     // 3. validateUserUsername
-    describe('validateUserUsername', () => {
+    describe('3. validateUserUsername', () => {
         test('should return isValid=true for valid username', async () => {
             validateUserNOTInDatabase.mockResolvedValue({ isValid: true });
             const valid = { username: 'peter.tester' };
@@ -199,7 +199,7 @@ describe('User Creation Validators Testing', () => {
     }); 
 
     // 4. validateUserRole
-    describe('validateUserRole', () => {
+    describe('4. validateUserRole', () => {
         test('should return isValid=true for valid admin role', () => {
             const valid = { role: 'admin' };
             const result = validateUserRole(valid);
@@ -226,7 +226,7 @@ describe('User Creation Validators Testing', () => {
     });
 
     // 5. validateUserStatus
-    describe('validateUserStatus', () => {
+    describe('5. validateUserStatus', () => {
         test('should return isValid=true for valid active status', () => {
             const valid = { status: 'active' };
             const result = validateUserStatus(valid);
@@ -259,7 +259,7 @@ describe('User Creation Validators Testing', () => {
     });
 
     // 6. validateEmail 
-    describe('validateUserEmail', () => {
+    describe('6. validateUserEmail', () => {
         test('should return isValid=true for valid email', () => {
             const validEmail = { email: 'jesus@email.com' };
             const result = validateUserEmail(validEmail);
@@ -273,7 +273,7 @@ describe('User Creation Validators Testing', () => {
     });
     
     // 7. validatePhoneNumber
-    describe('validateUserPhoneNumber', () => {
+    describe('7. validateUserPhoneNumber', () => {
         test('should return isValid=true for valid phone number', () => {
             const validPhone = { phoneNumber: '1234567890' };
             const result = validateUserPhoneNumber(validPhone);
@@ -287,7 +287,7 @@ describe('User Creation Validators Testing', () => {
     });
 
     // 8. validateUserPassword
-    describe('validateUserPassword', () => {
+    describe('8. validateUserPassword', () => {
         test('should return isValid=true for valid password', () => {
             const validPassword = { password: 'Fin345333!' };
             const result = validateUserPassword(validPassword);
@@ -326,7 +326,7 @@ describe('User Creation Validators Testing', () => {
     });
 
     // 9. validateUserFullName
-    describe('validateUserFullName', () => {
+    describe('9. validateUserFullName', () => {
         test('should return isValid=true for valid fullName', () => {
             const valid = { fullName: 'John Doe' };
             const result = validateUserFullName(valid);
@@ -347,7 +347,7 @@ describe('User Creation Validators Testing', () => {
     }); 
 
     // 10. validateUserBio
-    describe('validateUserBio', () => {
+    describe('10. validateUserBio', () => {
         test('should return isValid=true for valid bio', () => {
             const valid = { bio: 'This is a valid bio.' };
             const result = validateUserBio(valid);
@@ -362,7 +362,7 @@ describe('User Creation Validators Testing', () => {
     });
 
     // 11. validateUserPicture
-    describe('validateUserPicture', () => {
+    describe('11. validateUserPicture', () => {
         test('should return isValid=true for valid picture URL', () => {
             const valid = { picture: 'http://example.com/picture.jpg' };
             const result = validateUserPicture(valid);
@@ -377,7 +377,7 @@ describe('User Creation Validators Testing', () => {
     }); 
 
     // 12. validateUniqueFriends
-    describe('validateUniqueFriends', () => { 
+    describe('12. validateUniqueFriends', () => { 
         const validators = require('../../../middlewares/validators/userValidators.js');
 
         test('should return isValid=false if the new friend is the same as the current user', async () => {
