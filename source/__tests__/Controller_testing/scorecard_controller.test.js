@@ -1,4 +1,4 @@
-// Functions under test:
+// Functions Under Testing
 const {
     getAllScorecards,
     getScorecard,
