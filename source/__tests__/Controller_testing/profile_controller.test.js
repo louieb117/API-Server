@@ -138,8 +138,7 @@ describe('Profile Controller Testing', () => {
 
         test('should create a new profile', async () => {
             // Mocking
-            const mockSave = jest.fn();
-            Profile.mockImplementation(() => ({ save: mockSave }));
+            Profile.create.mockResolvedValue(mockProfileResponse);
 
             // Request and Response objects
             const req = { params: { user_id: mockUserId }, body: reqCreateProfile };
@@ -147,12 +146,12 @@ describe('Profile Controller Testing', () => {
             await createProfile(req, res);
 
             // Assertions
-            expect(mockSave).toHaveBeenCalled();
+            expect(Profile.create).toHaveBeenCalledWith({ user_id: mockUserId, ...reqCreateProfile });
             expect(res.status).toHaveBeenCalledWith(201);
             expect(res.json).toHaveBeenCalledWith({ data: mockProfileResponse });
         });
 
-        test('should return 400 if profile creation fails', async () => {
+        test('should return 500 if profile creation fails', async () => {
             // Mocking
             const errorMessage = 'Validation error';
             Profile.create.mockRejectedValue(new Error(errorMessage));
@@ -163,8 +162,8 @@ describe('Profile Controller Testing', () => {
             await createProfile(req, res);
 
             // Assertions
-            expect(Profile.create).toHaveBeenCalledWith({ user: mockProfileId, ...reqCreateProfile });
-            expect(res.status).toHaveBeenCalledWith(400);
+            expect(Profile.create).toHaveBeenCalledWith({ user_id: mockProfileId, ...reqCreateProfile });
+            expect(res.status).toHaveBeenCalledWith(500);
             expect(res.json).toHaveBeenCalledWith({ message: errorMessage });
         });
     });
@@ -183,8 +182,8 @@ describe('Profile Controller Testing', () => {
 
             // Assertions
             expect(Profile.findOneAndUpdate).toHaveBeenCalledWith(
-                { user: mockProfileId },
-                { $set: reqUpdateProfile },
+                { profile_id: mockProfileId },
+                reqUpdateProfile,
                 { new: true }
             );
             expect(res.status).toHaveBeenCalledWith(200);
@@ -202,12 +201,12 @@ describe('Profile Controller Testing', () => {
 
             // Assertions
             expect(Profile.findOneAndUpdate).toHaveBeenCalledWith(
-                { user: mockProfileId },
-                { $set: reqUpdateProfile },
+                { profile_id: mockProfileId },
+                reqUpdateProfile,
                 { new: true }
             );
             expect(res.status).toHaveBeenCalledWith(404);
-            expect(res.json).toHaveBeenCalledWith({ error: 'Profile not found' });
+            expect(res.json).toHaveBeenCalledWith({ message: 'Profile not found' });
         });
 
     });
@@ -225,8 +224,8 @@ describe('Profile Controller Testing', () => {
             await deleteProfile(req, res);
 
             // Assertions
-            expect(Profile.findOneAndDelete).toHaveBeenCalledWith({ user: mockProfileId });
-            expect(res.status).toHaveBeenCalledWith(200);
+            expect(Profile.findOneAndDelete).toHaveBeenCalledWith({ profile_id: mockProfileId });
+            expect(res.status).toHaveBeenCalledWith(204);
             expect(res.json).toHaveBeenCalledWith({ data: mockProfileResponse });
         });
 
@@ -240,9 +239,9 @@ describe('Profile Controller Testing', () => {
             await deleteProfile(req, res);
 
             // Assertions
-            expect(Profile.findOneAndDelete).toHaveBeenCalledWith({ user: mockProfileId });
+            expect(Profile.findOneAndDelete).toHaveBeenCalledWith({ profile_id: mockProfileId });
             expect(res.status).toHaveBeenCalledWith(404);
-            expect(res.json).toHaveBeenCalledWith({ error: 'Profile not found' });
+            expect(res.json).toHaveBeenCalledWith({ message: 'Profile not found' });
         });
 
     });

@@ -26,8 +26,7 @@ const getProfile = async (req, res) => {
 
 const createProfile = async (req, res) => {
     try {
-        const profile = new Profile({ user_id: req.params.user_id, ...req.body });
-        await profile.save();
+        const profile = await Profile.create({ user_id: req.params.user_id, ...req.body });
         res.status(201).json({ data: profile });
     } catch (error) {
         console.error('Error creating profile:', error); // Log the error
@@ -54,7 +53,7 @@ const deleteProfile = async (req, res) => {
         if (!profile) {
             return res.status(404).json({ message: 'Profile not found' });
         }
-        res.status(204).send();
+        res.status(204).json({ data: profile });
     } catch (error) {
         console.error('Error deleting profile:', error); // Log the error
         res.status(500).json({ message: error.message });

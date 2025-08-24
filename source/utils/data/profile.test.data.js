@@ -1,5 +1,15 @@
+const reqUserID = 'mockUserId';
+const reqUserName = 'testUser';
+const reqProfileID = 'testUser';
+
+// Mock data for testing
+const mockUserId = '68101f14af912a4fc8d69fe7';
+const mockUserName = 'peter.tester';
+const mockProfileId = '68101f14af912a4fc8d6ds00';
+
+
 const reqCreateProfile = {
-    user_id: 'testUser',
+    user_id: mockUserId,
     onlineStatus: true,
     profilePicture: 'http://example.com/profile.jpg',
     bio: 'This is a test bio',
@@ -24,17 +34,10 @@ const reqUpdateProfile = {
     bio: 'This is an updated test bio',
 };
 
-const reqUserID = 'testUserID';
-const reqUserName = 'testUser';
-const reqProfileID = 'testUser';
 
-// Mock data for testing
-const mockUserId = '68101f14af912a4fc8d69fe7';
-const mockUserName = 'peter.tester';
-const mockProfileId = '68101f14af912a4fc8d6ds00';
 const mockProfileResponse = {
     _id: mockProfileId,
-    user_id: 'testUser',
+    user_id: mockUserId,
     onlineStatus: true,
     profilePicture: 'http://example.com/profile.jpg',
     bio: 'This is a test bio',
