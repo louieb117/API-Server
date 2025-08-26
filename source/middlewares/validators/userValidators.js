@@ -111,6 +111,12 @@ const validateUserUsername = async (body) => {
 
 const validateUserPassword = (body) => {
     try{
+        if (!body.password) {
+            throw new Error("Password is required");
+        }
+        if (body.confirmPassword && (body.password !== body.confirmPassword)) {
+            throw new Error("Passwords do not match");
+        }
         if (body.password.length > 20) {
             throw new Error("Password must be less than 20 characters long");
         } 
@@ -227,11 +233,11 @@ const validateUserUpdateInput = async (body) => {
             if (body.hasOwnProperty(key)) {
                 switch (key) { 
                     case 'username':
-                        const userUsernameValidation = validateUserUsername(body);
+                        const userUsernameValidation = await validateUserUsername(body);
                         if (userUsernameValidation.isValid) {
                             updateData.username = body.username;
                         } else {
-                            return { isValid: false, message: userUsernameValidation.message };
+                            return { isValid: false, message: userUsernameValidation.message };  
                         }
                         break;
                     case 'password':
@@ -241,20 +247,14 @@ const validateUserUpdateInput = async (body) => {
                         } else {
                             return { isValid: false, message: userPasswordValidation.message };
                         }
-                        break;
-                    case 'role':
-                        const userRoleValidation = validateUserRole(body);
-                        if (userRoleValidation.isValid) {
-                            updateData.role = body.role;
+                        break; 
+                    case 'status': 
+                        const userStatusValidation = validateUserStatus(body);
+                        if (userStatusValidation.isValid) {
+                            updateData.status = body.status;
                         } else {
-                            return { isValid: false, message: userRoleValidation.message };
+                            return { isValid: false, message: userStatusValidation.message };
                         }
-                        break;
-                    case 'activated':
-                        updateData.activated = body.activated;
-                        break;
-                    case 'currentLocation':
-                        updateData.currentLocation = body.currentLocation;
                         break;
                     case 'phoneNumber':
                         const userPhoneNumberValidation = validateUserPhoneNumber(body);
@@ -271,48 +271,17 @@ const validateUserUpdateInput = async (body) => {
                         } else {
                             return { isValid: false, message: userEmailValidation.message };
                         }
-                        break;
-                    case 'bio':
-                        const userBioValidation = validateUserBio(body);
-                        if (userBioValidation.isValid) {
-                            updateData.bio = body.bio;
-                        } else {
-                            return { isValid: false, message: userBioValidation.message };
-                        }
-                        break;
-                    case 'picture':
-                        const userPictureValidation = validateUserPicture(body);
-                        if (userPictureValidation.isValid) {
-                            updateData.picture = body.picture;
-                        } else {
-                            return { isValid: false, message: userPictureValidation.message };
-                        }
-                        break;
-                    case 'friends':
-                        const userFriendsValidation = await validateUserFriends(body);
-                        if (userFriendsValidation.isValid) {
-                            updateData.friends = body.friends;
-                        } else {
-                            return { isValid: false, message: userFriendsValidation.message };
-                        }
-                        break;
+                        break; 
                     default:
                         break;
                 }
             }
         }
-        return { isValid: true, updateData };
+        return { isValid: true, body };
     } catch (error) {
-        return { isValid: false, message: error.message };
+        return { isValid: false, message: error.message }; 
     }
-};
-// const validateUserDeletionInput = (body) => {
-//     try{
-
-//     } catch (error) {
-//         return { isValid: false, message: error.message };
-//     }
-// };
+}; 
 
 module.exports = {
     validateUsernameInDatabase,
@@ -328,6 +297,5 @@ module.exports = {
     validateUserBio,
     validateUserPicture,
     validateUniqueFriends,
-    validateUserUpdateInput,
-    // validateUserDeletionInput
+    validateUserUpdateInput, 
 };
