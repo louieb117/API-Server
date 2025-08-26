@@ -13,6 +13,7 @@ const {
     validateUserBio,
     validateUserPicture, 
     validateUniqueFriends, 
+    validateUserUpdateInput,
 } = require('../../../middlewares/validators/userValidators.js');
 
 // Test data
@@ -288,11 +289,16 @@ describe('User Creation Validators Testing', () => {
 
     // 8. validateUserPassword
     describe('8. validateUserPassword', () => {
-        test('should return isValid=true for valid password', () => {
-            const validPassword = { password: 'Fin345333!' };
+        test('should return isValid=false if password not provided', () => {
+            const validPassword = {  };
+            const result = validateUserPassword(validPassword); 
+            expect(result.isValid).toBe(false);
+        });
+        test('should return isValid=false if password and confirm password do not match', () => {
+            const validPassword = { password: 'Fin345333!', confirmPassword: 'Fin345331!' };
             const result = validateUserPassword(validPassword);
-            expect(result.isValid).toBe(true);
-        });  
+            expect(result.isValid).toBe(false);
+        });   
         test('should return isValid=false for password > 20 characters', () => {
             const invalidPassword = { password: 'a'.repeat(21) };
             const result = validateUserPassword(invalidPassword);
@@ -323,6 +329,11 @@ describe('User Creation Validators Testing', () => {
             const result = validateUserPassword(invalidPassword);
             expect(result.isValid).toBe(false);
         });
+        test('should return isValid=true for valid password', () => {
+            const validPassword = { password: 'Fin345333!', confirmPassword: 'Fin345333!' };
+            const result = validateUserPassword(validPassword);
+            expect(result.isValid).toBe(true);
+        }); 
     });
 
     // 9. validateUserFullName
@@ -332,13 +343,11 @@ describe('User Creation Validators Testing', () => {
             const result = validateUserFullName(valid);
             expect(result.isValid).toBe(true);
         });
-
         test('should return isValid=false for short fullName < 3 characters', () => {
             const invalid = { fullName: 'JD' };
             const result = validateUserFullName(invalid);
             expect(result.isValid).toBe(false);
         });
-
         test('should return isValid=false for fullName > 50 characters', () => {
             const invalid = { fullName: 'a'.repeat(51) };
             const result = validateUserFullName(invalid);
@@ -353,7 +362,6 @@ describe('User Creation Validators Testing', () => {
             const result = validateUserBio(valid);
             expect(result.isValid).toBe(true);
         });
-
         test('should return isValid=false for bio > 200 characters', () => {
             const invalid = { bio: 'a'.repeat(201) };
             const result = validateUserBio(invalid);
@@ -368,7 +376,6 @@ describe('User Creation Validators Testing', () => {
             const result = validateUserPicture(valid);
             expect(result.isValid).toBe(true);
         });
-
         test('should return isValid=false for invalid picture URL > 200 characters', () => {
             const invalid = { picture: 'a'.repeat(201) };
             const result = validateUserPicture(invalid);
@@ -380,37 +387,71 @@ describe('User Creation Validators Testing', () => {
     describe('12. validateUniqueFriends', () => { 
         const validators = require('../../../middlewares/validators/userValidators.js');
 
-        test('should return isValid=false if the new friend is the same as the current user', async () => {
-            User.findOne.mockResolvedValue(mockUserResponse);
-            jest.spyOn(validators, 'validateUsernameInDatabase')
-            .mockResolvedValue({ isValid: true });
+        test('should return isValid=false if the new friend is the same as the current user', async () => { 
             // Same user ID as the current user
             const result = await validateUniqueFriends(mockUserResponse, '68101f14af912a4fc8d69fe7');
             expect(result.isValid).toBe(false); 
         });
-
-        test('should return isValid=false if the new friend is not the same as the current user', async () => {
-            User.findOne.mockResolvedValue(mockUserResponse);
-            jest.spyOn(validators, 'validateUsernameInDatabase')
-            .mockResolvedValue({ isValid: true });
+        test('should return isValid=false if the new friend is not the same as the current user', async () => { 
+            User.findOne.mockResolvedValue(mockUserResponse); 
             const result = await validateUniqueFriends(mockUserResponse, 'Not_the_Same_User');
             expect(result.isValid).toBe(true); 
         });
-
-        test('should return isValid=false if the new friend already exists in the friends list', async () => {
-            User.findOne.mockResolvedValue(mockUserResponse);
-            jest.spyOn(validators, 'validateUsernameInDatabase')
-            .mockResolvedValue({ isValid: true });
+        test('should return isValid=false if the new friend already exists in the friends list', async () => { 
             // Existing friend in the list
             const result = await validateUniqueFriends(mockUserResponse, 'friend_test');
             expect(result.isValid).toBe(false); 
         });
-        test('should return isValid=true if the new friend does not already exists in the friends list', async () => {
-            User.findOne.mockResolvedValue(mockUserResponse);
-            jest.spyOn(validators, 'validateUsernameInDatabase')
-            .mockResolvedValue({ isValid: true }); 
+        test('should return isValid=true if the new friend does not already exists in the friends list', async () => { 
+            User.findOne.mockResolvedValue(mockUserResponse); 
             const result = await validateUniqueFriends(mockUserResponse, 'Not_A_Friend');
             expect(result.isValid).toBe(true); 
+        });
+    });
+
+    // 13. validateUserUpdateInput
+    describe('13. validateUserUpdateInput', () => {   
+        test('should return isValid=false if updated username is not a valid username', async () => {
+            User.findOne.mockResolvedValue(mockUserResponse);   
+            const result = await validateUserUpdateInput( { "username": 'Fin.tester' } );  
+            expect(result.isValid).toBe(false);  
+        });
+        test('should return isValid=true if updated username is a valid username', async () => {
+            User.findOne.mockResolvedValue( mockUserResponse );   
+            const result = await validateUserUpdateInput( { mockUserResponse } );              
+            expect(result.isValid).toBe(true);  
+        });
+        test('should return isValid=false if updated password is not a valid password', async () => { 
+            const result = await validateUserUpdateInput( { "password": 'a' } );  
+            expect(result.isValid).toBe(false);  
+        });
+        test('should return isValid=true if updated password is a valid password', async () => { 
+            const result = await validateUserUpdateInput( { "password": 'Roboto123!' } );  
+            expect(result.isValid).toBe(true);  
+        });
+        test('should return isValid=false if updated status is not a valid status', async () => { 
+            const result = await validateUserUpdateInput( { "status": 'x' } );  
+            expect(result.isValid).toBe(false);  
+        });
+        test('should return isValid=true if updated status is a valid status', async () => { 
+            const result = await validateUserUpdateInput( { "status": 'banned' } );  
+            expect(result.isValid).toBe(true);  
+        });
+        test('should return isValid=false if updated phone number is not a valid phone number', async () => { 
+            const result = await validateUserUpdateInput( { "phoneNumber": 'a' } );  
+            expect(result.isValid).toBe(false);  
+        });
+        test('should return isValid=true if updated phone number is a valid phone number', async () => { 
+            const result = await validateUserUpdateInput( { "phoneNumber": '6199696660' } );  
+            expect(result.isValid).toBe(true);  
+        });
+        test('should return isValid=false if updated email is not a valid email', async () => { 
+            const result = await validateUserUpdateInput( { "email": 'a' } );  
+            expect(result.isValid).toBe(false);  
+        });
+        test('should return isValid=true if updated email is a valid email', async () => { 
+            const result = await validateUserUpdateInput( { "email": 'test.user.Roboto@potentiamaxima.com' } );  
+            expect(result.isValid).toBe(true);  
         });
     });
 }); 
