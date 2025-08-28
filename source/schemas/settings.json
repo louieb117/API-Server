@@ -1,0 +1,38 @@
+{  
+    "theme": {
+        "type": "string",
+        "enum": ["light", "dark", "system"],
+        "default": "system",
+        "description": "Preferred theme for the application."
+    },
+    "notifications": {
+        "type": "boolean",
+        "default": true,
+        "description": "Whether the user wants to receive notifications."
+    },
+    "language": {
+        "type": "string",
+        "enum": ["en", "es", "fr", "de", "zh"],
+        "default": "en",
+        "description": "Preferred language for the application.",
+        "maxLength": 5
+    },
+    "privacy": {
+        "type": "object",
+        "description": "Privacy settings for the user.",
+        "properties": {
+            "profileVisibility": {
+                "type": "string",
+                "enum": ["public", "friends", "private"],
+                "default": "public",
+                "description": "Who can see the user's profile."
+            },
+            "dataSharing": {
+                "type": "boolean",
+                "default": true,
+                "description": "Whether the user allows data sharing with third parties."
+            }
+        },
+        "required": ["profileVisibility", "dataSharing"]
+    } 
+}
