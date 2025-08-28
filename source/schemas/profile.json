@@ -62,47 +62,11 @@
       },
       "description": "List of friends' user ids."
     },
-    "preferences": {
-      "type": "object",
-      "description": "User preferences for the application.",
-      "properties": {
-        "theme": {
-          "type": "string",
-          "enum": ["light", "dark", "system"],
-          "default": "system",
-          "description": "Preferred theme for the application."
-        },
-        "notifications": {
-          "type": "boolean",
-          "default": true,
-          "description": "Whether the user wants to receive notifications."
-        },
-        "language": {
-          "type": "string",
-          "default": "en",
-          "description": "Preferred language for the application.",
-          "maxLength": 5
-        },
-        "privacy": {
-          "type": "object",
-          "description": "Privacy settings for the user.",
-          "properties": {
-            "profileVisibility": {
-              "type": "string",
-              "enum": ["public", "friends", "private"],
-              "default": "public",
-              "description": "Who can see the user's profile."
-            },
-            "dataSharing": {
-              "type": "boolean",
-              "default": true,
-              "description": "Whether the user allows data sharing with third parties."
-            }
-          },
-          "required": ["profileVisibility", "dataSharing"]
-        }
-      },
-      "required": ["theme", "notifications", "language", "privacy"]
+    "settings_id": {
+      "type": "string",
+      "required": true,
+      "maxLength": 25,
+      "description": "The id of the user's settings document."
     },
     "createdAt": {
       "type": "string",
