@@ -14,6 +14,7 @@ const {
     validateUserPicture, 
     validateUniqueFriends, 
     validateUserUpdateInput,
+    validateUserDelete
 } = require('../../../middlewares/validators/userValidators.js');
 
 // Test data
@@ -452,6 +453,25 @@ describe('User Creation Validators Testing', () => {
         test('should return isValid=true if updated email is a valid email', async () => { 
             const result = await validateUserUpdateInput( { "email": 'test.user.Roboto@potentiamaxima.com' } );  
             expect(result.isValid).toBe(true);  
+        });
+    });
+
+    // 14. validateUserDelete
+    describe('14. validateUserDelete', () => {   
+        beforeEach(() => jest.clearAllMocks());
+
+        test('should return isValid=false if user does not exist', async () => {
+            User.findById.mockResolvedValue(null);
+            const result = await validateUserDelete(mockUserResponse);
+            expect(result.message).toBe("User not found");
+            expect(result.isValid).toBe(false);
+        });
+
+        test('should return isValid=true if user exists', async () => {
+            User.findById.mockResolvedValue(mockUserResponse);
+            const result = await validateUserDelete(mockUserResponse);
+            expect(result.message).toBe("User exists");
+            expect(result.isValid).toBe(true);
         });
     });
 }); 
