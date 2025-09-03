@@ -283,6 +283,24 @@ const validateUserUpdateInput = async (body) => {
     }
 }; 
 
+const validateUserDelete = async (id) => {
+    try {
+        if (!id) {
+            throw new Error("id must be provided");
+        }
+        if (id.length > 20 ) {
+            throw new Error("Invalid id format, it should be a valid MongoDB ObjectId");
+        }
+        const user = await User.findById(id);
+        if (!user) {
+            throw new Error("User not found");
+        }
+        return { isValid: true, message: "User exists" };
+    } catch (error) {
+        return { isValid: false, message: error.message };
+    }
+}
+
 module.exports = {
     validateUsernameInDatabase,
     validateUserNOTInDatabase,
@@ -298,4 +316,5 @@ module.exports = {
     validateUserPicture,
     validateUniqueFriends,
     validateUserUpdateInput, 
+    validateUserDelete
 };

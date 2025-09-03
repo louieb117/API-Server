@@ -12,7 +12,7 @@ export default {
         "__tests__/Middleware_testing/validators_testing/scorecard_validator.test.js",
         "__tests__/Middleware_testing/validators_testing/user_validator.test.js", 
         "__tests__/Middleware_testing/validators_testing/login_validator.test.js",
-        // "__tests__/Middleware_testing/validators_testing/settings_validator.test.js",
+        "__tests__/Middleware_testing/validators_testing/settings_validator.test.js",
 
         // Controllers
         "__tests__/Controller_testing/scorecard_controller.test.js",

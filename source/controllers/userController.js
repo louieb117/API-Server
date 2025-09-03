@@ -3,7 +3,8 @@ const {
   validateUserCreationInput,
   validateUsernameInDatabase,
   validateUserNOTInDatabase,
-  validateUserUpdateInput
+  validateUserUpdateInput,
+  validateUserDelete
 } = require('../middlewares/validators/userValidators.js');
 
 const getAllUsers = async (req, res) => {
@@ -83,13 +84,13 @@ const updateUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
     try {
-      const userValidation = await validateUsernameInDatabase(req.body.username, req.params.id);
-      if (!userValidation.isValid) {
-        return res.status(404).json({ error: userValidation.message });
+      const validation = await validateUserDelete(req.params.id);
+      if (!validation.isValid) {
+        return res.status(404).json({ error: validation.message });
       }
-      const user = await User.findByIdAndDelete(req.params.id);
-      if (!user) return res.status(404).json({ message: 'User not found' });
-      res.json({ message: 'User deleted successfully' });
+
+      await User.findByIdAndDelete(req.params.id);
+      res.json({ message: "User deleted successfully" });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
