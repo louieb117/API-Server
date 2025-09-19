@@ -1,6 +1,6 @@
 const Scorecard = require('../models/scorecard.js');
 const { validateUsernameInDatabase } = require('../middlewares/validators/userValidators.js');
-const { validateScorecardInDatabase } = require('../middlewares/validators/libraries/scorecard.js');
+const { validateScorecardInDatabase } = require('../middlewares/validators/libraries/scorecard.lib.js');
 const { 
   validateScorecardCreationInput, 
   validateScorecardUpdateInput
