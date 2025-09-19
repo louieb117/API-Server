@@ -29,14 +29,16 @@ const {
   validateUserCreationInput,
   validateUsernameInDatabase,
   validateUserNOTInDatabase,
-  validateUserUpdateInput
+  validateUserUpdateInput,
+  validateUserDelete
 } = require('../../middlewares/validators/userValidators.js');
 
 jest.mock('../../middlewares/validators/userValidators.js', () => ({
   validateUserCreationInput: jest.fn(),
   validateUsernameInDatabase: jest.fn(),
   validateUserNOTInDatabase: jest.fn(),
-  validateUserUpdateInput: jest.fn()
+  validateUserUpdateInput: jest.fn(),
+  validateUserDelete: jest.fn()
 }));
 
 beforeAll(() => {
@@ -150,10 +152,10 @@ test('should create user if valid', async () => {
   // 5. deleteUser
   describe('deleteUser', () => {
     test('should delete user if exists', async () => {
-      validateUsernameInDatabase.mockResolvedValue({ isValid: true });
+      validateUserDelete.mockResolvedValue({ isValid: true });
       User.findByIdAndDelete.mockResolvedValue(mockUserResponse);
 
-      const req = { body: { username: 'peter.tester' }, params: { id: mockUserId } };
+      const req = { params: { id: mockUserId } };
       const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
 
       await deleteUser(req, res);
@@ -163,17 +165,28 @@ test('should create user if valid', async () => {
     });
 
     test('should return 404 if user not found', async () => {
-      validateUsernameInDatabase.mockResolvedValue({ isValid: true });
-      User.findByIdAndDelete.mockResolvedValue(null);
+      validateUserDelete.mockResolvedValue({ isValid: false, message: 'User not found' });
 
-      const req = { body: { username: 'peter.tester' }, params: { id: mockUserId } };
+      const req = { params: { id: mockUserId } };
       const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
 
       await deleteUser(req, res);
 
       expect(res.status).toHaveBeenCalledWith(404);
-      expect(res.json).toHaveBeenCalledWith({ message: 'User not found' });
+      expect(res.json).toHaveBeenCalledWith({ error: 'User not found' });
     });
-  });
 
+    test('should return 500 if an exception is thrown', async () => {
+      validateUserDelete.mockResolvedValue({ isValid: true });
+      User.findByIdAndDelete.mockRejectedValue(new Error('DB delete error'));
+
+      const req = { params: { id: mockUserId } };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+
+      await deleteUser(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({ message: 'DB delete error' });
+    });
+  }); 
 });

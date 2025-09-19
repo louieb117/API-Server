@@ -65,6 +65,7 @@
       },
       "description": "List of friends' user ids."
     },
+
     "createdAt": {
       "type": "string",
       "format": "date-time",

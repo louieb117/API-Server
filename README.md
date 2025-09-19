@@ -44,7 +44,10 @@ podman-compose down -t 0 && podman-compose build --no-cache && podman run --rm -
 
 podman run --rm -it localhost/api-server_backend:latest bash -c "npm test" 
 
-podman run --rm -it localhost/api-server_backend:latest bash -c "npm --trace-warnings test --detectOpenHandles --verbose "    
+podman run --rm -it localhost/api-server_backend:latest bash -c "npm --trace-warnings test --detectOpenHandles --verbose " 
+
+podman build -t api-server_backend:latest . && podman run --rm -it   -v /var/home/lbellov/Development/APIServer/API-Server/source:/app:Z   -v node_modules:/app/node_modules:Z   api-server_backend:latest bash
+
 ```
 
 The server will start at http://localhost:3000.
