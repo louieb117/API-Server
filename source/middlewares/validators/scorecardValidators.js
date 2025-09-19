@@ -6,7 +6,7 @@ const {
     validateScorecardPlayers,
     validateScorecardScoresCreate,
     validateScorecardScoresUpdate,
-} = require('./libraries/scorecard');
+} = require('./libraries/scorecard.lib');
 
 const validateScorecardDataInput = async (body, id) => {
     try {

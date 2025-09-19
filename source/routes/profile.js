@@ -5,6 +5,7 @@ const router = express.Router();
 const {
     getAllProfiles,
     getProfile,
+    getUsersProfile,
     createProfile,
     updateProfile,
     deleteProfile
@@ -22,6 +23,7 @@ const {
 
 router.get('/', getAllProfiles); // GET /api/profile
 router.get('/:id', getProfile); // GET /api/profile/:id
+router.get('/user/:id', getUsersProfile); // GET /api/profile/user/:id
 
 router.post('/', createProfile); // POST /api/profile
 

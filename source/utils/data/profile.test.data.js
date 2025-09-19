@@ -10,6 +10,7 @@ const mockProfileId = '68101f14af912a4fc8d6ds00';
 
 const reqCreateProfile = {
     user_id: mockUserId,
+    settings_id: null,
     onlineStatus: true,
     profilePicture: 'http://example.com/profile.jpg',
     bio: 'This is a test bio',
@@ -19,15 +20,6 @@ const reqCreateProfile = {
     otherScorecards: [],
     groups: [],
     friends: [],
-    preferences: {
-        theme: 'light',
-        notifications: true,
-        language: 'en',
-        privacy: {
-            profileVisibility: 'public',
-            dataSharing: true
-        }
-    },
 };
 
 const reqUpdateProfile = {
@@ -38,6 +30,7 @@ const reqUpdateProfile = {
 const mockProfileResponse = {
     _id: mockProfileId,
     user_id: mockUserId,
+    settings_id: null,
     onlineStatus: true,
     profilePicture: 'http://example.com/profile.jpg',
     bio: 'This is a test bio',
@@ -47,15 +40,6 @@ const mockProfileResponse = {
     otherScorecards: [],
     groups: [],
     friends: [],
-    preferences: {
-        theme: 'light',
-        notifications: true,
-        language: 'en',
-        privacy: {
-            profileVisibility: 'public',
-            dataSharing: true
-        }
-    },
 };
 
 module.exports = {

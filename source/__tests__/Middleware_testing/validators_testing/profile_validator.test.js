@@ -1,153 +1,115 @@
-// Validators under test
+// Functions under test:
 const {
-    validateProfileInDatabase,
-    validateProfileNOTInDatabase,
+    validateProfileDataInput,
     validateProfileCreationInput,
-    validateProfileUpdateInput,
-    validateProfileUserID,
-    validateProfileOnlineStatus,
-    validateProfilePicture,
-    validateProfileBio,
-    validateProfileLocation,
-    validateProfileFullName,
-    validateProfileMyScorecards,
-    validateProfileOtherScorecards,
-    validateProfileGroup,
-    validateProfileFriends,
-    validateProfilePreferences,
+    validateProfileUpdateInput
+} = require('../../../middlewares/validators/profileValidators');
 
-} = require('../../../Middleware/validators/profileValidator.js');
+// Test data:
+const { 
+    reqProfileID,
+    reqCreateProfile,
+    reqUpdateProfile
+} = require('../../../utils/data/profile.test.data.js');
 
-// Test data
-const { } = require("../../../utils/data/profile.test.data.js");
-
-// Mocks
-const Profile = require('../../../models/profile.js');
-jest.mock('../../../models/profile.js', () => ({
-    findById: jest.fn(),
-    create: jest.fn(),
-    update: jest.fn(),
-    delete: jest.fn(),
+// Mocks:
+const lib = require('../../../middlewares/validators/libraries/profile.lib.js');
+jest.mock('../../../middlewares/validators/libraries/profile.lib.js', () => ({
+    validateProfileInDatabase: jest.fn(),
+    validateProfileNotInDatabase: jest.fn(),
+    validateProfileUserID: jest.fn(),
+    validateProfileSettingsID: jest.fn(),
+    validateProfileOnlineStatus: jest.fn(),
+    validateProfilePicture: jest.fn(),
+    validateProfileBio: jest.fn(),
+    validateProfileLocation: jest.fn(),
+    validateProfileFullName: jest.fn(),
+    validateProfileMyScorecards: jest.fn(),
+    validateProfileOtherScorecards: jest.fn(),
+    validateProfileGroups: jest.fn(),
+    validateProfileFriends: jest.fn(),
+    validateProfileDataInput: jest.fn(),
+    validateProfileCreationInput: jest.fn()
 }));
 
-jest.mock('../../../middlewares/validators/libraries/profile.js', () => {
-    const original = jest.requireActual('../../../middlewares/validators/libraries/profile.js');
-    return {
-        ...original,
-        validateProfileInDatabase: jest.fn(),
-        validateProfileNOTInDatabase: jest.fn(),
-        validateProfileCreationInput: jest.fn(),
-        validateProfileUpdateInput: jest.fn(),
-        validateProfileUserID: jest.fn(),
-        validateProfileOnlineStatus: jest.fn(),
-        validateProfilePicture: jest.fn(),
-        validateProfileBio: jest.fn(),
-        validateProfileLocation: jest.fn(),
-        validateProfileFullName: jest.fn(),
-        validateProfileMyScorecards: jest.fn(),
-        validateProfileOtherScorecards: jest.fn(),
-        validateProfileGroup: jest.fn(),
-        validateProfileFriends: jest.fn(),
-        validateProfilePreferences: jest.fn(),
-    };
-});
-
-afterEach(() => {
-    jest.restoreAllMocks();
-});
-
-// Test suite for profile validators
-describe('Profile Creation Validators', () => {
-
-    describe('1. validateProfileInDatabase', () => {
-        test('should call the original function', () => {
-            const profileData = { id: '123' };
-            validateProfileInDatabase(profileData);
-            expect(validateProfileInDatabase).toHaveBeenCalledWith(profileData);
+// Test suite for Profile Validators 
+describe('Profile Validators Testing', () => {
+    // 1. validateProfileDataInput
+    describe('validateProfileDataInput', () => {
+        // Test: Valid data input
+        test('should return isValid=true for valid data', async () => {
+            lib.validateProfileUserID.mockResolvedValue({ isValid: true });
+            lib.validateProfileSettingsID.mockResolvedValue({ isValid: true });
+            lib.validateProfileOnlineStatus.mockResolvedValue({ isValid: true });
+            lib.validateProfilePicture.mockResolvedValue({ isValid: true });
+            lib.validateProfileBio.mockResolvedValue({ isValid: true });
+            lib.validateProfileLocation.mockResolvedValue({ isValid: true });
+            lib.validateProfileFullName.mockResolvedValue({ isValid: true });
+            lib.validateProfileMyScorecards.mockResolvedValue({ isValid: true });
+            lib.validateProfileOtherScorecards.mockResolvedValue({ isValid: true });
+            lib.validateProfileGroups.mockResolvedValue({ isValid: true });
+            lib.validateProfileFriends.mockResolvedValue({ isValid: true });
+            const result = await validateProfileDataInput(reqCreateProfile);
+            expect(result.isValid).toBe(true);
+        });
+        // Test: Invalid data input
+        test('should return isValid=false for invalid data', async () => {
+            const result = await validateProfileDataInput(null);
+            expect(result.isValid).toBe(false);
         });
     });
 
-    // test('validateProfileNOTInDatabase should call the original function', () => {
-    //     const profileData = { id: '123' };
-    //     validateProfileNOTInDatabase(profileData);
-    //     expect(validateProfileNOTInDatabase).toHaveBeenCalledWith(profileData);
-    // });
+    // 2. validateProfileCreationInput
+    describe('validateProfileCreationInput', () => {
+        // Test: Valid input should pass
+        test('should return isValid=true for valid input', async () => {
+            lib.validateProfileNotInDatabase.mockResolvedValue({ isValid: true });
+            lib.validateProfileUserID.mockResolvedValue({ isValid: true });
+            lib.validateProfileSettingsID.mockResolvedValue({ isValid: true });
+            lib.validateProfileOnlineStatus.mockResolvedValue({ isValid: true });
+            lib.validateProfilePicture.mockResolvedValue({ isValid: true });
+            lib.validateProfileBio.mockResolvedValue({ isValid: true });
+            lib.validateProfileLocation.mockResolvedValue({ isValid: true });
+            lib.validateProfileFullName.mockResolvedValue({ isValid: true });
+            lib.validateProfileMyScorecards.mockResolvedValue({ isValid: true });
+            lib.validateProfileOtherScorecards.mockResolvedValue({ isValid: true });
+            lib.validateProfileGroups.mockResolvedValue({ isValid: true });
+            lib.validateProfileFriends.mockResolvedValue({ isValid: true });
+            const result = await validateProfileCreationInput(reqCreateProfile);
+            expect(result.isValid).toBe(true);
+        });
+        // Test: Invalid input should fail
+        test('should return isValid=false for invalid input', async () => {
+            const result = await validateProfileCreationInput(null);
+            expect(result.isValid).toBe(false);
+        });
+        // Possible ideas: test invalid types, extra fields, etc.
+    });
 
-    // test('validateProfileCreationInput should call the original function', () => {
-    //     const profileData = { id: '123' };
-    //     validateProfileCreationInput(profileData);
-    //     expect(validateProfileCreationInput).toHaveBeenCalledWith(profileData);
-    // });
-
-    // test('validateProfileUpdateInput should call the original function', () => {
-    //     const profileData = { id: '123' };
-    //     validateProfileUpdateInput(profileData);
-    //     expect(validateProfileUpdateInput).toHaveBeenCalledWith(profileData);
-    // });
-
-    // test('validateProfileUserID should call the original function', () => {
-    //     const profileData = { id: '123' };
-    //     validateProfileUserID(profileData);
-    //     expect(validateProfileUserID).toHaveBeenCalledWith(profileData);
-    // });
-
-    // test('validateProfileOnlineStatus should call the original function', () => {
-    //     const profileData = { id: '123' };
-    //     validateProfileOnlineStatus(profileData);
-    //     expect(validateProfileOnlineStatus).toHaveBeenCalledWith(profileData);
-    // });
-
-    // test('validateProfilePicture should call the original function', () => {
-    //     const profileData = { id: '123' };
-    //     validateProfilePicture(profileData);
-    //     expect(validateProfilePicture).toHaveBeenCalledWith(profileData);
-    // });
-
-    // test('validateProfileBio should call the original function', () => {
-    //     const profileData = { id: '123' };
-    //     validateProfileBio(profileData);
-    //     expect(validateProfileBio).toHaveBeenCalledWith(profileData);
-    // });
-
-    // test('validateProfileLocation should call the original function', () => {
-    //     const profileData = { id: '123' };
-    //     validateProfileLocation(profileData);
-    //     expect(validateProfileLocation).toHaveBeenCalledWith(profileData);
-    // });
-
-    // test('validateProfileFullName should call the original function', () => {
-    //     const profileData = { id: '123' };
-    //     validateProfileFullName(profileData);
-    //     expect(validateProfileFullName).toHaveBeenCalledWith(profileData);
-    // });
-
-    // test('validateProfileMyScorecards should call the original function', () => {
-    //     const profileData = { id: '123' };
-    //     validateProfileMyScorecards(profileData);
-    //     expect(validateProfileMyScorecards).toHaveBeenCalledWith(profileData);
-    // });
-
-    // test('validateProfileOtherScorecards should call the original function', () => {
-    //     const profileData = { id: '123' };
-    //     validateProfileOtherScorecards(profileData);
-    //     expect(validateProfileOtherScorecards).toHaveBeenCalledWith(profileData);
-    // });
-
-    // test('validateProfileGroup should call the original function', () => {
-    //     const profileData = { id: '123' };
-    //     validateProfileGroup(profileData);
-    //     expect(validateProfileGroup).toHaveBeenCalledWith(profileData);
-    // });
-
-    // test('validateProfileFriends should call the original function', () => {
-    //     const profileData = { id: '123' };
-    //     validateProfileFriends(profileData);
-    //     expect(validateProfileFriends).toHaveBeenCalledWith(profileData);
-    // });
-
-    // test('validateProfilePreferences should call the original function', () => {
-    //     const profileData = { id: '123' };
-    //     validateProfilePreferences(profileData);
-    //     expect(validateProfilePreferences).toHaveBeenCalledWith(profileData);
-    // });
+    // 3. validateProfileUpdateInput
+    describe('validateProfileUpdateInput', () => {
+        // Test: Valid update input
+        test('should return isValid=true for valid update input', async () => {
+            lib.validateProfileInDatabase.mockResolvedValue({ isValid: true });
+            lib.validateProfileUserID.mockResolvedValue({ isValid: true });
+            lib.validateProfileSettingsID.mockResolvedValue({ isValid: true });
+            lib.validateProfileOnlineStatus.mockResolvedValue({ isValid: true });
+            lib.validateProfilePicture.mockResolvedValue({ isValid: true });
+            lib.validateProfileBio.mockResolvedValue({ isValid: true });
+            lib.validateProfileLocation.mockResolvedValue({ isValid: true });
+            lib.validateProfileFullName.mockResolvedValue({ isValid: true });
+            lib.validateProfileMyScorecards.mockResolvedValue({ isValid: true });
+            lib.validateProfileOtherScorecards.mockResolvedValue({ isValid: true });
+            lib.validateProfileGroups.mockResolvedValue({ isValid: true });
+            lib.validateProfileFriends.mockResolvedValue({ isValid: true });
+            const result = await validateProfileUpdateInput(reqUpdateProfile, reqProfileID);
+            expect(result.isValid).toBe(true);
+        });
+        // Test: Invalid update input
+        test('should return isValid=false for invalid update input', async () => {
+            const result = await validateProfileUpdateInput(null, null);
+            expect(result.isValid).toBe(false);
+        });
+        // Possible ideas: test invalid types, extra fields, non-existent ID, etc.
+    });
 });

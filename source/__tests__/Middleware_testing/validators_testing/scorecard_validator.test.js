@@ -12,8 +12,8 @@ const {
 } = require('../../../utils/data/scorecard.test.data.js');
 
 // Mocks:
-const lib = require('../../../middlewares/validators/libraries/scorecard.js');
-jest.mock('../../../middlewares/validators/libraries/scorecard.js', () => ({
+const lib = require('../../../middlewares/validators/libraries/scorecard.lib.js');
+jest.mock('../../../middlewares/validators/libraries/scorecard.lib.js', () => ({
     validateScorecardInDatabase: jest.fn(),
     validateScorecardNotInDatabase: jest.fn(),
     validateScorecardCreator: jest.fn(),

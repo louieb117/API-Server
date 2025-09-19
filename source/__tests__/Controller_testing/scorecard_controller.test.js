@@ -37,13 +37,11 @@ jest.mock('../../models/scorecard.js', () => ({
 
 // Mocking Scorecard validators
 const { 
-    validateScorecardDataInput,
     validateScorecardCreationInput,
     validateScorecardUpdateInput
  } = require('../../middlewares/validators/scorecardValidators.js');
 
 jest.mock('../../middlewares/validators/scorecardValidators.js', () => ({
-    validateScorecardDataInput: jest.fn(),
     validateScorecardCreationInput: jest.fn(),
     validateScorecardUpdateInput: jest.fn()
 }));
@@ -59,9 +57,9 @@ const {
     validateScorecardPlayers,
     validateScorecardScoresCreate,
     validateScorecardScoresUpdate
-} = require('../../middlewares/validators/libraries/scorecard.js');
+} = require('../../middlewares/validators/libraries/scorecard.lib.js');
 
-jest.mock('../../middlewares/validators/libraries/scorecard.js', () => ({
+jest.mock('../../middlewares/validators/libraries/scorecard.lib.js', () => ({
     validateScorecardInDatabase: jest.fn(),
     validateScorecardNotInDatabase: jest.fn(),
     validateScorecardCreator: jest.fn(),

@@ -2,6 +2,7 @@
 const {
     getAllProfiles,
     getProfile,
+    getUsersProfile,
     createProfile,
     updateProfile,
     deleteProfile
@@ -34,26 +35,24 @@ jest.mock('../../models/profile.js', () => ({
 }));
 
 // Mock: Profile validators
-// const {
-//     validateProfileData,
-//     validateProfileCreation,
-//     validateProfileUpdate
-// } = require('../../middlewares/validators/profileValidator.js');
+const {
+    validateProfileCreationInput,
+    validateProfileUpdateInput,
+} = require('../../middlewares/validators/profileValidators.js');
 
-// jest.mock('../../validators/profileValidator.js', () => ({
-//     validateProfileData: jest.fn(),
-//     validateProfileCreation: jest.fn(),
-//     validateProfileUpdate: jest.fn()
-// }));
+jest.mock('../../middlewares/validators/profileValidators.js', () => ({
+    validateProfileCreationInput: jest.fn(),
+    validateProfileUpdateInput: jest.fn()
+}));
 
 // Mock: Profile library validators
-// const {
-//     validateProfileLibrary
-// } = require('../../middlewares/validators/Libraries/profile.js');
+const {
+    validateProfileInDatabase
+} = require('../../middlewares/validators/libraries/profile.lib.js');
 
-// jest.mock('../../middlewares/validators/Libraries/profile.js', () => ({
-//     validateProfileLibrary: jest.fn()
-// }));
+jest.mock('../../middlewares/validators/libraries/profile.lib.js', () => ({
+    validateProfileInDatabase: jest.fn()
+}));
 
 // Mock: User Validators
 const { validateUsernameInDatabase } = require('../../middlewares/validators/userValidators.js');
@@ -103,7 +102,7 @@ describe('Profile Controller Testing', () => {
 
         test('should return a profile by user ID', async () => {
             // Mocking
-            Profile.findOne.mockResolvedValue([mockProfileResponse]);
+            validateProfileInDatabase.mockResolvedValue({ isValid: true, profile: mockProfileResponse });
 
             // Request and Response objects
             const req = { params: { id: mockProfileId } };
@@ -111,14 +110,13 @@ describe('Profile Controller Testing', () => {
             await getProfile(req, res);
 
             // Assertions
-            expect(Profile.findOne).toHaveBeenCalledWith({ id: mockProfileId });
             expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.json).toHaveBeenCalledWith({ data: [mockProfileResponse] });
+            expect(res.json).toHaveBeenCalledWith(mockProfileResponse);
         });
 
         test('should return 404 if profile not found', async () => {
             // Mocking
-            Profile.findOne.mockResolvedValue(null);
+            validateProfileInDatabase.mockResolvedValue({ isValid: false, message: 'Profile not found' });
 
             // Request and Response objects
             const req = { params: { id: mockProfileId } };
@@ -126,18 +124,53 @@ describe('Profile Controller Testing', () => {
             await getProfile(req, res);
 
             // Assertions
-            expect(Profile.findOne).toHaveBeenCalledWith({ id: mockProfileId });
             expect(res.status).toHaveBeenCalledWith(404);
-            expect(res.json).toHaveBeenCalledWith({ message: 'Profile not found' });
+            expect(res.json).toHaveBeenCalledWith({ error: 'Profile not found' });
         });
 
     });
 
-    // 3. createProfile
+    // 3. getUsersProfile
+    describe('getUsersProfile', () => { 
+
+        test('should return a user profile by user ID', async () => {
+            // Mocking
+            validateUsernameInDatabase.mockResolvedValue({ isValid: true, user: { id: mockUserId, username: mockUserName } });
+            Profile.findOne.mockResolvedValue(mockProfileResponse);
+            // Request and Response objects
+            const req = { params: { id: mockUserId } };
+            const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+            await getUsersProfile(req, res);        
+
+            // Assertions
+            expect(validateUsernameInDatabase).toHaveBeenCalledWith(mockUserId);
+            expect(Profile.findOne).toHaveBeenCalledWith({ user_id: mockUserId });
+            expect(res.status).toHaveBeenCalledWith(200);   
+            expect(res.json).toHaveBeenCalledWith({ Profile: mockProfileResponse, User: mockUserId });
+        }); 
+        test('should return 404 if user not found', async () => {
+            // Mocking
+            validateUsernameInDatabase.mockResolvedValue({ isValid: false, message: 'User not found' });
+
+            // Request and Response objects
+            const req = { params: { id: mockUserId } };
+            const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+            await getUsersProfile(req, res);   
+            
+            // Assertions
+            expect(validateUsernameInDatabase).toHaveBeenCalledWith(mockUserId);
+            expect(res.status).toHaveBeenCalledWith(404);   
+            expect(res.json).toHaveBeenCalledWith({ error: 'User not found' });
+        });
+    });
+
+    // 4. createProfile
     describe('createProfile', () => {
 
-        test('should create a new profile', async () => {
+       test('should create a new profile', async () => {
             // Mocking
+            validateUsernameInDatabase.mockResolvedValue({ isValid: true, user: { id: mockUserId, username: mockUserName } });
+            validateProfileCreationInput.mockReturnValue({ isValid: true });
             Profile.create.mockResolvedValue(mockProfileResponse);
 
             // Request and Response objects
@@ -146,34 +179,38 @@ describe('Profile Controller Testing', () => {
             await createProfile(req, res);
 
             // Assertions
-            expect(Profile.create).toHaveBeenCalledWith({ user_id: mockUserId, ...reqCreateProfile });
+            expect(validateUsernameInDatabase).toHaveBeenCalledWith(mockUserId);
+            expect(validateProfileCreationInput).toHaveBeenCalledWith(reqCreateProfile);
+            expect(Profile.create).toHaveBeenCalledWith(reqCreateProfile);
             expect(res.status).toHaveBeenCalledWith(201);
-            expect(res.json).toHaveBeenCalledWith({ data: mockProfileResponse });
+            expect(res.json).toHaveBeenCalledWith({
+                message: "New Profile Created!",
+                data: mockProfileResponse
+            });
         });
-
-        test('should return 500 if profile creation fails', async () => {
+        test('should return 404 if user not found', async () => {
             // Mocking
-            const errorMessage = 'Validation error';
-            Profile.create.mockRejectedValue(new Error(errorMessage));
+            validateUsernameInDatabase.mockResolvedValue({ isValid: false, message: 'User not found' });
 
             // Request and Response objects
-            const req = { params: { id: mockProfileId }, body: reqCreateProfile };
+            const req = { params: { user_id: mockUserId }, body: reqCreateProfile };
             const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
             await createProfile(req, res);
 
             // Assertions
-            expect(Profile.create).toHaveBeenCalledWith({ user_id: mockProfileId, ...reqCreateProfile });
-            expect(res.status).toHaveBeenCalledWith(500);
-            expect(res.json).toHaveBeenCalledWith({ message: errorMessage });
+            expect(validateUsernameInDatabase).toHaveBeenCalledWith(mockUserId);
+            expect(res.status).toHaveBeenCalledWith(404);
+            expect(res.json).toHaveBeenCalledWith({ error: 'User not found' }); 
         });
     });
 
-    // 4. updateProfile
+    // 5. updateProfile
     describe('updateProfile', () => {
-
         test('should update an existing profile', async () => {
             // Mocking
-            Profile.findOneAndUpdate.mockResolvedValue(mockProfileResponse);
+            validateProfileInDatabase.mockResolvedValue({ isValid: true, profile: mockProfileResponse });
+            validateProfileUpdateInput.mockReturnValue({ isValid: true });
+            Profile.findOneAndUpdate.mockResolvedValue({ ...mockProfileResponse, bio: reqUpdateProfile.bio });
 
             // Request and Response objects
             const req = { params: { id: mockProfileId }, body: reqUpdateProfile };
@@ -181,18 +218,25 @@ describe('Profile Controller Testing', () => {
             await updateProfile(req, res);
 
             // Assertions
+            expect(validateProfileInDatabase).toHaveBeenCalledWith(mockProfileId);
+            expect(validateProfileUpdateInput).toHaveBeenCalledWith(reqUpdateProfile);
             expect(Profile.findOneAndUpdate).toHaveBeenCalledWith(
                 { profile_id: mockProfileId },
                 reqUpdateProfile,
                 { new: true }
             );
             expect(res.status).toHaveBeenCalledWith(200);
-            expect(res.json).toHaveBeenCalledWith({ data: mockProfileResponse });
+            expect(res.json).toHaveBeenCalledWith({
+                message: "Profile Updated!",
+                data: {
+                ...mockProfileResponse, bio: reqUpdateProfile.bio 
+                }   
+            });
         });
 
         test('should return 404 if profile not found', async () => {
             // Mocking
-            Profile.findOneAndUpdate.mockResolvedValue(null);
+            validateProfileInDatabase.mockResolvedValue({ isValid: false, message: 'Profile not found' });
 
             // Request and Response objects
             const req = { params: { id: mockProfileId }, body: reqUpdateProfile };
@@ -200,13 +244,9 @@ describe('Profile Controller Testing', () => {
             await updateProfile(req, res);
 
             // Assertions
-            expect(Profile.findOneAndUpdate).toHaveBeenCalledWith(
-                { profile_id: mockProfileId },
-                reqUpdateProfile,
-                { new: true }
-            );
+            expect(validateProfileInDatabase).toHaveBeenCalledWith(mockProfileId);
             expect(res.status).toHaveBeenCalledWith(404);
-            expect(res.json).toHaveBeenCalledWith({ message: 'Profile not found' });
+            expect(res.json).toHaveBeenCalledWith({ error: 'Profile not found' });
         });
 
     });
