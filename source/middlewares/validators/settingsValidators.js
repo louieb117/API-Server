@@ -1,85 +1,43 @@
+const { 
+    validateTheme,
+    validateNotifications, 
+    validateLanguage,
+    validatePrivacy
+} = require('./libraries/settings.lib');
+
 const Settings = require('../../models/settings.js');
+
+const validateSettingsDataInput = async (settings) => {
+    try {
+        if (!settings || Object.keys(settings).length === 0) {
+            throw new Error("Settings object is empty");
+        }
+        const allowedFields = ['theme', 'notifications', 'language', 'privacy'];
+        for (const key in settings) {
+            if (settings.hasOwnProperty(key) && !allowedFields.includes(key)) {
+                throw new Error(`Invalid settings field: ${key}`);
+            }
+        }
+        return { isValid: true };
+    } catch (error) {
+        return { isValid: false, message: error.message };
+    }
+};
 
 const validateSettingsInDatabase = async (settings_id) => {
     try {
-        if (!settings_id) {
+        if (!settings_id) { 
             return { isValid: false, message: "Settings ID is required" };
         }   
-        if (settings_id.length !== 24) {
+        if (settings_id.length !== 24) { 
             return { isValid: false, message: "Invalid Settings ID format" };
         }
         const existingSettings = settings_id ? await Settings.findById(settings_id) : null;
-        if (!existingSettings) {
+        if (!existingSettings) { 
             return { isValid: false, message: "Settings not found in the database" };
-        }
+        } 
         return { isValid: true, message: "Settings found in the database", settings: existingSettings };    
     }
-    catch (error) {
-        return { isValid: false, message: error.message };
-    }
-};
-
-const validateTheme = (theme) => {
-    try {
-        const validThemes = ['light', 'dark', 'system'];
-        if (!validThemes.includes(theme)) {
-            return { isValid: false, message: `Invalid theme. Valid options are: ${validThemes.join(', ')}` };
-        }
-        return { isValid: true, message: "Theme successfully validated" };
-    }
-    catch (error) {
-        return { isValid: false, message: error.message };
-    }
-};
-
-const validateNotifications = (notifications) => {
-    try {
-        if (typeof notifications !== 'boolean') {
-            return { isValid: false, message: "Notifications must be a boolean value." };
-        }
-        return { isValid: true, message: "Notifications setting successfully validated" };
-    }
-    catch (error) {
-        return { isValid: false, message: error.message };
-    }
-};
-
-const validateLanguage = (language) => {
-    try {
-        const validLanguages = ['en', 'es', 'fr', 'de', 'zh'];
-        if (!validLanguages.includes(language)) {
-            return { isValid: false, message: `Invalid language. Valid options are: ${validLanguages.join(', ')}` };
-        }
-        return { isValid: true, message: "Language successfully validated" };
-    }
-    catch (error) {
-        return { isValid: false, message: error.message };
-    }
-};
-
-const validatePrivacy = (privacy) => {
-    try {
-        if (!privacy || typeof privacy !== "object") {
-            return { isValid: false, message: "Privacy must be an object" };
-        }
-        const { profileVisibility, dataSharing } = privacy;
-        // Validate profileVisibility
-        const validVisibilityOptions = ["public", "friends", "private"];
-        if (!validVisibilityOptions.includes(profileVisibility)) {
-            return { 
-                isValid: false, 
-                message: `Invalid profileVisibility. Valid options: ${validVisibilityOptions.join(", ")}` 
-            };
-        }
-        // Validate dataSharing
-        if (typeof dataSharing !== "boolean") {
-            return { 
-                isValid: false, 
-                message: "dataSharing must be a boolean (true/false)" 
-            };
-        }
-        return { isValid: true, message: "Privacy settings successfully validated" };
-    } 
     catch (error) {
         return { isValid: false, message: error.message };
     }
@@ -137,11 +95,8 @@ const validateSettingsUpdate = async (settings) => {
 };
 
 
-module.exports = {
+module.exports = { 
+    validateSettingsDataInput,
     validateSettingsInDatabase,
-    validateTheme,
-    validateNotifications, 
-    validateLanguage,
-    validatePrivacy,
     validateSettingsUpdate
 };
