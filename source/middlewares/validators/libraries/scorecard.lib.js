@@ -37,6 +37,8 @@ const validateScorecardNotInDatabase = async (id) => {
     }
 };
 
+// ISSUE: This function needs to be revised. Does not function as intended.
+
 const validateScorecardCreator = async (body) => {
     try{
         const scorecard = await Scorecard.findById(body.creator);

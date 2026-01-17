@@ -9,7 +9,7 @@ const {
     validateScorecardPlayers,
     validateScorecardScoresCreate,
     validateScorecardScoresUpdate
-} = require('../../../../middlewares/validators/libraries/scorecard.js');
+} = require('../../../../middlewares/validators/libraries/scorecard.lib.js');
 
 // Test data:
 const { 
